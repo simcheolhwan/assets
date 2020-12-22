@@ -32,4 +32,5 @@ export const formatDateWith = (fmt = "yyyy-MM-dd") => {
 export const formatDate = formatDateWith()
 
 /* percent */
-export const percent = (n: number) => numeral(n).format("0%")
+export const percent = (n: number, integer = false) =>
+  numeral(n).format(integer ? "0%" : "0.[00]%")

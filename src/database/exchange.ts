@@ -1,12 +1,8 @@
 import { useEffect } from "react"
 import { selector, useRecoilValue } from "recoil"
-import { subDays } from "date-fns"
-import { formatDate } from "../utils/format"
-import { prev } from "../utils/history"
+import { prev, yesterday } from "../utils/history"
 import { prevExchange } from "./polygon"
 import { addExchange, contentsState, databaseState } from "./database"
-
-const yesterday = formatDate(subDays(new Date(), 1))
 
 export const yesterdayExchangeQuery = selector({
   key: "yesterdayExchange",

@@ -1,9 +1,9 @@
 import { Table, Tag } from "antd"
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons"
 import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../utils/format"
 import { percent } from "../utils/format"
 import { todayDashboardQuery } from "../database/today"
+import Change from "../components/Change"
 
 const { Column } = Table
 
@@ -48,21 +48,21 @@ const DashboardTable = () => {
       <Column
         title="비율"
         dataIndex="ratio"
-        render={percent}
+        render={(value) => percent(value, true)}
         align="center"
         responsive={["sm"]}
       />
       <Column
         title="목표"
         dataIndex="aim"
-        render={percent}
+        render={(value) => percent(value, true)}
         align="center"
         responsive={["sm"]}
       />
       <Column
         title="리밸런싱"
         dataIndex="rebalance"
-        render={(amount) => amount && <Rebalance>{amount}</Rebalance>}
+        render={(amount) => <Change format={formatAmount}>{amount}</Change>}
         align="center"
         responsive={["sm"]}
       />
@@ -71,11 +71,3 @@ const DashboardTable = () => {
 }
 
 export default DashboardTable
-
-/* component */
-const Rebalance = ({ children: amount }: { children: number }) => (
-  <>
-    {amount > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-    {formatAmount(Math.abs(amount))}
-  </>
-)
