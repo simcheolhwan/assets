@@ -102,21 +102,24 @@ interface Params {
 
 const calc = (params: Params) => {
   const { exchange, balanceItem, priceItem, tickers, wallets, depts } = params
-  const dataSource = Object.values(balanceItem)
-    .map((data) => {
-      const { balance, tickerKey, walletKey } = data
-      const price = priceItem[tickerKey]?.price ?? 1
-      const { name: ticker, currency } = tickers[tickerKey]
-      const rate = currency === "KRW" ? 1 : exchange
-      const value = balance * price * rate
-      const wallet = wallets[walletKey]
-      return { ...data, currency, ticker, wallet, price, value }
-    })
-    .sort(({ value: a }, { value: b }) => b - a)
 
-  const asset = dataSource.reduce((acc, { value }) => acc + value, 0)
+  const data = Object.values(balanceItem).map((data) => {
+    const { balance, tickerKey, walletKey } = data
+    const price = priceItem[tickerKey]?.price ?? 1
+    const { name: ticker, currency, aim } = tickers[tickerKey]
+    const rate = currency === "KRW" ? 1 : exchange
+    const value = balance * price * rate
+    const wallet = wallets[walletKey]
+    return { ...data, currency, ticker, wallet, price, value, aim }
+  })
+
+  const asset = data.reduce((acc, { value }) => acc + value, 0)
   const dept = Object.values(depts).reduce((acc, { amount }) => acc + amount, 0)
   const total = asset - dept
+
+  const dataSource = data
+    .map((item) => ({ ...item, ratio: item.value / asset }))
+    .sort(({ value: a }, { value: b }) => b - a)
 
   return { dataSource, asset, dept, total }
 }

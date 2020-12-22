@@ -1,4 +1,5 @@
 import { Table, Tag } from "antd"
+import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons"
 import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../utils/format"
 import { percent } from "../utils/format"
@@ -7,7 +8,7 @@ import { todayDashboardQuery } from "../database/today"
 const { Column } = Table
 
 const DashboardTable = () => {
-  const { dataSource, asset } = useRecoilValue(todayDashboardQuery)
+  const { dataSource } = useRecoilValue(todayDashboardQuery)
 
   return (
     <Table dataSource={dataSource} pagination={false} rowKey="balanceKey">
@@ -41,9 +42,16 @@ const DashboardTable = () => {
       />
       <Column
         title="비율"
-        dataIndex="value"
-        render={(value) => percent(value / asset)}
-        align="right"
+        dataIndex="ratio"
+        render={percent}
+        align="center"
+        responsive={["sm"]}
+      />
+      <Column
+        title="목표 비율"
+        dataIndex="aim"
+        render={percent}
+        align="center"
         responsive={["sm"]}
       />
     </Table>
