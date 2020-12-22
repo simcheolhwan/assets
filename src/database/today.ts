@@ -64,8 +64,8 @@ export const useUpdateToday = () => {
   return { isChanged, update }
 }
 
-export const todayDashboardQuery = selector({
-  key: "todayDashboard",
+export const todayBalancesQuery = selector({
+  key: "todayBalances",
   get: ({ get }) => {
     const { tickers, wallets, depts } = get(contentsState)
     const today = get(todayQuery)
@@ -75,12 +75,12 @@ export const todayDashboardQuery = selector({
 })
 
 export const balancesHistoryQuery = selector({
-  key: "dashboardHistory",
+  key: "balancesHistory",
   get: ({ get }) => {
     const { balances, prices, exchanges, ...rest } = get(contentsState)
     return Object.keys(prices).map((date) => ({
       date,
-      dashboard: calc({
+      balances: calc({
         ...rest,
         balanceItem: balances[date],
         priceItem: prices[date],

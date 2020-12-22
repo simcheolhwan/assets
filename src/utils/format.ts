@@ -6,9 +6,14 @@ export const getSign = (ticker: CurrencyTicker) =>
   ({ KRW: "₩", USD: "$" }[ticker])
 
 /* amount */
-export const formatAmountWith = (currency?: CurrencyTicker) => {
+export const formatAmountWith = (
+  currency?: CurrencyTicker,
+  noRound = false
+) => {
   return (value: number) => {
-    const v = value > 1e6 ? Math.round(value / 1000) * 1000 : value
+    const p = Math.pow(10, String(Math.round(value)).length - 3)
+    const v = noRound ? value : Math.round(value / p) * p
+
     return [currency && getSign(currency), numeral(v).format()]
       .filter(String)
       .join(" ")
@@ -17,6 +22,7 @@ export const formatAmountWith = (currency?: CurrencyTicker) => {
 
 export const formatAmount = formatAmountWith()
 export const formatKRW = formatAmountWith("KRW")
+export const formatExchange = formatAmountWith("KRW", true)
 
 export const formatM = (number: number) =>
   number ? Math.round(number / 1e6) + "백만" : ""

@@ -48,7 +48,7 @@ const Chart = () => {
   /* data: balances */
   const balancesHistory = useRecoilValue(balancesHistoryQuery)
   const balanceData = balancesHistory
-    .map(({ date, dashboard }) => ({ t: new Date(date), y: dashboard.total }))
+    .map(({ date, balances }) => ({ t: new Date(date), y: balances.total }))
     .filter(filter)
 
   const balancesDatasets = {

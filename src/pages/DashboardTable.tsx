@@ -2,13 +2,13 @@ import { Table, Tag } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../utils/format"
 import { percent } from "../utils/format"
-import { todayDashboardQuery } from "../database/today"
+import { todayBalancesQuery } from "../database/today"
 import Change from "../components/Change"
 
 const { Column } = Table
 
 const DashboardTable = () => {
-  const { dataSource } = useRecoilValue(todayDashboardQuery)
+  const { dataSource } = useRecoilValue(todayBalancesQuery)
 
   return (
     <Table
