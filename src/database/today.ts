@@ -118,7 +118,13 @@ const calc = (params: Params) => {
   const total = asset - dept
 
   const dataSource = data
-    .map((item) => ({ ...item, ratio: item.value / asset }))
+    .map((item) => {
+      const { balance, value, aim = 0 } = item
+      const ratio = value / asset
+      const aimValue = asset * aim
+      const rebalance = balance * (aimValue / value - 1)
+      return { ...item, ratio, rebalance }
+    })
     .sort(({ value: a }, { value: b }) => b - a)
 
   return { dataSource, asset, dept, total }

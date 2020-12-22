@@ -11,7 +11,12 @@ const DashboardTable = () => {
   const { dataSource } = useRecoilValue(todayDashboardQuery)
 
   return (
-    <Table dataSource={dataSource} pagination={false} rowKey="balanceKey">
+    <Table
+      dataSource={dataSource}
+      pagination={false}
+      rowKey="balanceKey"
+      size="small"
+    >
       <Column
         title="위치"
         dataIndex="wallet"
@@ -48,9 +53,16 @@ const DashboardTable = () => {
         responsive={["sm"]}
       />
       <Column
-        title="목표 비율"
+        title="목표"
         dataIndex="aim"
         render={percent}
+        align="center"
+        responsive={["sm"]}
+      />
+      <Column
+        title="리밸런싱"
+        dataIndex="rebalance"
+        render={(amount) => amount && <Rebalance>{amount}</Rebalance>}
         align="center"
         responsive={["sm"]}
       />
@@ -59,3 +71,11 @@ const DashboardTable = () => {
 }
 
 export default DashboardTable
+
+/* component */
+const Rebalance = ({ children: amount }: { children: number }) => (
+  <>
+    {amount > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+    {formatAmount(Math.abs(amount))}
+  </>
+)
