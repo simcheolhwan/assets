@@ -125,7 +125,7 @@ const calc = (params: Params) => {
       const rebalance = balance * (aimValue / value - 1)
       return { ...item, ratio, rebalance }
     })
-    .sort(({ value: a }, { value: b }) => b - a)
+    .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
 
   return { dataSource, asset, dept, total }
 }
