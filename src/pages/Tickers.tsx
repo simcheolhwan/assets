@@ -1,5 +1,6 @@
 import { PageHeader, Table } from "antd"
 import { useRecoilValue } from "recoil"
+import { isNil } from "ramda"
 import { yesterday } from "../utils/history"
 import { contentsState } from "../database/database"
 import { todayQuery } from "../database/today"
@@ -15,13 +16,16 @@ const Tickers = () => {
   const { priceItem } = useRecoilValue(todayQuery)
   const priceItemYesterday = prices[yesterday]
 
-  const dataSource = Object.values(tickers).map((ticker) => {
-    const { tickerKey } = ticker
-    const price = priceItem[tickerKey]?.price
-    const yesterday = priceItemYesterday[tickerKey]?.price
-    const change = price ? price / yesterday - 1 : undefined
-    return { ...ticker, price, change }
-  })
+  const dataSource = Object.values(tickers)
+    .map((ticker) => {
+      const { tickerKey } = ticker
+      const price = priceItem[tickerKey]?.price
+      const yesterday = priceItemYesterday[tickerKey]?.price
+      const change = price ? price / yesterday - 1 : undefined
+      return { ...ticker, price, change }
+    })
+    .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
+    .sort(({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b)))
 
   return (
     <PageHeader title={title} extra={[<AddTickerModal key="add" />]}>
