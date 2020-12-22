@@ -1,6 +1,6 @@
 import { PageHeader, Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
-import { formatM, formatDateWith, formatKRW } from "../utils/format"
+import { formatM, formatDateWith } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import { useTitle } from "../layouts/routes"
 
@@ -29,7 +29,8 @@ const DepositsHistory = () => {
           title="내역"
           dataIndex="amount"
           render={(amount) => (
-            <Text type={amount < 0 ? "danger" : "success"}>
+            <Text type={amount < 0 ? "danger" : undefined}>
+              {amount > 0 && "+"}
               {formatM(amount)}
             </Text>
           )}
