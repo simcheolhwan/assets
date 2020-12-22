@@ -7,7 +7,7 @@ import { Line } from "react-chartjs-2"
 import { isBefore, startOfYear } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
-import { formatM, formatDate, formatBigKRW } from "../utils/format"
+import { formatM, formatDate, formatKRW } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import { balancesHistoryQuery } from "../database/today"
 import { useTitle } from "../layouts/routes"
@@ -164,8 +164,7 @@ const Chart = () => {
               xPadding: 10,
               yPadding: 8,
               callbacks: {
-                title: ([{ value }]) =>
-                  value ? formatBigKRW(Number(value)) : "",
+                title: ([{ value }]) => (value ? formatKRW(Number(value)) : ""),
                 label: ({ label, datasetIndex, index }) => {
                   const affix = getAffix(datasetIndex!, index!)
                   return label ? [formatDate(label), affix].join(" ") : ""

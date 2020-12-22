@@ -11,7 +11,7 @@ import DashboardTable from "./DashboardTable"
 
 const Dashboard = () => {
   const title = useTitle()
-  const { asset, total } = useRecoilValue(todayBalancesQuery)
+  const { total } = useRecoilValue(todayBalancesQuery)
   const balancesHistory = useRecoilValue(balancesHistoryQuery)
   const exchange = useRecoilValue(yesterdayExchangeQuery)
   const { isChanged, update } = useUpdateToday()
@@ -29,12 +29,15 @@ const Dashboard = () => {
   )
 
   return (
-    <PageHeader title={title} subTitle={formatKRW(asset)} extra={[button]}>
+    <PageHeader
+      title={title}
+      subTitle={`환율 ${formatExchange(exchange)}`}
+      extra={[button]}
+    >
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Row>
-          <Space size="large">
+          <Space size="large" wrap>
             <Statistic title="자본" value={formatKRW(total)} />
-            <Statistic title="환율" value={formatExchange(exchange)} />
             <Statistic
               title="어제보다"
               value={formatKRW(pnl)}
