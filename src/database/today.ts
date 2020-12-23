@@ -1,16 +1,16 @@
 import { selector, useRecoilValue } from "recoil"
 import { equals, last } from "ramda"
 import { formatDate } from "../utils/format"
-import { latest } from "../utils/history"
-import { updateToday, contentsState } from "./database"
+import { latest, today } from "../utils/history"
+import { updateDayData, contentsState } from "./database"
 import { lunaPriceQuery, ustBalanceQuery } from "./terra"
 import { lpBalanceQuery, symbolPriceQuery } from "./mirror"
 import { prevExchangeQuery, stockPriceQuery } from "./polygon"
 
-export const todayQuery = selector({
-  key: "today",
+export const todayDataQuery = selector({
+  key: "todayData",
   get: async ({ get }) => {
-    const { balances, prices, tickers, wallets } = get(contentsState)
+    const { balances, prices, exchanges, tickers, wallets } = get(contentsState)
     const prevBalances = latest(balances)
     const prevPrices = latest(prices)
 
@@ -60,30 +60,28 @@ export const todayQuery = selector({
     const exchangeItem = { USD: exchange }
     const updates = { balanceItem, priceItem, exchangeItem }
 
-    const isTodayExists = [balances, prices].every(
-      (group) => last(Object.keys(group).sort()) === formatDate()
+    const isTodayExists = [balances, prices, exchanges].every(
+      (group) => last(Object.keys(group).sort()) === today
     )
 
-    !isTodayExists && (await updateToday(formatDate(), updates))
+    !isTodayExists && (await updateDayData(formatDate(), updates))
 
     return updates
   },
 })
 
 export const useUpdateToday = () => {
-  const today = useRecoilValue(todayQuery)
+  const todayData = useRecoilValue(todayDataQuery)
   const { balances, prices, exchanges } = useRecoilValue(contentsState)
-  const yesterday = {
-    balanceItem: latest(balances),
-    priceItem: latest(prices),
-    exchangeItem: latest(exchanges),
+
+  const prevTodayData = {
+    balanceItem: balances[today],
+    priceItem: prices[today],
+    exchangeItem: exchanges[today],
   }
 
-  const isChanged = !equals(today, yesterday)
-
-  const update = async () => {
-    await updateToday(formatDate(), today)
-  }
+  const update = async () => await updateDayData(today, todayData)
+  const isChanged = !equals(todayData, prevTodayData)
 
   return { isChanged, update }
 }
@@ -92,7 +90,7 @@ export const todayBalancesQuery = selector({
   key: "todayBalances",
   get: ({ get }) => {
     const { tickers, wallets, depts } = get(contentsState)
-    const today = get(todayQuery)
+    const today = get(todayDataQuery)
     return calc({ ...today, tickers, wallets, depts })
   },
 })

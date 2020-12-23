@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { isNil } from "ramda"
 import { yesterday } from "../utils/history"
 import { contentsState } from "../database/database"
-import { todayQuery } from "../database/today"
+import { todayDataQuery } from "../database/today"
 import { useTitle } from "../layouts/routes"
 import AddTickerModal from "./AddTickerModal"
 import Change from "../components/Change"
@@ -13,7 +13,7 @@ const { Column } = Table
 const Tickers = () => {
   const title = useTitle()
   const { tickers, prices } = useRecoilValue(contentsState)
-  const { priceItem } = useRecoilValue(todayQuery)
+  const { priceItem } = useRecoilValue(todayDataQuery)
   const priceItemYesterday = prices[yesterday]
 
   const dataSource = Object.values(tickers)

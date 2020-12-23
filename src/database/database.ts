@@ -72,7 +72,7 @@ export const addPrice = async (date: string, price: PriceItem) =>
 export const addTicker = async (ticker: Ticker) =>
   await db.ref(`/tickers/${ticker.tickerKey}`).set(ticker)
 
-export const updateToday = async (
+export const updateDayData = async (
   date: string,
   { balanceItem, priceItem, exchangeItem }: DayItem
 ) => {
