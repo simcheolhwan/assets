@@ -22,8 +22,9 @@ type Depts = Dictionary<Dept>
 
 interface Ticker {
   tickerKey: string
-  name: string
   currency: CurrencyTicker
+  name: string
+  icon?: string
   aim?: number
 }
 

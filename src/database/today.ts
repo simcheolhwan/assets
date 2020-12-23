@@ -125,11 +125,11 @@ const calc = (params: Params) => {
   const data = Object.values(balanceItem).map((data) => {
     const { balance, tickerKey, walletKey } = data
     const price = priceItem[tickerKey]?.price ?? 1
-    const { name: ticker, currency, aim } = tickers[tickerKey]
+    const { currency, name: ticker, icon, aim } = tickers[tickerKey]
     const rate = currency === "KRW" ? 1 : exchange
     const value = balance * price * rate
     const wallet = wallets[walletKey]
-    return { ...data, currency, ticker, wallet, price, value, aim }
+    return { ...data, currency, ticker, icon, wallet, price, value, aim }
   })
 
   const asset = data.reduce((acc, { value }) => acc + value, 0)
