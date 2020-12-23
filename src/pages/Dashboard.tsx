@@ -22,10 +22,12 @@ const Dashboard = () => {
   const { balances } = nth(-2, balancesHistory)!
   const pnlDay = total - balances.total
   const changeDay = pnlDay / balances.total
+  const isChangedDay = Math.abs(changeDay) >= 0.001
 
   const { balance: lastBalance } = last(depositsHistory)!
   const pnlDeposit = total - lastBalance
   const changeDeposit = pnlDeposit / lastBalance
+  const isChangedDeposit = Math.abs(changeDeposit) >= 0.001
 
   /* render */
   const button = (
@@ -46,13 +48,15 @@ const Dashboard = () => {
             <Statistic title="자본" value={formatKRW(total)} />
             <Statistic
               title="어제보다"
-              value={formatKRW(pnlDay)}
-              suffix={<Change color>{changeDay}</Change>}
+              value={isChangedDay ? formatKRW(pnlDay) : "변동없음"}
+              suffix={isChangedDay && <Change color>{changeDay}</Change>}
             />
             <Statistic
               title="투자금보다"
-              value={formatKRW(pnlDeposit)}
-              suffix={<Change color>{changeDeposit}</Change>}
+              value={isChangedDeposit ? formatKRW(pnlDeposit) : "변동없음"}
+              suffix={
+                isChangedDeposit && <Change color>{changeDeposit}</Change>
+              }
             />
           </Space>
         </Row>
