@@ -1,7 +1,8 @@
 import { useRecoilValue } from "recoil"
 import { Button, PageHeader, Row, Space, Statistic } from "antd"
-import { nth } from "ramda"
+import { last, nth } from "ramda"
 import { formatExchange, formatKRW } from "../utils/format"
+import { depositsHistoryState } from "../database/database"
 import { balancesHistoryQuery, todayBalancesQuery } from "../database/today"
 import { useUpdateToday } from "../database/today"
 import { yesterdayExchangeQuery } from "../database/exchange"
@@ -11,15 +12,20 @@ import DashboardTable from "./DashboardTable"
 
 const Dashboard = () => {
   const title = useTitle()
+  const exchange = useRecoilValue(yesterdayExchangeQuery)
   const { total } = useRecoilValue(todayBalancesQuery)
   const balancesHistory = useRecoilValue(balancesHistoryQuery)
-  const exchange = useRecoilValue(yesterdayExchangeQuery)
+  const depositsHistory = useRecoilValue(depositsHistoryState)
   const { isChanged, update } = useUpdateToday()
 
-  /* change */
+  /* p&l */
   const { balances } = nth(-2, balancesHistory)!
-  const pnl = total - balances.total
-  const change = pnl / balances.total
+  const pnlDay = total - balances.total
+  const changeDay = pnlDay / balances.total
+
+  const { balance: lastBalance } = last(depositsHistory)!
+  const pnlDeposit = total - lastBalance
+  const changeDeposit = pnlDeposit / lastBalance
 
   /* render */
   const button = (
@@ -40,8 +46,13 @@ const Dashboard = () => {
             <Statistic title="자본" value={formatKRW(total)} />
             <Statistic
               title="어제보다"
-              value={formatKRW(pnl)}
-              suffix={<Change color>{change}</Change>}
+              value={formatKRW(pnlDay)}
+              suffix={<Change color>{changeDay}</Change>}
+            />
+            <Statistic
+              title="투자금보다"
+              value={formatKRW(pnlDeposit)}
+              suffix={<Change color>{changeDeposit}</Change>}
             />
           </Space>
         </Row>
