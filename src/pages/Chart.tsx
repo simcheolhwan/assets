@@ -67,9 +67,10 @@ const Chart = () => {
     title: "시작",
   }
 
-  const prepended = prepend(initial, depositsHistory)
-  const depositsData = prepended
-    .map(({ date, balance }) => ({ t: new Date(date), y: balance }))
+  const depositsData = prepend(initial, depositsHistory)
+    .map(({ date, balance, ...rest }) => {
+      return { t: new Date(date), y: balance, ...rest }
+    })
     .filter(filter)
 
   const depositsDatasets = {
@@ -81,7 +82,7 @@ const Chart = () => {
 
   /* render */
   const getAffix = (datasetIndex: number, index: number) => {
-    const { title, amount } = prepended[index]
+    const { title, amount } = depositsData[index]
     const valid = showDeposits && datasetIndex === 1
     return valid ? `${title} ${amount ? formatM(amount) : ""}` : ""
   }
