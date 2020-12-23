@@ -18,14 +18,23 @@ const DashboardTable = () => {
       size="small"
       scroll={{ x: true }}
     >
-      <Column title="항목" dataIndex="ticker" align="center" fixed="left" />
       <Column
         dataIndex="icon"
         render={(icon) =>
-          icon && <img src={icon} alt="" width={20} height={20} />
+          icon && (
+            <img
+              src={icon}
+              alt=""
+              width={20}
+              height={20}
+              style={{ filter: "grayscale(100%)", opacity: 0.25 }}
+            />
+          )
         }
         align="center"
+        fixed="left"
       />
+      <Column title="항목" dataIndex="ticker" align="center" fixed="left" />
       <Column
         title="위치"
         dataIndex="wallet"
