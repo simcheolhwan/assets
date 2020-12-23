@@ -1,7 +1,7 @@
 import { selector, useRecoilValue } from "recoil"
 import { equals, last } from "ramda"
 import { formatDate } from "../utils/format"
-import { prev } from "../utils/history"
+import { latest } from "../utils/history"
 import { updateToday, contentsState } from "./database"
 import { lunaPriceQuery, ustBalanceQuery } from "./terra"
 import { lpBalanceQuery, symbolPriceQuery } from "./mirror"
@@ -12,8 +12,8 @@ export const todayQuery = selector({
   key: "today",
   get: async ({ get }) => {
     const { balances, prices, tickers, wallets } = get(contentsState)
-    const prevBalances = prev(balances)
-    const prevPrices = prev(prices)
+    const prevBalances = latest(balances)
+    const prevPrices = latest(prices)
 
     /* Get balances and prices */
     const ustBalance = get(ustBalanceQuery)
@@ -72,7 +72,7 @@ export const todayQuery = selector({
 export const useUpdateToday = () => {
   const today = useRecoilValue(todayQuery)
   const { balances, prices } = useRecoilValue(contentsState)
-  const yesterday = { balanceItem: prev(balances), priceItem: prev(prices) }
+  const yesterday = { balanceItem: latest(balances), priceItem: latest(prices) }
   const isChanged = !equals(today, yesterday)
 
   const update = async () => {

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { selector, useRecoilValue } from "recoil"
-import { prev, today } from "../utils/history"
+import { latest, today } from "../utils/history"
 import { prevExchange } from "./polygon"
 import { addExchange, contentsState, databaseState } from "./database"
 
@@ -8,7 +8,7 @@ export const todayExchangeQuery = selector({
   key: "todayExchange",
   get: ({ get }) => {
     const { exchanges } = get(contentsState)
-    return prev(exchanges).USD
+    return latest(exchanges).USD
   },
 })
 
