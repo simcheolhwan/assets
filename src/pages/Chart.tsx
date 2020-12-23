@@ -4,7 +4,7 @@ import { Radio, Checkbox, PageHeader, Card, Space } from "antd"
 import { helpers } from "chart.js"
 import { head, prepend } from "ramda"
 import { Line } from "react-chartjs-2"
-import { isBefore, startOfYear } from "date-fns"
+import { isBefore, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
 import { formatM, formatDate, formatKRW } from "../utils/format"
@@ -13,6 +13,7 @@ import { balancesHistoryQuery } from "../database/today"
 import { useTitle } from "../layouts/routes"
 
 enum Range {
+  "W" = "1W",
   "M" = "1M",
   "Q" = "1Q",
   "Y" = "1Y",
@@ -28,6 +29,7 @@ const Chart = () => {
   const [range, setRange] = useState<Range>(Range.MAX)
   const filter = ({ t }: { t: Date }) =>
     ({
+      [Range.W]: isBefore(subWeeks(new Date(), 1), t),
       [Range.M]: isBefore(subMonths(new Date(), 1), t),
       [Range.Q]: isBefore(subQuarters(new Date(), 1), t),
       [Range.Y]: isBefore(subYears(new Date(), 1), t),
