@@ -11,7 +11,7 @@ import { yesterdayExchangeQuery } from "./exchange"
 export const todayQuery = selector({
   key: "today",
   get: async ({ get }) => {
-    const { balances, prices, tickers } = get(contentsState)
+    const { balances, prices, tickers, wallets } = get(contentsState)
     const prevBalances = prev(balances)
     const prevPrices = prev(prices)
 
@@ -24,21 +24,39 @@ export const todayQuery = selector({
     const lunaPrice = get(lunaPriceQuery)
     const MIRPrice = get(symbolPriceQuery("MIR"))
 
-    const balancePair = {
-      UST: ustBalance,
-      "MIR-UST LP": lpBalanceMIR,
-      "mQQQ-UST LP": lpBalancemQQQ,
+    /* Get key */
+    const findTickerKey = (ticker: string) =>
+      Object.values(tickers).find(({ name }) => name === ticker)?.tickerKey ??
+      ""
+
+    const findWalletKey = (wallet: string) =>
+      Object.keys(wallets).find((key) => wallets[key] === wallet) ?? ""
+
+    const findBalanceKey = (ticker: string, wallet: string) => {
+      const match = (balance: Balance) =>
+        balance.tickerKey === tickerKey && balance.walletKey === walletKey
+
+      const tickerKey = findTickerKey(ticker)
+      const walletKey = findWalletKey(wallet)
+
+      return Object.values(prevBalances).find(match)?.balanceKey ?? ""
     }
 
-    const pricePair = {
-      QQQ: stockPriceQQQ,
-      TQQQ: stockPriceTQQQ,
-      LUNA: lunaPrice,
-      MIR: MIRPrice,
+    const balanceDict = {
+      [findBalanceKey("UST", "스테이션")]: ustBalance,
+      [findBalanceKey("MIR-UST LP", "미러")]: lpBalanceMIR,
+      [findBalanceKey("mQQQ-UST LP", "미러")]: lpBalancemQQQ,
     }
 
-    const balanceItem = merge(prevBalances, balancePair, tickers, "balance")
-    const priceItem = merge(prevPrices, pricePair, tickers, "price")
+    const priceDict = {
+      [findTickerKey("QQQ")]: stockPriceQQQ,
+      [findTickerKey("TQQQ")]: stockPriceTQQQ,
+      [findTickerKey("LUNA")]: lunaPrice,
+      [findTickerKey("MIR")]: MIRPrice,
+    }
+
+    const balanceItem = merge(prevBalances, balanceDict, "balance")
+    const priceItem = merge(prevPrices, priceDict, "price")
     const updates = { balanceItem, priceItem }
 
     const isTodayExists = [balances, prices].every(
@@ -130,28 +148,8 @@ const calc = (params: Params) => {
   return { dataSource, asset, dept, total }
 }
 
-const merge = <T>(
-  object: T,
-  pair: Dictionary<number>,
-  tickers: Tickers,
-  replace: string
-) => {
-  const tickerKeyPair = Object.entries(pair).reduce<Dictionary<number>>(
-    (acc, [name, value]) => {
-      const tickerKey = Object.values(tickers).find(
-        (ticker) => ticker.name === name
-      )?.tickerKey
-
-      return Object.assign({}, acc, tickerKey && { [tickerKey]: value })
-    },
-    {}
-  )
-
-  return Object.entries(object).reduce((acc, [key, value]) => {
-    const next = tickerKeyPair[value.tickerKey]
-      ? { ...value, [replace]: tickerKeyPair[value.tickerKey] }
-      : value
-
+const merge = <T>(source: T, dict: Dictionary<number>, replaceKey: string) =>
+  Object.entries(source).reduce((acc, [key, value]) => {
+    const next = dict[key] ? { ...value, [replaceKey]: dict[key] } : value
     return { ...acc, [key]: next }
   }, {} as T)
-}
