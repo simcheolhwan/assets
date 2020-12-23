@@ -6,7 +6,7 @@ const config = {
   params: { apiKey: process.env.REACT_APP_POLYGON_API_KEY },
 }
 
-/* yesterday's exchange rate */
+/* previous exchange rate */
 export const prevExchange = () => {
   const path = "/v2/aggs/ticker/C:USDKRW/prev"
   return axios.get<PolygonResponse>(path, config)

@@ -6,7 +6,7 @@ import { updateToday, contentsState } from "./database"
 import { lunaPriceQuery, ustBalanceQuery } from "./terra"
 import { lpBalanceQuery, symbolPriceQuery } from "./mirror"
 import { stockPriceQuery } from "./polygon"
-import { yesterdayExchangeQuery } from "./exchange"
+import { todayExchangeQuery } from "./exchange"
 
 export const todayQuery = selector({
   key: "today",
@@ -87,7 +87,7 @@ export const todayBalancesQuery = selector({
   get: ({ get }) => {
     const { tickers, wallets, depts } = get(contentsState)
     const today = get(todayQuery)
-    const exchange = get(yesterdayExchangeQuery)
+    const exchange = get(todayExchangeQuery)
     return calc({ ...today, tickers, wallets, depts, exchange })
   },
 })
@@ -96,13 +96,14 @@ export const balancesHistoryQuery = selector({
   key: "balancesHistory",
   get: ({ get }) => {
     const { balances, prices, exchanges, ...rest } = get(contentsState)
+
     return Object.keys(prices).map((date) => ({
       date,
       balances: calc({
         ...rest,
         balanceItem: balances[date],
         priceItem: prices[date],
-        exchange: exchanges[date]?.USD ?? prev(exchanges).USD,
+        exchange: exchanges[date].USD,
       }),
     }))
   },

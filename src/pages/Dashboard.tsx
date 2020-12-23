@@ -5,14 +5,14 @@ import { formatExchange, formatKRW } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import { balancesHistoryQuery, todayBalancesQuery } from "../database/today"
 import { useUpdateToday } from "../database/today"
-import { yesterdayExchangeQuery } from "../database/exchange"
+import { todayExchangeQuery } from "../database/exchange"
 import Change from "../components/Change"
 import { useTitle } from "../layouts/routes"
 import DashboardTable from "./DashboardTable"
 
 const Dashboard = () => {
   const title = useTitle()
-  const exchange = useRecoilValue(yesterdayExchangeQuery)
+  const exchange = useRecoilValue(todayExchangeQuery)
   const { total } = useRecoilValue(todayBalancesQuery)
   const balancesHistory = useRecoilValue(balancesHistoryQuery)
   const depositsHistory = useRecoilValue(depositsHistoryState)
