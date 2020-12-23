@@ -29,8 +29,13 @@ const Tickers = () => {
 
   return (
     <PageHeader title={title} extra={[<AddTickerModal key="add" />]}>
-      <Table dataSource={dataSource} pagination={false} rowKey="tickerKey">
-        <Column title="이름" dataIndex="name" align="center" />
+      <Table
+        dataSource={dataSource}
+        pagination={false}
+        rowKey="tickerKey"
+        scroll={{ x: true }}
+      >
+        <Column title="이름" dataIndex="name" align="center" fixed="left" />
         <Column title="통화" dataIndex="currency" align="center" />
         <Column title="가격" dataIndex="price" align="center" />
         <Column

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Radio, Checkbox, PageHeader, Card } from "antd"
+import { Radio, Checkbox, PageHeader, Card, Space } from "antd"
 import { helpers } from "chart.js"
 import { head, prepend } from "ramda"
 import { Line } from "react-chartjs-2"
@@ -95,27 +95,27 @@ const Chart = () => {
     <PageHeader
       title={title}
       extra={[
-        <Checkbox
-          checked={showDeposits}
-          onChange={(e) => setShowDeposits(e.target.checked)}
-          key="checkbox"
-        >
-          입출금
-        </Checkbox>,
-        <Radio.Group
-          options={Object.values(Range).map((value) => ({
-            label: value,
-            value,
-          }))}
-          onChange={(e) => setRange(e.target.value)}
-          value={range}
-          optionType="button"
-          buttonStyle="solid"
-          key="radio"
-        />,
+        <Space wrap key="filter">
+          <Checkbox
+            checked={showDeposits}
+            onChange={(e) => setShowDeposits(e.target.checked)}
+          >
+            입출금
+          </Checkbox>
+          <Radio.Group
+            options={Object.values(Range).map((value) => ({
+              label: value,
+              value,
+            }))}
+            onChange={(e) => setRange(e.target.value)}
+            value={range}
+            optionType="button"
+            buttonStyle="solid"
+          />
+        </Space>,
       ]}
     >
-      <Card style={{ padding: 32 }}>
+      <Card>
         <Line
           height={240}
           data={{ datasets }}

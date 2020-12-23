@@ -41,7 +41,6 @@ const DepositsHistory = () => {
           dataIndex="balance"
           render={formatM}
           align="right"
-          responsive={["sm"]}
         />
       </Table>
     </PageHeader>

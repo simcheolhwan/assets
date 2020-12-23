@@ -16,15 +16,16 @@ const DashboardTable = () => {
       pagination={false}
       rowKey="balanceKey"
       size="small"
+      scroll={{ x: true }}
     >
+      <Column title="항목" dataIndex="ticker" align="center" fixed="left" />
       <Column
         title="위치"
         dataIndex="wallet"
         render={(wallet) => <Tag>{wallet}</Tag>}
         align="center"
-        responsive={["sm"]}
       />
-      <Column title="항목" dataIndex="ticker" align="center" />
+
       <Column<{ currency: CurrencyTicker }>
         title="가격"
         dataIndex="price"
@@ -36,35 +37,25 @@ const DashboardTable = () => {
         dataIndex="balance"
         render={formatAmount}
         align="right"
-        responsive={["sm"]}
       />
-      <Column
-        title="가치"
-        dataIndex="value"
-        render={formatKRW}
-        align="right"
-        responsive={["sm"]}
-      />
+      <Column title="가치" dataIndex="value" render={formatKRW} align="right" />
       <Column
         title="비율"
         dataIndex="ratio"
         render={(value) => percent(value, true)}
         align="center"
-        responsive={["sm"]}
       />
       <Column
         title="목표"
         dataIndex="aim"
         render={(value) => percent(value, true)}
         align="center"
-        responsive={["sm"]}
       />
       <Column
         title="리밸런싱"
         dataIndex="rebalance"
         render={(amount) => <Change format={formatAmount}>{amount}</Change>}
         align="center"
-        responsive={["sm"]}
       />
     </Table>
   )
