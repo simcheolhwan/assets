@@ -80,12 +80,13 @@ const Chart = () => {
   }
 
   /* render */
-  const getAffix = (date: string) => {
-    const deposit = depositsHistory.find((history) => history.date === date)
-    return deposit && showDeposits
-      ? [deposit.title, formatM(deposit.amount)].join(" ")
-      : ""
-  }
+  const getAffix = (date: string) =>
+    !showDeposits
+      ? ""
+      : depositsHistory
+          .filter((history) => history.date === date)
+          .map(({ title, amount }) => [title, formatM(amount)].join(" "))
+          .join(", ")
 
   const datasets = [
     { dataset: balancesDatasets, valid: showBalances },
