@@ -25,6 +25,7 @@ const Chart = () => {
   const title = useTitle()
 
   /* state */
+  const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(true)
   const [range, setRange] = useState<Range>(Range.MAX)
   const filter = ({ t }: { t: Date }) =>
@@ -64,15 +65,11 @@ const Chart = () => {
   const depositsHistory = useRecoilValue(depositsHistoryState)
   const initial = {
     date: formatDate(startOfYear(new Date(head(depositsHistory)!.date))),
-    amount: 0,
     balance: 0,
-    title: "시작",
   }
 
   const depositsData = prepend(initial, depositsHistory)
-    .map(({ date, balance, ...rest }) => {
-      return { t: new Date(date), y: balance, ...rest }
-    })
+    .map(({ date, balance }) => ({ t: new Date(date), y: balance }))
     .filter(filter)
 
   const depositsDatasets = {
@@ -83,21 +80,31 @@ const Chart = () => {
   }
 
   /* render */
-  const getAffix = (datasetIndex: number, index: number) => {
-    const { title, amount } = depositsData[index]
-    const valid = showDeposits && datasetIndex === 1
-    return valid ? `${title} ${amount ? formatM(amount) : ""}` : ""
+  const getAffix = (date: string) => {
+    const deposit = depositsHistory.find((history) => history.date === date)
+    return deposit && showDeposits
+      ? [deposit.title, formatM(deposit.amount)].join(" ")
+      : ""
   }
 
-  const datasets = showDeposits
-    ? [balancesDatasets, depositsDatasets]
-    : [balancesDatasets]
+  const datasets = [
+    { dataset: balancesDatasets, valid: showBalances },
+    { dataset: depositsDatasets, valid: showDeposits },
+  ]
+    .filter(({ valid }) => valid)
+    .map(({ dataset }) => dataset)
 
   return (
     <PageHeader
       title={title}
       extra={[
         <Space wrap key="filter">
+          <Checkbox
+            checked={showBalances}
+            onChange={(e) => setShowBalances(e.target.checked)}
+          >
+            잔고
+          </Checkbox>
           <Checkbox
             checked={showDeposits}
             onChange={(e) => setShowDeposits(e.target.checked)}
@@ -168,8 +175,8 @@ const Chart = () => {
               yPadding: 8,
               callbacks: {
                 title: ([{ value }]) => (value ? formatKRW(Number(value)) : ""),
-                label: ({ label, datasetIndex, index }) => {
-                  const affix = getAffix(datasetIndex!, index!)
+                label: ({ label }) => {
+                  const affix = getAffix(formatDate(label))
                   return label ? [formatDate(label), affix].join(" ") : ""
                 },
               },
