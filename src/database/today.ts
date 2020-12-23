@@ -5,8 +5,7 @@ import { latest } from "../utils/history"
 import { updateToday, contentsState } from "./database"
 import { lunaPriceQuery, ustBalanceQuery } from "./terra"
 import { lpBalanceQuery, symbolPriceQuery } from "./mirror"
-import { stockPriceQuery } from "./polygon"
-import { todayExchangeQuery } from "./exchange"
+import { prevExchangeQuery, stockPriceQuery } from "./polygon"
 
 export const todayQuery = selector({
   key: "today",
@@ -57,7 +56,9 @@ export const todayQuery = selector({
 
     const balanceItem = merge(prevBalances, balanceDict, "balance")
     const priceItem = merge(prevPrices, priceDict, "price")
-    const updates = { balanceItem, priceItem }
+    const exchange = get(prevExchangeQuery)
+    const exchangeItem = { USD: exchange }
+    const updates = { balanceItem, priceItem, exchangeItem }
 
     const isTodayExists = [balances, prices].every(
       (group) => last(Object.keys(group).sort()) === formatDate()
@@ -71,8 +72,13 @@ export const todayQuery = selector({
 
 export const useUpdateToday = () => {
   const today = useRecoilValue(todayQuery)
-  const { balances, prices } = useRecoilValue(contentsState)
-  const yesterday = { balanceItem: latest(balances), priceItem: latest(prices) }
+  const { balances, prices, exchanges } = useRecoilValue(contentsState)
+  const yesterday = {
+    balanceItem: latest(balances),
+    priceItem: latest(prices),
+    exchangeItem: latest(exchanges),
+  }
+
   const isChanged = !equals(today, yesterday)
 
   const update = async () => {
@@ -87,8 +93,7 @@ export const todayBalancesQuery = selector({
   get: ({ get }) => {
     const { tickers, wallets, depts } = get(contentsState)
     const today = get(todayQuery)
-    const exchange = get(todayExchangeQuery)
-    return calc({ ...today, tickers, wallets, depts, exchange })
+    return calc({ ...today, tickers, wallets, depts })
   },
 })
 
@@ -103,7 +108,7 @@ export const balancesHistoryQuery = selector({
         ...rest,
         balanceItem: balances[date],
         priceItem: prices[date],
-        exchange: exchanges[date].USD,
+        exchangeItem: exchanges[date],
       }),
     }))
   },
@@ -111,21 +116,22 @@ export const balancesHistoryQuery = selector({
 
 /* helpers */
 interface Params {
-  exchange: number
   balanceItem: BalanceItem
   priceItem: PriceItem
+  exchangeItem: ExchangeItem
   tickers: Tickers
   wallets: Wallets
   depts: Depts
 }
 
-const calc = (params: Params) => {
-  const { exchange, balanceItem, priceItem, tickers, wallets, depts } = params
+const calc = ({ balanceItem, priceItem, exchangeItem, ...rest }: Params) => {
+  const { tickers, wallets, depts } = rest
 
   const data = Object.values(balanceItem).map((data) => {
     const { balance, tickerKey, walletKey } = data
     const price = priceItem[tickerKey]?.price ?? 1
     const { currency, name: ticker, icon, aim } = tickers[tickerKey]
+    const { USD: exchange } = exchangeItem
     const rate = currency === "KRW" ? 1 : exchange
     const value = balance * price * rate
     const wallet = wallets[walletKey]

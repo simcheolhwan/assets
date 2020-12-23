@@ -57,6 +57,7 @@ interface Dept {
 interface DayItem {
   balanceItem: BalanceItem
   priceItem: PriceItem
+  exchangeItem: ExchangeItem
 }
 
 /* history */

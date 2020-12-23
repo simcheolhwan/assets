@@ -4,7 +4,6 @@ import { useRecoilValue } from "recoil"
 import { Layout, PageHeader, Spin } from "antd"
 
 import { loadingState, useDatabase } from "../database/database"
-import { useTodayExchange } from "../database/exchange"
 
 import useAuth, { authState } from "../database/auth"
 import routes from "./routes"
@@ -16,7 +15,6 @@ const { Content } = Layout
 
 const App = () => {
   useDatabase()
-  useTodayExchange()
 
   const auth = useRecoilValue(authState)
   const loading = useRecoilValue(loadingState)

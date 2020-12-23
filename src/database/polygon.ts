@@ -1,4 +1,4 @@
-import { selectorFamily } from "recoil"
+import { selector, selectorFamily } from "recoil"
 import axios from "axios"
 
 const config = {
@@ -7,10 +7,19 @@ const config = {
 }
 
 /* previous exchange rate */
-export const prevExchange = () => {
-  const path = "/v2/aggs/ticker/C:USDKRW/prev"
-  return axios.get<PolygonResponse>(path, config)
-}
+export const prevExchangeQuery = selector({
+  key: "prevExchange",
+  get: async () => {
+    try {
+      const path = "/v2/aggs/ticker/C:USDKRW/prev"
+      const { data } = await axios.get<PolygonResponse>(path, config)
+      const [{ c }] = data.results
+      return c
+    } catch {
+      return 0
+    }
+  },
+})
 
 /* stock price */
 export const stockPriceQuery = selectorFamily({

@@ -74,11 +74,12 @@ export const addTicker = async (ticker: Ticker) =>
 
 export const updateToday = async (
   date: string,
-  { balanceItem, priceItem }: DayItem
+  { balanceItem, priceItem, exchangeItem }: DayItem
 ) => {
   const updates = {
     [`/balances/${date}`]: balanceItem,
     [`/prices/${date}`]: priceItem,
+    [`/exchanges/${date}`]: exchangeItem,
   }
 
   await db.ref().update(updates)
