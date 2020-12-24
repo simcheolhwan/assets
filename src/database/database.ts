@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
-import { notification } from "antd"
 import { db } from "../firebase"
 import { authState } from "./auth"
 
@@ -86,9 +85,4 @@ export const updateDayData = async (
   }
 
   await db.ref().update(updates)
-  notification.open({
-    message: "업데이트 완료",
-    description: "최신 잔고와 가격을 데이터베이스에 업데이트했습니다.",
-    placement: "bottomRight",
-  })
 }

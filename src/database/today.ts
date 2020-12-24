@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { atom, selectorFamily, useRecoilState, useRecoilValue } from "recoil"
 import { equals, last } from "ramda"
+import { notification } from "antd"
 import { v4 } from "uuid"
 
 import { formatDate } from "../utils/format"
@@ -94,7 +95,15 @@ export const useUpdateToday = () => {
   const todayItem = useRecoilValue(todayItemQuery(dataIndex))
   const prevTodayItem = useRecoilValue(dayItemQuery(today))
 
-  const update = async () => await updateDayData(today, todayItem)
+  const update = async () => {
+    await updateDayData(today, todayItem)
+    notification.open({
+      message: "업데이트 완료",
+      description: "최신 잔고와 가격을 데이터베이스에 업데이트했습니다.",
+      placement: "bottomRight",
+    })
+  }
+
   const refresh = () => setDataIndex(v4())
   const isChanged = !equals(todayItem, prevTodayItem)
 
