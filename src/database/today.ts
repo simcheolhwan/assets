@@ -147,6 +147,7 @@ export const updateTodayQuery = selector({
         description: differences.map(getMessage).join("\n"),
         placement: "bottomRight",
         style: { whiteSpace: "pre-line" },
+        duration: 15,
       })
     }
 
