@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../utils/format"
 import { isCurrencyTicker } from "../utils/format"
 import { percent } from "../utils/format"
-import { todayBalancesQuery } from "../database/today"
+import { dayQuery } from "../database/day"
 import { ReactComponent as Won } from "../icons/won.svg"
 import { ReactComponent as Dollar } from "../icons/dollar.svg"
 import Change from "../components/Change"
@@ -22,8 +22,8 @@ const signSVG: Record<CurrencyTicker, ReactNode> = {
   USD: <Dollar {...ICON} />,
 }
 
-const DashboardTable = () => {
-  const { dataSource } = useRecoilValue(todayBalancesQuery)
+const DashboardTable = ({ date }: { date: string }) => {
+  const { dataSource } = useRecoilValue(dayQuery(date))
 
   return (
     <Table

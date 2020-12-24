@@ -1,10 +1,7 @@
-import { Suspense } from "react"
 import { Route, Switch } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { Layout, PageHeader, Spin } from "antd"
-
 import { loadingState, useDatabase } from "../database/database"
-
 import useAuth, { authState } from "../database/auth"
 import routes from "./routes"
 import Nav from "./Nav"
@@ -36,15 +33,13 @@ const App = () => {
             <SignIn onSignIn={signIn} />
           </PageHeader>
         ) : (
-          <Suspense fallback={spin}>
-            <Switch>
-              {routes.map((route) => (
-                <Route {...route} exact={route.path === "/"} key={route.path} />
-              ))}
+          <Switch>
+            {routes.map((route) => (
+              <Route {...route} exact={route.path === "/"} key={route.path} />
+            ))}
 
-              <Route path="/signout" component={SignOut} />
-            </Switch>
-          </Suspense>
+            <Route path="/signout" component={SignOut} />
+          </Switch>
         )}
       </Content>
     </Layout>

@@ -86,5 +86,6 @@ export const updateDayData = async (
   notification.open({
     message: "업데이트 완료",
     description: "최신 잔고와 가격을 데이터베이스에 업데이트했습니다.",
+    placement: "bottomRight",
   })
 }

@@ -1,18 +1,17 @@
-import { PageHeader, Table, Typography } from "antd"
+import { Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatM, formatDateWith } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
-import { useTitle } from "../layouts/routes"
+import Page from "../layouts/Page"
 
 const { Column } = Table
 const { Text } = Typography
 
 const DepositsHistory = () => {
-  const title = useTitle()
   const dataSource = useRecoilValue(depositsHistoryState)
 
   return (
-    <PageHeader title={title}>
+    <Page>
       <Table
         dataSource={dataSource}
         pagination={false}
@@ -43,7 +42,7 @@ const DepositsHistory = () => {
           align="right"
         />
       </Table>
-    </PageHeader>
+    </Page>
   )
 }
 

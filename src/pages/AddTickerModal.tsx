@@ -16,7 +16,7 @@ const AddTickerModal = () => {
 
   return (
     <>
-      <Button type="primary" onClick={open}>
+      <Button type="default" onClick={open}>
         추가하기
       </Button>
 

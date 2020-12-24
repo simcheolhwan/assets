@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Radio, Checkbox, PageHeader, Card, Space } from "antd"
+import { Radio, Checkbox, Card, Space } from "antd"
 import { helpers } from "chart.js"
 import { head, prepend } from "ramda"
 import { Line } from "react-chartjs-2"
@@ -9,8 +9,8 @@ import { subMonths, subQuarters, subYears } from "date-fns"
 
 import { formatM, formatDate, formatKRW } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
-import { balancesHistoryQuery } from "../database/today"
-import { useTitle } from "../layouts/routes"
+import { historyQuery } from "../database/day"
+import Page from "../layouts/Page"
 
 enum Range {
   "W" = "1W",
@@ -22,8 +22,6 @@ enum Range {
 }
 
 const Chart = () => {
-  const title = useTitle()
-
   /* state */
   const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(true)
@@ -49,9 +47,9 @@ const Chart = () => {
   }
 
   /* data: balances */
-  const balancesHistory = useRecoilValue(balancesHistoryQuery)
-  const balanceData = balancesHistory
-    .map(({ date, balances }) => ({ t: new Date(date), y: balances.total }))
+  const history = useRecoilValue(historyQuery)
+  const balanceData = history
+    .map(({ date, total }) => ({ t: new Date(date), y: total }))
     .filter(filter)
 
   const balancesDatasets = {
@@ -96,22 +94,23 @@ const Chart = () => {
     .map(({ dataset }) => dataset)
 
   return (
-    <PageHeader
-      title={title}
-      extra={[
-        <Space wrap key="filter">
+    <Page
+      extra={
+        <Space wrap>
           <Checkbox
             checked={showBalances}
             onChange={(e) => setShowBalances(e.target.checked)}
           >
             잔고
           </Checkbox>
+
           <Checkbox
             checked={showDeposits}
             onChange={(e) => setShowDeposits(e.target.checked)}
           >
             입출금
           </Checkbox>
+
           <Radio.Group
             options={Object.values(Range).map((value) => ({
               label: value,
@@ -122,8 +121,8 @@ const Chart = () => {
             optionType="button"
             buttonStyle="solid"
           />
-        </Space>,
-      ]}
+        </Space>
+      }
     >
       <Card>
         <Line
@@ -185,7 +184,7 @@ const Chart = () => {
           }}
         />
       </Card>
-    </PageHeader>
+    </Page>
   )
 }
 

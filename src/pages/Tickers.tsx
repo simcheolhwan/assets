@@ -1,34 +1,18 @@
-import { PageHeader, Table } from "antd"
+import { Table } from "antd"
 import { useRecoilValue } from "recoil"
-import { isNil } from "ramda"
-import { yesterday } from "../utils/history"
-import { contentsState } from "../database/database"
-import { todayDataQuery } from "../database/today"
-import { useTitle } from "../layouts/routes"
-import AddTickerModal from "./AddTickerModal"
+import { today } from "../utils/history"
+import { dayPricesQuery } from "../database/day"
 import Change from "../components/Change"
+import Page from "../layouts/Page"
+import AddTickerModal from "./AddTickerModal"
 
 const { Column } = Table
 
 const Tickers = () => {
-  const title = useTitle()
-  const { tickers, prices } = useRecoilValue(contentsState)
-  const { priceItem } = useRecoilValue(todayDataQuery)
-  const priceItemYesterday = prices[yesterday]
-
-  const dataSource = Object.values(tickers)
-    .map((ticker) => {
-      const { tickerKey } = ticker
-      const price = priceItem[tickerKey]?.price
-      const yesterday = priceItemYesterday[tickerKey]?.price
-      const change = price ? price / yesterday - 1 : undefined
-      return { ...ticker, price, change }
-    })
-    .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
-    .sort(({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b)))
+  const dataSource = useRecoilValue(dayPricesQuery(today))
 
   return (
-    <PageHeader title={title} extra={[<AddTickerModal key="add" />]}>
+    <Page>
       <Table
         dataSource={dataSource}
         pagination={false}
@@ -52,7 +36,11 @@ const Tickers = () => {
           responsive={["sm"]}
         />
       </Table>
-    </PageHeader>
+
+      <div style={{ marginTop: 16 }}>
+        <AddTickerModal key="add" />
+      </div>
+    </Page>
   )
 }
 
