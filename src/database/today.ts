@@ -1,7 +1,7 @@
 import { atom, selector, selectorFamily } from "recoil"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { equals, last } from "ramda"
-import { message } from "antd"
+import { notification } from "antd"
 import { v4 } from "uuid"
 
 import { formatDate } from "../utils/format"
@@ -136,12 +136,18 @@ export const updateTodayQuery = selector({
 
     const differences = [...balanceDiff, ...priceDiff, ...exchangeDiff]
 
+    type Diff = { name: string; oldValue: number; newValue: number }
+    const getMessage = ({ name, oldValue, newValue }: Diff) =>
+      `${name}: ${oldValue} → ${newValue}`
+
     const update = async () => {
       await updateDayData(today, todayItem)
-
-      differences.forEach(({ name, oldValue, newValue }) =>
-        message.success(`${name}: ${oldValue} → ${newValue}`)
-      )
+      notification.open({
+        message: "업데이트 완료",
+        description: differences.map(getMessage).join("\n"),
+        placement: "bottomRight",
+        style: { whiteSpace: "pre-line" },
+      })
     }
 
     return { isChanged, update }
