@@ -5,6 +5,9 @@ import { format } from "date-fns"
 export const getSign = (ticker: CurrencyTicker) =>
   ({ KRW: "₩", USD: "$" }[ticker])
 
+export const isCurrencyTicker = (name: string): name is CurrencyTicker =>
+  ["KRW", "USD"].includes(name)
+
 /* amount */
 export const formatAmountWith = (
   currency?: CurrencyTicker,

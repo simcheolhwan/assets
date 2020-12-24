@@ -1,11 +1,26 @@
+import { ReactNode } from "react"
 import { Table, Tag } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../utils/format"
+import { isCurrencyTicker } from "../utils/format"
 import { percent } from "../utils/format"
 import { todayBalancesQuery } from "../database/today"
+import { ReactComponent as Won } from "../icons/won.svg"
+import { ReactComponent as Dollar } from "../icons/dollar.svg"
 import Change from "../components/Change"
 
 const { Column } = Table
+
+const ICON = {
+  height: 20,
+  fill: "white",
+  style: { filter: "grayscale(100%)", opacity: 0.25, verticalAlign: "top" },
+}
+
+const signSVG: Record<CurrencyTicker, ReactNode> = {
+  KRW: <Won {...ICON} />,
+  USD: <Dollar {...ICON} />,
+}
 
 const DashboardTable = () => {
   const { dataSource } = useRecoilValue(todayBalancesQuery)
@@ -18,18 +33,14 @@ const DashboardTable = () => {
       size="small"
       scroll={{ x: true }}
     >
-      <Column
+      <Column<{ ticker: string }>
         dataIndex="icon"
-        render={(icon) =>
-          icon && (
-            <img
-              src={icon}
-              alt=""
-              width={20}
-              height={20}
-              style={{ filter: "grayscale(100%)", opacity: 0.25 }}
-            />
-          )
+        render={(icon, { ticker }) =>
+          isCurrencyTicker(ticker) ? (
+            signSVG[ticker]
+          ) : icon ? (
+            <img src={icon} {...ICON} alt="" />
+          ) : null
         }
         align="center"
         fixed="left"
@@ -42,7 +53,7 @@ const DashboardTable = () => {
         align="center"
       />
 
-      <Column<{ currency: CurrencyTicker }>
+      <Column<Ticker>
         title="가격"
         dataIndex="price"
         render={(price, { currency }) => formatAmountWith(currency)(price)}
