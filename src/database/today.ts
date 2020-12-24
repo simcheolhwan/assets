@@ -1,7 +1,7 @@
-import { useEffect } from "react"
-import { atom, selectorFamily, useRecoilState, useRecoilValue } from "recoil"
+import { atom, selector, selectorFamily } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { equals, last } from "ramda"
-import { notification } from "antd"
+import { message } from "antd"
 import { v4 } from "uuid"
 
 import { formatDate } from "../utils/format"
@@ -14,9 +14,10 @@ import { queryExchange, queryStockPrice } from "./polygon"
 
 export const dataIndexState = atom({ key: "dataIndex", default: v4() })
 
-export const todayItemQuery = selectorFamily({
+export const todayItemQuery = selector({
   key: "todayItem",
-  get: (uuid: string) => async ({ get }) => {
+  get: async ({ get }) => {
+    get(dataIndexState)
     const { balances, prices, exchanges, tickers, wallets } = get(contentsState)
     const prevBalances = latest(balances)
     const prevPrices = latest(prices)
@@ -90,39 +91,69 @@ export const dayItemQuery = selectorFamily({
   },
 })
 
-export const useUpdateToday = () => {
-  const [dataIndex, setDataIndex] = useRecoilState(dataIndexState)
-  const todayItem = useRecoilValue(todayItemQuery(dataIndex))
-  const prevTodayItem = useRecoilValue(dayItemQuery(today))
+export const updateTodayQuery = selector({
+  key: "updateToday",
+  get: ({ get }) => {
+    const { balances, prices, exchanges, tickers } = get(contentsState)
+    const prevTodayItem = get(dayItemQuery(today))
+    const todayItem = get(todayItemQuery)
+    const isChanged = !equals(todayItem, prevTodayItem)
+    const diffItem: Partial<DayItem> = diff(todayItem, prevTodayItem)
+    const { priceItem, balanceItem, exchangeItem } = diffItem
 
-  const update = async () => {
-    await updateDayData(today, todayItem)
-    notification.open({
-      message: "업데이트 완료",
-      description: "최신 잔고와 가격을 데이터베이스에 업데이트했습니다.",
-      placement: "bottomRight",
-    })
-  }
+    const balanceDiff = !balanceItem
+      ? []
+      : Object.entries(balanceItem).map(([balanceKey, { balance }]) => {
+          const { tickerKey } = latest(balances)[balanceKey]
+          const { name } = tickers[tickerKey]
+          return {
+            name,
+            newValue: balance,
+            oldValue: latest(balances)[balanceKey].balance,
+          }
+        })
 
-  const refresh = () => setDataIndex(v4())
-  const isChanged = !equals(todayItem, prevTodayItem)
+    const priceDiff = !priceItem
+      ? []
+      : Object.entries(priceItem).map(([tickerKey, { price }]) => {
+          const { name } = tickers[tickerKey]
+          return {
+            name,
+            newValue: price,
+            oldValue: latest(prices)[tickerKey].price,
+          }
+        })
 
-  useEffect(() => {
-    const verbose = () => {
-      const difference = diff(todayItem, prevTodayItem)
-      const { priceItem, balanceItem, exchangeItem } = difference
+    const exchangeDiff = !exchangeItem
+      ? []
+      : Object.entries(exchangeItem).map(([currency, exchange]) => {
+          return {
+            name: currency,
+            newValue: exchange,
+            oldValue: latest(exchanges)[currency as "USD"],
+          }
+        })
 
-      console.group("변경")
-      priceItem && console.table(priceItem)
-      balanceItem && console.table(balanceItem)
-      exchangeItem && console.table(exchangeItem)
-      console.groupEnd()
+    const differences = [...balanceDiff, ...priceDiff, ...exchangeDiff]
+
+    const update = async () => {
+      await updateDayData(today, todayItem)
+
+      differences.forEach(({ name, oldValue, newValue }) =>
+        message.success(`${name}: ${oldValue} → ${newValue}`)
+      )
     }
 
-    isChanged && verbose()
-  }, [isChanged, todayItem, prevTodayItem])
+    return { isChanged, update }
+  },
+})
 
-  return { isChanged, update, refresh }
+export const useUpdateToday = () => {
+  const setDataIndex = useSetRecoilState(dataIndexState)
+  const updateToday = useRecoilValue(updateTodayQuery)
+  const refresh = () => setDataIndex(v4())
+
+  return { ...updateToday, refresh }
 }
 
 /* utils */
