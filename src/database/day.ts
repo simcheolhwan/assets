@@ -1,4 +1,4 @@
-import { selector, selectorFamily, waitForAll } from "recoil"
+import { selector, selectorFamily } from "recoil"
 import { isNil, last, reverse, uniq } from "ramda"
 import { isBefore } from "date-fns"
 import { yesterday } from "../utils/history"
@@ -78,6 +78,7 @@ export const dayQuery = selectorFamily({
   },
 })
 
+/* tickers */
 export const dayPricesQuery = selectorFamily({
   key: "dayPrices",
   get: (date: string) => ({ get }) => {
@@ -104,6 +105,7 @@ export const dayPricesQuery = selectorFamily({
   },
 })
 
+/* history */
 export const prevDateQuery = selectorFamily({
   key: "prevDate",
   get: (date: string) => ({ get }) => {
@@ -125,15 +127,6 @@ export const daysQuery = selector({
   get: ({ get }) => {
     const { balances } = get(contentsState)
     return uniq(Object.keys(balances).sort())
-  },
-})
-
-export const historyQuery = selector({
-  key: "history",
-  get: ({ get }) => {
-    const days = get(daysQuery)
-    const history = get(waitForAll(days.map(dayStatusQuery)))
-    return history
   },
 })
 
