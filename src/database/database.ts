@@ -1,7 +1,8 @@
 import { useEffect } from "react"
-import { atom, selector, useSetRecoilState } from "recoil"
+import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
 import { notification } from "antd"
 import { db } from "../firebase"
+import { authState } from "./auth"
 
 const initial = {
   tickers: {},
@@ -50,13 +51,15 @@ export const depositsHistoryState = selector({
 
 /* load: database */
 export const useDatabase = () => {
+  const { contents: authenticated } = useRecoilValue(authState)
   const setDatabase = useSetRecoilState(databaseState)
 
   useEffect(() => {
-    db.ref().on("value", (snapshot) => {
-      setDatabase({ state: "hasValue", contents: snapshot.val() || initial })
-    })
-  }, [setDatabase])
+    authenticated &&
+      db.ref().on("value", (snapshot) => {
+        setDatabase({ state: "hasValue", contents: snapshot.val() || initial })
+      })
+  }, [authenticated, setDatabase])
 }
 
 /* update */
