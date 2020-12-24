@@ -1,4 +1,4 @@
-type State = "loading" | "hasValue"
+type State = "loading" | "hasValue" | "hydrated"
 type CurrencyTicker = "KRW" | "USD"
 
 /* database */

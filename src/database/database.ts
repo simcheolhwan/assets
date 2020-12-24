@@ -13,10 +13,21 @@ const initial = {
   depts: {},
 }
 
+const init = () => {
+  const local = localStorage.getItem("database") ?? JSON.stringify(initial)
+
+  try {
+    const parsed: Database = JSON.parse(local)
+    return { state: "hasValue" as const, contents: parsed }
+  } catch (error) {
+    return { state: "loading" as const, contents: initial }
+  }
+}
+
 /* state: database */
 export const databaseState = atom<Loadable<Database>>({
   key: "database",
-  default: { state: "loading", contents: initial },
+  default: init(),
 })
 
 /* selectors: database */
@@ -56,7 +67,9 @@ export const useDatabase = () => {
   useEffect(() => {
     authenticated &&
       db.ref().on("value", (snapshot) => {
-        setDatabase({ state: "hasValue", contents: snapshot.val() || initial })
+        const contents = snapshot.val() || initial
+        setDatabase({ state: "hydrated", contents })
+        localStorage.setItem("database", JSON.stringify(contents))
       })
   }, [authenticated, setDatabase])
 }
