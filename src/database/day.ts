@@ -1,5 +1,5 @@
 import { selector, selectorFamily, waitForAll } from "recoil"
-import { isNil, reverse, uniq } from "ramda"
+import { isNil, last, reverse, uniq } from "ramda"
 import { isBefore } from "date-fns"
 import { yesterday } from "../utils/history"
 import { contentsState, depositsHistoryState } from "./database"
@@ -109,6 +109,14 @@ export const prevDateQuery = selectorFamily({
   get: (date: string) => ({ get }) => {
     const days = get(daysQuery)
     return days[days.indexOf(date) - 1]
+  },
+})
+
+export const latestDateQuery = selector({
+  key: "latestDate",
+  get: ({ get }) => {
+    const days = get(daysQuery)
+    return last(days)!
   },
 })
 

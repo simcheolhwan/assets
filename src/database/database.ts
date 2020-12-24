@@ -14,14 +14,12 @@ const initial = {
 }
 
 const init = () => {
-  const local = localStorage.getItem("database") ?? JSON.stringify(initial)
+  const local = localStorage.getItem("database")
+  const parsed: Database = JSON.parse(local!)
 
-  try {
-    const parsed: Database = JSON.parse(local)
-    return { state: "hasValue" as const, contents: parsed }
-  } catch (error) {
-    return { state: "loading" as const, contents: initial }
-  }
+  return parsed
+    ? { state: "hasValue" as const, contents: parsed }
+    : { state: "loading" as const, contents: initial }
 }
 
 /* state: database */
