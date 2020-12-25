@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { ChartDataSets } from "chart.js"
 import { contentsState } from "../database/database"
 import { historyQuery } from "../database/chart"
-import { colors, dataset, tickerColors } from "./chartUtils"
+import { dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
 
 const ValuesChart = () => {

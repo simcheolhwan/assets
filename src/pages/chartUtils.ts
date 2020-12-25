@@ -1,3 +1,12 @@
+export enum Range {
+  "W" = "1W",
+  "M" = "1M",
+  "Q" = "1Q",
+  "Y" = "1Y",
+  "YTD" = "YTD",
+  "MAX" = "MAX",
+}
+
 export const colors = {
   red: "#e64c57",
   orange: "#dd794a",
