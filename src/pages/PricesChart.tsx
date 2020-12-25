@@ -28,6 +28,7 @@ const PricesChart = () => {
       }
     })
     .filter(({ data }) => (data as ChartPoint[]).some(({ y }) => y))
+    .sort(({ label: a = "" }, { label: b = "" }) => a.localeCompare(b))
 
   return (
     <>
