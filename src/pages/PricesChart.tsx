@@ -5,8 +5,19 @@ import { dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
 
 const PricesChart = () => {
-  const { tickers, prices } = useRecoilValue(contentsState)
+  const { tickers, prices, exchanges } = useRecoilValue(contentsState)
   const tickerKeys = Object.keys(tickers)
+
+  const exchangesDatasets = {
+    ...dataset,
+    borderColor: tickerColors["USD"],
+    borderWidth: 2,
+    label: "USD",
+    data: Object.entries(exchanges).map(([date, { USD }]) => {
+      const { USD: initialExchange } = Object.values(exchanges)[0]
+      return { t: new Date(date), y: (USD - initialExchange) / initialExchange }
+    }),
+  }
 
   const collectPrice = (tickerKey: string) =>
     Object.entries(prices).map(([date, priceItem]) => {
@@ -29,6 +40,7 @@ const PricesChart = () => {
     })
     .filter(({ data }) => (data as ChartPoint[]).some(({ y }) => y))
     .sort(({ label: a = "" }, { label: b = "" }) => a.localeCompare(b))
+    .concat(exchangesDatasets)
 
   return (
     <>
