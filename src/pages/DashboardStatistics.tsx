@@ -11,7 +11,7 @@ const DashboardStatistics = ({ date }: { date: string }) => {
     <Space size="large" wrap>
       <Statistic title="자본" value={formatKRW(total)} />
       <PnL {...pnl} />
-      <PnL {...pnlFromDeposit} date="투자금" />
+      <PnL {...pnlFromDeposit} date="마지막 투자" />
     </Space>
   )
 }
