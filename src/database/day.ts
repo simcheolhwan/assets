@@ -131,7 +131,7 @@ export const daysQuery = selector({
 })
 
 /* helpers */
-const calcPnL = (current: number, comparison: number) => {
+export const calcPnL = (current: number, comparison: number) => {
   const pnl = current - comparison
   const change = pnl / comparison
   const isChanged = Math.abs(change) >= 0.001

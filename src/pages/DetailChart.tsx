@@ -20,14 +20,12 @@ const DetailChart = () => {
   const tickerKeys = Object.keys(tickers)
 
   const collectHistory = (tickerKey: string) =>
-    history.map(({ date, dataSource }) => ({
-      t: new Date(date),
-      y: dataSource.reduce(
-        (acc, { value, tickerKey: key }) =>
-          key === tickerKey ? acc + value : acc,
-        0
-      ),
-    }))
+    history.map(({ date, dataSource }, index) => {
+      const { dataSource: prevDataSource } = history[index ? index - 1 : index]
+      const value1 = findValue(tickerKey, dataSource)
+      const value2 = findValue(tickerKey, prevDataSource)
+      return { t: new Date(date), y: value1 - value2 }
+    })
 
   const datasets = tickerKeys
     .reduce<ChartDataSets[]>((acc, tickerKey) => {
@@ -44,7 +42,7 @@ const DetailChart = () => {
         },
       ]
     }, [])
-    .filter(({ data }) => (data as ChartPoint[]).every(({ y }) => y))
+    .filter(({ data }) => (data as ChartPoint[]).some(({ y }) => y))
 
   return (
     <>
@@ -58,3 +56,9 @@ const DetailChart = () => {
 }
 
 export default DetailChart
+
+/* helpers */
+const findValue = (
+  tickerKey: string,
+  dataSource: { tickerKey: string; value: number }[]
+) => dataSource.find((d) => d.tickerKey === tickerKey)?.value ?? 0
