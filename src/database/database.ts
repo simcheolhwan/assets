@@ -74,17 +74,20 @@ export const useDatabase = () => {
 }
 
 /* update */
-export const addExchange = async (date: string, value: number) =>
-  await db.ref(`/exchanges/${date}`).set({ USD: value })
-
 export const addBalance = async (date: string, balance: BalanceItem) =>
   await db.ref(`/balances/${date}`).set(balance)
 
 export const addPrice = async (date: string, price: PriceItem) =>
   await db.ref(`/prices/${date}`).set(price)
 
+export const addExchange = async (date: string, value: number) =>
+  await db.ref(`/exchanges/${date}`).set({ USD: value })
+
 export const addTicker = async (ticker: Ticker) =>
   await db.ref(`/tickers/${ticker.tickerKey}`).set(ticker)
+
+export const addDeposit = async (deposits: Deposit[]) =>
+  await db.ref(`/deposits`).set(deposits)
 
 export const updateDayData = async (
   date: string,

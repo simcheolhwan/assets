@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil"
 import { formatM, formatDateWith } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import Page from "../layouts/Page"
+import AddDepositModal from "./AddDepositModal"
 
 const { Column } = Table
 const { Text } = Typography
@@ -11,7 +12,7 @@ const DepositsHistory = () => {
   const dataSource = useRecoilValue(depositsHistoryState)
 
   return (
-    <Page>
+    <Page extra>
       <Table
         dataSource={dataSource}
         pagination={false}
@@ -42,6 +43,10 @@ const DepositsHistory = () => {
           align="right"
         />
       </Table>
+
+      <div style={{ marginTop: 16 }}>
+        <AddDepositModal />
+      </div>
     </Page>
   )
 }
