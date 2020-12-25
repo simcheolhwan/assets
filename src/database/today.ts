@@ -3,6 +3,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import { equals, last } from "ramda"
 import { notification } from "antd"
 import { v4 } from "uuid"
+import { isBefore } from "date-fns"
 
 import { formatDate } from "../utils/format"
 import { latest, today } from "../utils/history"
@@ -73,7 +74,7 @@ export const todayItemQuery = selector({
       (group) => last(Object.keys(group).sort()) === today
     )
 
-    !isTodayExists && (await updateDayData(formatDate(), updates))
+    !isTodayExists && (await updateDayData(formatDate(), updates, Date.now()))
 
     return updates
   },
@@ -94,10 +95,16 @@ export const dayItemQuery = selectorFamily({
 export const updateTodayQuery = selector({
   key: "updateToday",
   get: ({ get }) => {
-    const { balances, prices, exchanges, tickers } = get(contentsState)
+    const contents = get(contentsState)
+    const { balances, prices, exchanges, tickers, updatedAt } = contents
     const prevTodayItem = get(dayItemQuery(today))
     const todayItem = get(todayItemQuery)
-    const isChanged = !equals(todayItem, prevTodayItem)
+
+    const now = Date.now()
+    const isChanged =
+      !equals(todayItem, prevTodayItem) &&
+      isBefore(new Date(updatedAt), new Date(now))
+
     const diffItem: Partial<DayItem> = diff(todayItem, prevTodayItem)
     const { priceItem, balanceItem, exchangeItem } = diffItem
 
@@ -141,14 +148,16 @@ export const updateTodayQuery = selector({
       `${name}: ${oldValue} → ${newValue}`
 
     const update = async () => {
-      await updateDayData(today, todayItem)
-      notification.open({
-        message: "업데이트 완료",
-        description: differences.map(getMessage).join("\n"),
-        placement: "bottomRight",
-        style: { whiteSpace: "pre-line" },
-        duration: 15,
-      })
+      if (isChanged) {
+        await updateDayData(today, todayItem, now)
+        notification.open({
+          message: "업데이트 완료",
+          description: differences.map(getMessage).join("\n"),
+          placement: "bottomRight",
+          style: { whiteSpace: "pre-line" },
+          duration: 15,
+        })
+      }
     }
 
     return { isChanged, update }

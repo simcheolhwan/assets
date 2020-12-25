@@ -12,6 +12,8 @@ interface Database {
 
   deposits: Deposit[]
   depts: Depts
+
+  updatedAt: number
 }
 
 type Tickers = Dictionary<Ticker>
