@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { Radio, Checkbox, Card, Space } from "antd"
+import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
@@ -19,6 +20,15 @@ enum Range {
   "Y" = "1Y",
   "YTD" = "YTD",
   "MAX" = "MAX",
+}
+
+const Unit: Record<Range, TimeScale["unit"]> = {
+  [Range.W]: "day",
+  [Range.M]: "day",
+  [Range.Q]: "month",
+  [Range.Y]: "month",
+  [Range.YTD]: "quarter",
+  [Range.MAX]: "quarter",
 }
 
 const Charts = () => {
@@ -125,7 +135,7 @@ const Charts = () => {
       }
     >
       <Card>
-        <Chart datasets={datasets} getAffix={getAffix} />
+        <Chart datasets={datasets} unit={Unit[range]} getAffix={getAffix} />
       </Card>
 
       <DetailChart />

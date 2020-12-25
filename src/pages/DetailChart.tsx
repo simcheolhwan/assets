@@ -49,7 +49,7 @@ const DetailChart = () => {
       <h1 style={{ marginTop: 16 }}>종목</h1>
 
       <Card>
-        <Chart datasets={datasets} legend />
+        <Chart datasets={datasets} unit="day" legend />
       </Card>
     </>
   )

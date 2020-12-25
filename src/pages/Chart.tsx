@@ -1,14 +1,15 @@
-import { ChartDataSets, helpers } from "chart.js"
+import { ChartDataSets, helpers, TimeScale } from "chart.js"
 import { Line } from "react-chartjs-2"
 import { formatDate, formatKRW, formatM } from "../utils/format"
 
 interface Props {
-  legend?: boolean
   datasets: ChartDataSets[]
+  legend?: boolean
+  unit?: TimeScale["unit"]
   getAffix?: (date: string) => string
 }
 
-const Chart = ({ legend, datasets, getAffix = () => "" }: Props) => (
+const Chart = ({ legend, unit, datasets, getAffix = () => "" }: Props) => (
   <Line
     data={{ datasets }}
     height={240}
@@ -24,7 +25,7 @@ const Chart = ({ legend, datasets, getAffix = () => "" }: Props) => (
             type: "time",
             display: true,
             gridLines: { display: false },
-            time: { unit: "quarter" },
+            time: { unit },
             ticks: { source: "auto", autoSkip: true },
           },
         ],
