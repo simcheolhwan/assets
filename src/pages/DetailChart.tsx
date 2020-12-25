@@ -1,6 +1,6 @@
 import { Card } from "antd"
 import { useRecoilValue } from "recoil"
-import { ChartDataSets, ChartPoint } from "chart.js"
+import { ChartDataSets } from "chart.js"
 import { contentsState } from "../database/database"
 import { historyQuery } from "../database/chart"
 import { colors, dataset } from "./chartUtils"

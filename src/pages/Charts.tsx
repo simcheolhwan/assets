@@ -1,11 +1,10 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { Radio, Checkbox, Card, Space } from "antd"
-import { head, prepend } from "ramda"
-import { isBefore, startOfYear, subWeeks } from "date-fns"
+import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
-import { formatM, formatDate } from "../utils/format"
+import { formatM } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import { historyQuery } from "../database/chart"
 import Page from "../layouts/Page"
@@ -27,13 +26,13 @@ const Charts = () => {
   const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(true)
   const [range, setRange] = useState<Range>(Range.MAX)
-  const filter = ({ t }: { t: Date }) =>
+  const filter = ({ t }: ChartPoint) =>
     ({
-      [Range.W]: isBefore(subWeeks(new Date(), 1), t),
-      [Range.M]: isBefore(subMonths(new Date(), 1), t),
-      [Range.Q]: isBefore(subQuarters(new Date(), 1), t),
-      [Range.Y]: isBefore(subYears(new Date(), 1), t),
-      [Range.YTD]: isBefore(startOfYear(new Date()), t),
+      [Range.W]: isAfter(t, subWeeks(new Date(), 1)),
+      [Range.M]: isAfter(t, subMonths(new Date(), 1)),
+      [Range.Q]: isAfter(t, subQuarters(new Date(), 1)),
+      [Range.Y]: isAfter(t, subYears(new Date(), 1)),
+      [Range.YTD]: isSameYear(t, new Date()),
       [Range.MAX]: true,
     }[range])
 
@@ -52,13 +51,23 @@ const Charts = () => {
 
   /* data: deposits */
   const depositsHistory = useRecoilValue(depositsHistoryState)
-  const initial = {
-    date: formatDate(startOfYear(new Date(head(depositsHistory)!.date))),
-    balance: 0,
-  }
+  const depositsData = depositsHistory
+    .reduce<ChartPoint[]>((acc, { date, balance }, index) => {
+      const prevDeposits = depositsHistory[index - 1]
+      const point = { t: new Date(date), y: balance }
 
-  const depositsData = prepend(initial, depositsHistory)
-    .map(({ date, balance }) => ({ t: new Date(date), y: balance }))
+      // Prepend the start of the year
+      const shouldPrepend =
+        !prevDeposits ||
+        !isSameYear(new Date(prevDeposits.date), new Date(date))
+
+      const prepend = {
+        t: startOfYear(new Date(date)),
+        y: !prevDeposits ? 0 : prevDeposits.balance,
+      }
+
+      return shouldPrepend ? [...acc, prepend, point] : [...acc, point]
+    }, [])
     .filter(filter)
 
   const depositsDatasets = {
