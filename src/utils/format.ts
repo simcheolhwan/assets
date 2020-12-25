@@ -28,7 +28,7 @@ export const formatKRW = formatAmountWith("KRW")
 export const formatExchange = formatAmountWith("KRW", true)
 
 export const formatM = (number: number) =>
-  number ? Math.round(number / 1e6) + "백만" : ""
+  number ? Math.round(number / 1e6) + "백만" : "0"
 
 /* date */
 export const formatDateWith = (fmt = "yyyy-MM-dd") => {
