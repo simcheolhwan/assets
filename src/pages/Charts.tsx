@@ -9,7 +9,7 @@ import PricesChart from "./PricesChart"
 const { TabPane } = Tabs
 
 const Charts = () => {
-  const [range, setRange] = useState<Range>(Range.MAX)
+  const [range, setRange] = useState<Range>(Range.W)
 
   const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(true)
