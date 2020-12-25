@@ -1,7 +1,7 @@
 import { atom, selector, selectorFamily } from "recoil"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { equals, last } from "ramda"
-import { notification } from "antd"
+import { message, notification } from "antd"
 import { v4 } from "uuid"
 import { isBefore } from "date-fns"
 
@@ -74,7 +74,10 @@ export const todayItemQuery = selector({
       (group) => last(Object.keys(group).sort()) === today
     )
 
-    !isTodayExists && (await updateDayData(formatDate(), updates, Date.now()))
+    if (!isTodayExists) {
+      await updateDayData(formatDate(), updates, Date.now())
+      message.success("오늘의 데이터를 처음으로 기록했습니다.")
+    }
 
     return updates
   },
