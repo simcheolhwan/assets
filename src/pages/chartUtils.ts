@@ -1,9 +1,22 @@
 export const colors = {
-  blue: "#1eb2ff",
-  aqua: "#47d7e2",
   red: "#e64c57",
   orange: "#dd794a",
+  yellow: "#ffec3d",
+  green: "#73d13d",
+  aqua: "#47d7e2",
+  blue: "#1eb2ff",
   purple: "#9b8ec5",
+  gray: "#d9d9d9",
+}
+
+export const tickerColors: Dictionary<string> = {
+  "mQQQ-UST LP": colors.blue,
+  "MIR-UST LP": colors.gray,
+  MIR: colors.gray,
+  TQQQ: colors.red,
+  LUNA: colors.yellow,
+  KRW: colors.green,
+  QQQ: colors.blue,
 }
 
 export const dataset = {

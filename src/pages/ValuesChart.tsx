@@ -3,27 +3,19 @@ import { useRecoilValue } from "recoil"
 import { ChartDataSets } from "chart.js"
 import { contentsState } from "../database/database"
 import { historyQuery } from "../database/chart"
-import { colors, dataset } from "./chartUtils"
+import { colors, dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
 
-const tickerColors: Dictionary<string> = {
-  "mQQQ-UST LP": colors.blue,
-  "MIR-UST LP": colors.aqua,
-  TQQQ: colors.red,
-  LUNA: colors.orange,
-  KRW: colors.purple,
-}
-
-const DetailChart = () => {
+const ValuesChart = () => {
   const history = useRecoilValue(historyQuery)
   const { tickers } = useRecoilValue(contentsState)
   const tickerKeys = Object.keys(tickers)
 
   const collectHistory = (tickerKey: string) =>
     history.map(({ date, dataSource }) => {
-      const { dataSource: prevDataSource } = history[0]
+      const { dataSource: initialDataSource } = history[0]
       const value1 = findValue(tickerKey, dataSource)
-      const value2 = findValue(tickerKey, prevDataSource)
+      const value2 = findValue(tickerKey, initialDataSource)
       return { t: new Date(date), y: value1 - value2 }
     })
 
@@ -46,7 +38,7 @@ const DetailChart = () => {
 
   return (
     <>
-      <h1 style={{ marginTop: 16 }}>종목</h1>
+      <h1 style={{ marginTop: 16 }}>가치</h1>
 
       <Card>
         <Chart datasets={datasets} unit="day" legend />
@@ -55,7 +47,7 @@ const DetailChart = () => {
   )
 }
 
-export default DetailChart
+export default ValuesChart
 
 /* helpers */
 const findValue = (

@@ -11,7 +11,8 @@ import { historyQuery } from "../database/chart"
 import Page from "../layouts/Page"
 import { colors, dataset } from "./chartUtils"
 import Chart from "./Chart"
-import DetailChart from "./DetailChart"
+import ValuesChart from "./ValuesChart"
+import PricesChart from "./PricesChart"
 
 enum Range {
   "W" = "1W",
@@ -138,7 +139,8 @@ const Charts = () => {
         <Chart datasets={datasets} unit={Unit[range]} getAffix={getAffix} />
       </Card>
 
-      <DetailChart />
+      <ValuesChart />
+      <PricesChart />
     </Page>
   )
 }
