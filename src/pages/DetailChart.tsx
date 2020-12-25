@@ -20,8 +20,8 @@ const DetailChart = () => {
   const tickerKeys = Object.keys(tickers)
 
   const collectHistory = (tickerKey: string) =>
-    history.map(({ date, dataSource }, index) => {
-      const { dataSource: prevDataSource } = history[index ? index - 1 : index]
+    history.map(({ date, dataSource }) => {
+      const { dataSource: prevDataSource } = history[0]
       const value1 = findValue(tickerKey, dataSource)
       const value2 = findValue(tickerKey, prevDataSource)
       return { t: new Date(date), y: value1 - value2 }
