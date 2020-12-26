@@ -1,5 +1,6 @@
 import { Card } from "antd"
 import { useRecoilValue } from "recoil"
+import { percent } from "../utils/format"
 import { contentsState } from "../database/database"
 import { dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
@@ -47,7 +48,7 @@ const PricesChart = () => {
       <h1 style={{ marginTop: 16 }}>가격</h1>
 
       <Card>
-        <Chart datasets={datasets} unit="day" legend percent />
+        <Chart datasets={datasets} format={percent} unit="day" legend />
       </Card>
     </>
   )

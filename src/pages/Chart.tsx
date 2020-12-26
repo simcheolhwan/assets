@@ -1,17 +1,18 @@
 import { ChartDataSets, helpers, TimeScale } from "chart.js"
 import { Line } from "react-chartjs-2"
-import { formatDate, formatKRW, formatM, percent } from "../utils/format"
+import { formatDate } from "../utils/format"
 
 interface Props {
   datasets: ChartDataSets[]
   legend?: boolean
   unit?: TimeScale["unit"]
-  percent?: boolean
+  format: (value: number) => string
+  formatY?: (value: number) => string
   getAffix?: (date: string) => string
 }
 
 const Chart = ({ legend, unit, datasets, ...props }: Props) => {
-  const { percent: isPercent, getAffix = () => "" } = props
+  const { format, formatY, getAffix = () => "" } = props
 
   return (
     <Line
@@ -46,7 +47,7 @@ const Chart = ({ legend, unit, datasets, ...props }: Props) => {
                 stepSize: 100 * 1e6,
                 padding: 20,
                 callback: (value) =>
-                  isPercent ? percent(Number(value)) : formatM(Number(value)),
+                  formatY?.(Number(value)) ?? format(Number(value)),
               },
             },
           ],
@@ -64,13 +65,7 @@ const Chart = ({ legend, unit, datasets, ...props }: Props) => {
           xPadding: 10,
           yPadding: 8,
           callbacks: {
-            title: ([{ value }]) =>
-              isPercent
-                ? percent(Number(value))
-                : value
-                ? formatKRW(Number(value))
-                : "",
-
+            title: ([{ value }]) => format(Number(value) ?? 0),
             label: ({ label }) => {
               const affix = getAffix(formatDate(label))
               return label ? [formatDate(label), affix].join(" ") : ""

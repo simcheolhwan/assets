@@ -1,12 +1,15 @@
-import { Card } from "antd"
+import { useState } from "react"
 import { useRecoilValue } from "recoil"
+import { Card, Radio } from "antd"
 import { ChartDataSets } from "chart.js"
+import { formatKRW, percent } from "../utils/format"
 import { contentsState } from "../database/database"
 import { historyQuery } from "../database/chart"
 import { dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
 
 const ValuesChart = () => {
+  const [key, setKey] = useState<"balance" | "value">("value")
   const history = useRecoilValue(historyQuery)
   const { tickers } = useRecoilValue(contentsState)
   const tickerKeys = Object.keys(tickers)
@@ -14,9 +17,15 @@ const ValuesChart = () => {
   const collectHistory = (tickerKey: string) =>
     history.map(({ date, dataSource }) => {
       const { dataSource: initialDataSource } = history[0]
-      const value1 = findValue(tickerKey, dataSource)
-      const value2 = findValue(tickerKey, initialDataSource)
-      return { t: new Date(date), y: value1 - value2 }
+      const current = find(tickerKey, dataSource, key)
+      const initial = find(tickerKey, initialDataSource, key)
+
+      const value = {
+        balance: (current - initial) / initial,
+        value: current - initial,
+      }
+
+      return { t: new Date(date), y: value[key] }
     })
 
   const datasets = tickerKeys
@@ -37,12 +46,36 @@ const ValuesChart = () => {
     .filter(({ data }) => (data as ChartPoint[]).some(({ y }) => y))
     .sort(({ label: a = "" }, { label: b = "" }) => a.localeCompare(b))
 
+  const format = {
+    balance: (value: number) => (value > 0 ? "+" : "") + percent(value),
+    value: formatKRW,
+  }
+
   return (
     <>
-      <h1 style={{ marginTop: 16 }}>가치</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1 style={{ marginTop: 16 }}>가치</h1>
+
+        <Radio.Group
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+          optionType="button"
+          buttonStyle="solid"
+          size="small"
+        >
+          <Radio.Button value="value">가치</Radio.Button>
+          <Radio.Button value="balance">잔고</Radio.Button>
+        </Radio.Group>
+      </div>
 
       <Card>
-        <Chart datasets={datasets} unit="day" legend />
+        <Chart datasets={datasets} format={format[key]} unit="day" legend />
       </Card>
     </>
   )
@@ -51,7 +84,8 @@ const ValuesChart = () => {
 export default ValuesChart
 
 /* helpers */
-const findValue = (
+const find = (
   tickerKey: string,
-  dataSource: { tickerKey: string; value: number }[]
-) => dataSource.find((d) => d.tickerKey === tickerKey)?.value ?? 0
+  dataSource: { tickerKey: string; balance: number; value: number }[],
+  key: "balance" | "value"
+) => dataSource.find((d) => d.tickerKey === tickerKey)?.[key] ?? 0

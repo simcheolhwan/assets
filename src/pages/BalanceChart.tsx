@@ -4,7 +4,7 @@ import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
-import { formatM } from "../utils/format"
+import { formatKRW, formatM } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import { historyQuery } from "../database/chart"
 import { colors, dataset, Range } from "./chartUtils"
@@ -95,7 +95,13 @@ const BalanceChart = ({ range, showBalances, showDeposits }: Props) => {
 
   return (
     <Card>
-      <Chart datasets={datasets} unit={Unit[range]} getAffix={getAffix} />
+      <Chart
+        datasets={datasets}
+        unit={Unit[range]}
+        format={formatKRW}
+        formatY={formatM}
+        getAffix={getAffix}
+      />
     </Card>
   )
 }

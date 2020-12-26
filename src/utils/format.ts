@@ -18,7 +18,7 @@ export const formatAmountWith = (
     const v = noRound ? value : Math.round(value / p) * p
 
     return [currency && getSign(currency), numeral(v).format()]
-      .filter(String)
+      .filter(Boolean)
       .join(" ")
   }
 }
