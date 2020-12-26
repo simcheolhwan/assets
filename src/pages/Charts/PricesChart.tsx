@@ -49,7 +49,13 @@ const PricesChart = () => {
       <ChartTitle title="가격" style={{ marginTop: "1em" }} />
 
       <Card>
-        <Chart datasets={datasets} format={percent} unit="day" legend />
+        <Chart
+          datasets={datasets}
+          format={percent}
+          unit="day"
+          legend
+          affixLabel
+        />
       </Card>
     </>
   )

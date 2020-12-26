@@ -6,13 +6,14 @@ interface Props {
   datasets: ChartDataSets[]
   legend?: boolean
   unit?: TimeScale["unit"]
+  affixLabel?: boolean
   format: (value: number) => string
   formatY?: (value: number) => string
   getAffix?: (date: string) => string
 }
 
 const Chart = ({ legend, unit, datasets, ...props }: Props) => {
-  const { format, formatY, getAffix = () => "" } = props
+  const { format, formatY, affixLabel, getAffix = () => "" } = props
 
   return (
     <Line
@@ -66,9 +67,12 @@ const Chart = ({ legend, unit, datasets, ...props }: Props) => {
           yPadding: 8,
           callbacks: {
             title: ([{ value }]) => format(Number(value) ?? 0),
-            label: ({ label }) => {
-              const affix = getAffix(formatDate(label))
-              return label ? [formatDate(label), affix].join(" ") : ""
+            label: ({ label, datasetIndex }, { datasets }) => {
+              const affix = affixLabel
+                ? datasets![datasetIndex!].label
+                : getAffix(formatDate(label))
+
+              return [formatDate(label), affix].join(" ")
             },
           },
         },

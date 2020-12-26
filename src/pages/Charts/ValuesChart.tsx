@@ -77,6 +77,7 @@ const ValuesChart = () => {
           formatY={key === "value" ? formatM : undefined}
           unit="day"
           legend
+          affixLabel
         />
       </Card>
     </>
