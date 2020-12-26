@@ -1,9 +1,9 @@
 import { Table, Tooltip, Typography } from "antd"
 import { useRecoilValue } from "recoil"
-import { formatM, formatDateWith, formatDate } from "../utils/format"
-import { depositsHistoryState } from "../database/database"
-import Page from "../layouts/Page"
-import AddDepositModal from "./AddDepositModal"
+import { formatM, formatDateWith, formatDate } from "../../utils/format"
+import { depositsHistoryState } from "../../database/database"
+import Page from "../../layouts/Page"
+import AddDepositModal from "../Manage/AddDepositModal"
 
 const { Column } = Table
 const { Text } = Typography

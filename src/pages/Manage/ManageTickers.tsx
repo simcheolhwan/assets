@@ -1,18 +1,17 @@
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
-import { dayPricesQuery, latestDateQuery } from "../database/day"
-import Change from "../components/Change"
-import Page from "../layouts/Page"
+import { dayPricesQuery, latestDateQuery } from "../../database/day"
+import Change from "../../components/Change"
 import AddTickerModal from "./AddTickerModal"
 
 const { Column } = Table
 
-const Tickers = () => {
+const ManageTickers = () => {
   const date = useRecoilValue(latestDateQuery)
   const dataSource = useRecoilValue(dayPricesQuery(date))
 
   return (
-    <Page>
+    <>
       <Table
         dataSource={dataSource}
         pagination={false}
@@ -40,8 +39,8 @@ const Tickers = () => {
       <div style={{ marginTop: 16 }}>
         <AddTickerModal key="add" />
       </div>
-    </Page>
+    </>
   )
 }
 
-export default Tickers
+export default ManageTickers

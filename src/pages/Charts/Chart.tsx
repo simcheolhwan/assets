@@ -1,6 +1,6 @@
 import { ChartDataSets, helpers, TimeScale } from "chart.js"
 import { Line } from "react-chartjs-2"
-import { formatDate } from "../utils/format"
+import { formatDate } from "../../utils/format"
 
 interface Props {
   datasets: ChartDataSets[]

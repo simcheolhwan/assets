@@ -1,8 +1,8 @@
 import { Card } from "antd"
 import { useRecoilValue } from "recoil"
-import { percent } from "../utils/format"
-import { contentsState } from "../database/database"
-import ChartTitle from "../components/ChartTitle"
+import { percent } from "../../utils/format"
+import { contentsState } from "../../database/database"
+import ChartTitle from "../../components/ChartTitle"
 import { dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
 

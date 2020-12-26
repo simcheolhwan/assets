@@ -1,6 +1,9 @@
 import { useState } from "react"
+import { useRecoilValue } from "recoil"
 import { Radio, Space, Tabs } from "antd"
-import Page from "../layouts/Page"
+import { latestDateQuery } from "../../database/day"
+import Page from "../../layouts/Page"
+import DashboardStatistics from "../Dashboard/DashboardStatistics"
 import { Range } from "./chartUtils"
 import BalanceChart from "./BalanceChart"
 import ValuesChart from "./ValuesChart"
@@ -9,6 +12,7 @@ import PricesChart from "./PricesChart"
 const { TabPane } = Tabs
 
 const Charts = () => {
+  const date = useRecoilValue(latestDateQuery)
   const [range, setRange] = useState<Range>(Range.W)
 
   return (
@@ -28,14 +32,15 @@ const Charts = () => {
         </Space>
       }
     >
+      <DashboardStatistics date={date} />
       <Tabs defaultActiveKey="1">
-        <TabPane tab="자본" key="1">
-          <BalanceChart range={range} />
-        </TabPane>
-
-        <TabPane tab="종목" key="2">
+        <TabPane tab="종목" key="1">
           <ValuesChart />
           <PricesChart />
+        </TabPane>
+
+        <TabPane tab="자본" key="2">
+          <BalanceChart range={range} />
         </TabPane>
       </Tabs>
     </Page>

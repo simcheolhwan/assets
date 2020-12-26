@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
 import { db } from "../firebase"
+import { formatDate } from "../utils/format"
 import { authState } from "./auth"
 
 const initial = {
@@ -74,17 +75,14 @@ export const useDatabase = () => {
 }
 
 /* update */
-export const addBalance = async (date: string, balance: BalanceItem) =>
-  await db.ref(`/balances/${date}`).set(balance)
-
-export const addPrice = async (date: string, price: PriceItem) =>
-  await db.ref(`/prices/${date}`).set(price)
-
-export const addExchange = async (date: string, value: number) =>
-  await db.ref(`/exchanges/${date}`).set({ USD: value })
+export const addDeposit = async (deposits: Deposit[]) =>
+  await db.ref(`/deposits`).set(deposits)
 
 export const addTicker = async (ticker: Ticker) =>
   await db.ref(`/tickers/${ticker.tickerKey}`).set(ticker)
 
-export const addDeposit = async (deposits: Deposit[]) =>
-  await db.ref(`/deposits`).set(deposits)
+export const addWallet = async (walletKey: string, name: string) =>
+  await db.ref(`/wallets/${walletKey}`).set(name)
+
+export const addBalance = async (balance: Balance) =>
+  await db.ref(`/balances/${formatDate()}/${balance.balanceKey}`).set(balance)

@@ -1,8 +1,8 @@
 import React from "react"
 import { v4 } from "uuid"
 import { Button, Modal, Form, Input, Radio } from "antd"
-import { useModal } from "../hooks"
-import { addTicker } from "../database/database"
+import { useModal } from "../../hooks"
+import { addTicker } from "../../database/database"
 
 const AddTickerModal = () => {
   const { isOpen, open, close } = useModal()

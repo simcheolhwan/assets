@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom"
+import { Redirect, Route, Switch } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { Layout, PageHeader, Spin } from "antd"
 import { loadingState, useDatabase } from "../database/database"
@@ -39,6 +39,7 @@ const App = () => {
             ))}
 
             <Route path="/signout" component={SignOut} />
+            <Redirect to={routes[0].path} />
           </Switch>
         )}
       </Content>

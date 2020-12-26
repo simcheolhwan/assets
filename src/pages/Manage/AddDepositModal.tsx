@@ -1,9 +1,9 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
 import { Button, Modal, Form, Input } from "antd"
-import { useModal } from "../hooks"
-import { addDeposit, contentsState } from "../database/database"
-import { today } from "../utils/history"
+import { useModal } from "../../hooks"
+import { addDeposit, contentsState } from "../../database/database"
+import { today } from "../../utils/history"
 
 const AddDepositModal = () => {
   const { isOpen, open, close } = useModal()
