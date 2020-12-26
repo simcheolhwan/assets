@@ -1,5 +1,6 @@
+import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Card } from "antd"
+import { Card, Checkbox } from "antd"
 import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
@@ -7,6 +8,7 @@ import { subMonths, subQuarters, subYears } from "date-fns"
 import { formatKRW, formatM } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import { historyQuery } from "../database/chart"
+import ChartTitle from "../components/ChartTitle"
 import { colors, dataset, Range } from "./chartUtils"
 import Chart from "./Chart"
 
@@ -19,13 +21,11 @@ const Unit: Record<Range, TimeScale["unit"]> = {
   [Range.MAX]: "quarter",
 }
 
-interface Props {
-  range: Range
-  showBalances: boolean
-  showDeposits: boolean
-}
+const BalanceChart = ({ range }: { range: Range }) => {
+  const [showBalances, setShowBalances] = useState(true)
+  const [showDeposits, setShowDeposits] = useState(true)
 
-const BalanceChart = ({ range, showBalances, showDeposits }: Props) => {
+  /* range */
   const filter = ({ t }: ChartPoint) =>
     ({
       [Range.W]: isAfter(t, subWeeks(new Date(), 1)),
@@ -94,15 +94,37 @@ const BalanceChart = ({ range, showBalances, showDeposits }: Props) => {
     .map(({ dataset }) => dataset)
 
   return (
-    <Card>
-      <Chart
-        datasets={datasets}
-        unit={Unit[range]}
-        format={formatKRW}
-        formatY={formatM}
-        getAffix={getAffix}
+    <>
+      <ChartTitle
+        extra={
+          <div>
+            <Checkbox
+              checked={showBalances}
+              onChange={(e) => setShowBalances(e.target.checked)}
+            >
+              잔고
+            </Checkbox>
+
+            <Checkbox
+              checked={showDeposits}
+              onChange={(e) => setShowDeposits(e.target.checked)}
+            >
+              입출금
+            </Checkbox>
+          </div>
+        }
       />
-    </Card>
+
+      <Card>
+        <Chart
+          datasets={datasets}
+          unit={Unit[range]}
+          format={formatKRW}
+          formatY={formatM}
+          getAffix={getAffix}
+        />
+      </Card>
+    </>
   )
 }
 

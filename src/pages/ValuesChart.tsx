@@ -5,6 +5,7 @@ import { ChartDataSets } from "chart.js"
 import { formatKRW, percent } from "../utils/format"
 import { contentsState } from "../database/database"
 import { historyQuery } from "../database/chart"
+import ChartTitle from "../components/ChartTitle"
 import { dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
 
@@ -53,26 +54,21 @@ const ValuesChart = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h1 style={{ marginTop: 16 }}>가치</h1>
-
-        <Radio.Group
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-          optionType="button"
-          buttonStyle="solid"
-          size="small"
-        >
-          <Radio.Button value="value">가치</Radio.Button>
-          <Radio.Button value="balance">잔고</Radio.Button>
-        </Radio.Group>
-      </div>
+      <ChartTitle
+        title="가치"
+        extra={
+          <Radio.Group
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            optionType="button"
+            buttonStyle="solid"
+            size="small"
+          >
+            <Radio.Button value="value">가치</Radio.Button>
+            <Radio.Button value="balance">잔고</Radio.Button>
+          </Radio.Group>
+        }
+      />
 
       <Card>
         <Chart datasets={datasets} format={format[key]} unit="day" legend />

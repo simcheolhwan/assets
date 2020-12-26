@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Checkbox, Radio, Space, Tabs } from "antd"
+import { Radio, Space, Tabs } from "antd"
 import Page from "../layouts/Page"
 import { Range } from "./chartUtils"
 import BalanceChart from "./BalanceChart"
@@ -10,27 +10,6 @@ const { TabPane } = Tabs
 
 const Charts = () => {
   const [range, setRange] = useState<Range>(Range.W)
-
-  const [showBalances, setShowBalances] = useState(true)
-  const [showDeposits, setShowDeposits] = useState(true)
-
-  const filter = (
-    <>
-      <Checkbox
-        checked={showBalances}
-        onChange={(e) => setShowBalances(e.target.checked)}
-      >
-        잔고
-      </Checkbox>
-
-      <Checkbox
-        checked={showDeposits}
-        onChange={(e) => setShowDeposits(e.target.checked)}
-      >
-        입출금
-      </Checkbox>
-    </>
-  )
 
   return (
     <Page
@@ -49,13 +28,9 @@ const Charts = () => {
         </Space>
       }
     >
-      <Tabs defaultActiveKey="1" tabBarExtraContent={filter}>
+      <Tabs defaultActiveKey="1">
         <TabPane tab="자본" key="1">
-          <BalanceChart
-            range={range}
-            showBalances={showBalances}
-            showDeposits={showDeposits}
-          />
+          <BalanceChart range={range} />
         </TabPane>
 
         <TabPane tab="종목" key="2">
