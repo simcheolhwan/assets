@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { Card, Radio } from "antd"
 import { ChartDataSets } from "chart.js"
-import { formatKRW, percent } from "../utils/format"
+import { formatKRW, formatM, percent } from "../utils/format"
 import { contentsState } from "../database/database"
 import { historyQuery } from "../database/chart"
 import ChartTitle from "../components/ChartTitle"
@@ -71,7 +71,13 @@ const ValuesChart = () => {
       />
 
       <Card>
-        <Chart datasets={datasets} format={format[key]} unit="day" legend />
+        <Chart
+          datasets={datasets}
+          format={format[key]}
+          formatY={key === "value" ? formatM : undefined}
+          unit="day"
+          legend
+        />
       </Card>
     </>
   )

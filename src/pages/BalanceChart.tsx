@@ -5,7 +5,7 @@ import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
-import { formatKRW, formatM } from "../utils/format"
+import { formatDate, formatKRW, formatM } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import { historyQuery } from "../database/chart"
 import ChartTitle from "../components/ChartTitle"
@@ -59,7 +59,8 @@ const BalanceChart = ({ range }: { range: Range }) => {
       // Prepend the start of the year
       const shouldPrepend =
         !prevDeposits ||
-        !isSameYear(new Date(prevDeposits.date), new Date(date))
+        (!isSameYear(new Date(prevDeposits.date), new Date(date)) &&
+          date !== formatDate(startOfYear(new Date(date))))
 
       const prepend = {
         t: startOfYear(new Date(date)),
