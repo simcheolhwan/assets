@@ -19,7 +19,8 @@ export const todayItemQuery = selector({
   key: "todayItem",
   get: async ({ get }) => {
     get(dataIndexState)
-    const { balances, prices, exchanges, tickers, wallets } = get(contentsState)
+    const { balances, prices, exchanges, ...contents } = get(contentsState)
+    const { tickers, wallets, updatedAt } = contents
     const prevBalances = latest(balances)
     const prevPrices = latest(prices)
     const prevExchanges = latest(exchanges)
@@ -70,12 +71,14 @@ export const todayItemQuery = selector({
     const exchangeItem = { USD: exchange || prevExchanges.USD }
     const updates = { balanceItem, priceItem, exchangeItem }
 
-    const isTodayExists = [balances, prices, exchanges].every(
-      (group) => last(Object.keys(group).sort()) === today
-    )
+    const now = Date.now()
+    const isTodayExists =
+      [balances, prices, exchanges].every(
+        (group) => last(Object.keys(group).sort()) === today
+      ) && isBefore(new Date(updatedAt), new Date(now))
 
     if (!isTodayExists) {
-      await updateDayData(formatDate(), updates, Date.now())
+      await updateDayData(formatDate(), updates, now)
       message.success("오늘의 데이터를 처음으로 기록했습니다.")
     }
 
