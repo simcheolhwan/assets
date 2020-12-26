@@ -8,7 +8,7 @@ const { TabPane } = Tabs
 
 const Manage = () => {
   return (
-    <Page>
+    <Page extra>
       <Tabs defaultActiveKey="1">
         <TabPane tab="종목" key="1">
           <ManageTickers />

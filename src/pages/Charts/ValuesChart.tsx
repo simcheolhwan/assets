@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Card, Radio } from "antd"
+import { Card, Radio, Space } from "antd"
 import { ChartDataSets } from "chart.js"
 import { formatKRW, formatM, percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
@@ -9,7 +9,7 @@ import ChartTitle from "../../components/ChartTitle"
 import { dataset, tickerColors } from "./chartUtils"
 import Chart from "./Chart"
 
-const ValuesChart = () => {
+const ValuesChart = ({ extra: filter }: { extra: ReactNode }) => {
   const [key, setKey] = useState<"balance" | "value">("value")
   const history = useRecoilValue(historyQuery)
   const { tickers } = useRecoilValue(contentsState)
@@ -57,16 +57,19 @@ const ValuesChart = () => {
       <ChartTitle
         title="가치"
         extra={
-          <Radio.Group
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-            optionType="button"
-            buttonStyle="solid"
-            size="small"
-          >
-            <Radio.Button value="value">가치</Radio.Button>
-            <Radio.Button value="balance">잔고</Radio.Button>
-          </Radio.Group>
+          <Space wrap>
+            <Radio.Group
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              optionType="button"
+              buttonStyle="solid"
+            >
+              <Radio.Button value="value">가치</Radio.Button>
+              <Radio.Button value="balance">잔고</Radio.Button>
+            </Radio.Group>
+
+            {filter}
+          </Space>
         }
       />
 

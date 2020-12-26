@@ -1,3 +1,4 @@
+import { Space } from "antd"
 import { CSSProperties, FC, ReactNode } from "react"
 
 interface Props {
@@ -8,18 +9,18 @@ interface Props {
 
 const ChartTitle: FC<Props> = ({ title, extra, style }) => {
   return (
-    <div
+    <Space
       style={{
         ...style,
-        display: "flex",
         justifyContent: "space-between",
-        alignItems: "center",
         marginBottom: ".5em",
+        width: "100%",
       }}
+      wrap
     >
       <h1 style={{ margin: 0 }}>{title}</h1>
       {extra}
-    </div>
+    </Space>
   )
 }
 

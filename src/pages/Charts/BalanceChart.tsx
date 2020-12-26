@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Card, Checkbox } from "antd"
+import { Card, Checkbox, Space } from "antd"
 import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
@@ -21,7 +21,7 @@ const Unit: Record<Range, TimeScale["unit"]> = {
   [Range.MAX]: "quarter",
 }
 
-const BalanceChart = ({ range }: { range: Range }) => {
+const BalanceChart = ({ range, extra }: { range: Range; extra: ReactNode }) => {
   const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(true)
 
@@ -97,8 +97,9 @@ const BalanceChart = ({ range }: { range: Range }) => {
   return (
     <>
       <ChartTitle
+        title="자본"
         extra={
-          <div>
+          <Space wrap>
             <Checkbox
               checked={showBalances}
               onChange={(e) => setShowBalances(e.target.checked)}
@@ -112,7 +113,9 @@ const BalanceChart = ({ range }: { range: Range }) => {
             >
               입출금
             </Checkbox>
-          </div>
+
+            {extra}
+          </Space>
         }
       />
 
