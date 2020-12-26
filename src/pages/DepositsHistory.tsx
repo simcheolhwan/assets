@@ -1,6 +1,6 @@
-import { Table, Typography } from "antd"
+import { Table, Tooltip, Typography } from "antd"
 import { useRecoilValue } from "recoil"
-import { formatM, formatDateWith } from "../utils/format"
+import { formatM, formatDateWith, formatDate } from "../utils/format"
 import { depositsHistoryState } from "../database/database"
 import Page from "../layouts/Page"
 import AddDepositModal from "./AddDepositModal"
@@ -21,7 +21,11 @@ const DepositsHistory = () => {
         <Column
           title="날짜"
           dataIndex="date"
-          render={formatDateWith("yyyy")}
+          render={(date) => (
+            <Tooltip title={formatDate(date)} placement="bottom">
+              {formatDateWith("yyyy")(date)}
+            </Tooltip>
+          )}
           align="center"
         />
         <Column title="항목" dataIndex="title" align="center" />

@@ -14,16 +14,34 @@ export const dayStatusQuery = selectorFamily({
     const priceItem = prices[date]
     const exchangeItem = exchanges[date]
 
+    /* merge wallets by ticker */
+    const byTicker = Object.keys(tickers)
+      .map((tickerKey) =>
+        Object.values(balanceItem)
+          .filter((item) => item.tickerKey === tickerKey)
+          .reduce<Dashboard>(
+            (acc, { balance, walletKey }) => ({
+              ...acc,
+              balance: acc.balance + balance,
+              wallets: [
+                ...acc.wallets,
+                { name: wallets[walletKey], balance: balance },
+              ],
+            }),
+            { tickerKey, wallets: [], balance: 0 }
+          )
+      )
+      .filter(({ balance }) => balance)
+
     /* calculate values */
-    const data = Object.values(balanceItem).map((data) => {
-      const { balance, tickerKey, walletKey } = data
+    const data = byTicker.map((data) => {
+      const { balance, tickerKey } = data
       const { currency, name: ticker, icon, aim } = tickers[tickerKey]
       const price = priceItem[tickerKey]?.price ?? 1
       const { USD } = exchangeItem
       const rate = currency === "KRW" ? 1 : USD
       const value = balance * price * rate
-      const wallet = wallets[walletKey]
-      return { ...data, currency, ticker, icon, wallet, price, value, aim }
+      return { ...data, currency, ticker, icon, price, value, aim }
     })
 
     /* statistics */

@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { Table, Tag } from "antd"
+import { Popover, Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../utils/format"
 import { isCurrencyTicker } from "../utils/format"
@@ -10,6 +10,7 @@ import { ReactComponent as Dollar } from "../icons/dollar.svg"
 import Change from "../components/Change"
 
 const { Column } = Table
+const { Text } = Typography
 
 const ICON = {
   height: 20,
@@ -25,11 +26,18 @@ const signSVG: Record<CurrencyTicker, ReactNode> = {
 const DashboardTable = ({ date }: { date: string }) => {
   const { dataSource } = useRecoilValue(dayQuery(date))
 
+  const renderWallets = (wallets: DashboardWallet[]) =>
+    wallets.map(({ name, balance }) => (
+      <p key={name}>
+        {name}: {formatAmount(balance)}
+      </p>
+    ))
+
   return (
     <Table
       dataSource={dataSource}
       pagination={false}
-      rowKey="balanceKey"
+      rowKey="tickerKey"
       size="small"
       scroll={{ x: true }}
     >
@@ -45,12 +53,12 @@ const DashboardTable = ({ date }: { date: string }) => {
         align="center"
         fixed="left"
       />
-      <Column title="항목" dataIndex="ticker" align="center" fixed="left" />
       <Column
-        title="위치"
-        dataIndex="wallet"
-        render={(wallet) => <Tag>{wallet}</Tag>}
+        title="항목"
+        dataIndex="ticker"
+        render={(ticker) => <Text strong>{ticker}</Text>}
         align="center"
+        fixed="left"
       />
 
       <Column<Ticker>
@@ -59,10 +67,18 @@ const DashboardTable = ({ date }: { date: string }) => {
         render={(price, { currency }) => formatAmountWith(currency)(price)}
         align="center"
       />
-      <Column
+      <Column<Dashboard>
         title="잔고"
         dataIndex="balance"
-        render={formatAmount}
+        render={(value, { wallets }) =>
+          wallets.length > 1 ? (
+            <Popover content={renderWallets(wallets)} placement="bottom">
+              {formatAmount(value)}
+            </Popover>
+          ) : (
+            formatAmount(value)
+          )
+        }
         align="right"
       />
       <Column title="가치" dataIndex="value" render={formatKRW} align="right" />
