@@ -88,18 +88,3 @@ export const addTicker = async (ticker: Ticker) =>
 
 export const addDeposit = async (deposits: Deposit[]) =>
   await db.ref(`/deposits`).set(deposits)
-
-export const updateDayData = async (
-  date: string,
-  { balanceItem, priceItem, exchangeItem }: DayItem,
-  updatedAt: number
-) => {
-  const updates = {
-    [`/balances/${date}`]: balanceItem,
-    [`/prices/${date}`]: priceItem,
-    [`/exchanges/${date}`]: exchangeItem,
-    "/updatedAt": updatedAt,
-  }
-
-  await db.ref().update(updates)
-}

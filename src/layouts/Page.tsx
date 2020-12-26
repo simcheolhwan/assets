@@ -1,27 +1,11 @@
 import { FC, ReactNode, Suspense } from "react"
-import { Button, PageHeader } from "antd"
+import { PageHeader } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatExchange } from "../utils/format"
 import { latest } from "../utils/history"
 import { contentsState, databaseState } from "../database/database"
-import { useUpdateToday } from "../database/today"
 import { useTitle } from "./routes"
-
-const TodayButton = () => {
-  const { isChanged, update, refresh } = useUpdateToday()
-
-  return (
-    <>
-      <Button
-        type="primary"
-        danger={isChanged}
-        onClick={isChanged ? update : refresh}
-      >
-        {isChanged ? "업데이트" : "새로고침"}
-      </Button>
-    </>
-  )
-}
+import UpdatedAt from "./UpdatedAt"
 
 const Page: FC<{ extra?: ReactNode }> = ({ children, extra }) => {
   const { state } = useRecoilValue(databaseState)
@@ -30,15 +14,14 @@ const Page: FC<{ extra?: ReactNode }> = ({ children, extra }) => {
 
   const title = useTitle()
   const subTitle = `환율 ${formatExchange(USD)}`
-
-  const today = state === "hydrated" && (
+  const updatedAt = state === "hydrated" && (
     <Suspense fallback key="suspense">
-      <TodayButton />
+      <UpdatedAt />
     </Suspense>
   )
 
   return (
-    <PageHeader title={title} subTitle={subTitle} extra={extra ?? today}>
+    <PageHeader title={title} subTitle={subTitle} extra={extra ?? updatedAt}>
       {children}
     </PageHeader>
   )
