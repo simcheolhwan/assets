@@ -6,9 +6,9 @@ import Charts from "../pages/Charts"
 
 const routes = [
   { path: "/", label: "현황", component: Dashboard },
+  { path: "/charts", label: "차트", component: Charts },
   { path: "/tickers", label: "종목", component: Tickers },
   { path: "/deposits", label: "입출금", component: DepositsHistory },
-  { path: "/charts", label: "차트", component: Charts },
 ]
 
 export const useTitle = () => {
