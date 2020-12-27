@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { contentsState } from "../../database/database"
 import { formatAmount } from "../../utils/format"
 import { latest } from "../../utils/history"
-import AddBalanceModal from "./AddBalanceModal"
+import SetBalanceModal from "./SetBalanceModal"
 
 const { Column } = Table
 
@@ -38,15 +38,14 @@ const ManageBalances = () => {
           align="center"
         />
         <Column
-          title="Key"
           dataIndex="balanceKey"
           align="center"
-          render={(key) => <code>{key}</code>}
+          render={(balanceKey) => <SetBalanceModal balanceKey={balanceKey} />}
         />
       </Table>
 
       <div style={{ marginTop: 16 }}>
-        <AddBalanceModal key="add" />
+        <SetBalanceModal />
       </div>
     </>
   )

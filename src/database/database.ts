@@ -75,14 +75,14 @@ export const useDatabase = () => {
 }
 
 /* update */
-export const addDeposit = async (deposits: Deposit[]) =>
+export const setDeposit = async (deposits: Deposit[]) =>
   await db.ref(`/deposits`).set(deposits)
 
-export const addTicker = async (ticker: Ticker) =>
+export const setTicker = async (ticker: Ticker) =>
   await db.ref(`/tickers/${ticker.tickerKey}`).set(ticker)
 
-export const addWallet = async (walletKey: string, name: string) =>
+export const setWallet = async (walletKey: string, name: string) =>
   await db.ref(`/wallets/${walletKey}`).set(name)
 
-export const addBalance = async (balance: Balance) =>
+export const setBalance = async (balance: Balance) =>
   await db.ref(`/balances/${formatDate()}/${balance.balanceKey}`).set(balance)

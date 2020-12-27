@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { formatM, formatDateWith, formatDate } from "../../utils/format"
 import { depositsHistoryState } from "../../database/database"
 import Page from "../../layouts/Page"
-import AddDepositModal from "../Manage/AddDepositModal"
+import SetDepositModal from "../Manage/SetDepositModal"
 
 const { Column } = Table
 const { Text } = Typography
@@ -28,7 +28,12 @@ const DepositsHistory = () => {
           )}
           align="center"
         />
-        <Column title="항목" dataIndex="title" align="center" />
+        <Column
+          title="항목"
+          dataIndex="title"
+          render={(title) => <Text strong>{title}</Text>}
+          align="center"
+        />
         <Column
           title="내역"
           dataIndex="amount"
@@ -46,10 +51,14 @@ const DepositsHistory = () => {
           render={formatM}
           align="right"
         />
+        <Column
+          render={(_, record, index) => <SetDepositModal index={index} />}
+          align="right"
+        />
       </Table>
 
       <div style={{ marginTop: 16 }}>
-        <AddDepositModal />
+        <SetDepositModal />
       </div>
     </Page>
   )

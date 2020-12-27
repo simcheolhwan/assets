@@ -1,9 +1,10 @@
-import { Table } from "antd"
+import { Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { contentsState } from "../../database/database"
-import AddWalletModal from "./AddWalletModal"
+import SetWalletModal from "./SetWalletModal"
 
 const { Column } = Table
+const { Text } = Typography
 
 const ManageWallets = () => {
   const { wallets } = useRecoilValue(contentsState)
@@ -19,17 +20,22 @@ const ManageWallets = () => {
         rowKey="walletKey"
         scroll={{ x: true }}
       >
-        <Column title="이름" dataIndex="name" align="center" fixed="left" />
         <Column
-          title="Key"
+          title="이름"
+          dataIndex="name"
+          render={(name) => <Text strong>{name}</Text>}
+          align="center"
+          fixed="left"
+        />
+        <Column
           dataIndex="walletKey"
           align="center"
-          render={(key) => <code>{key}</code>}
+          render={(walletKey) => <SetWalletModal walletKey={walletKey} />}
         />
       </Table>
 
       <div style={{ marginTop: 16 }}>
-        <AddWalletModal key="add" />
+        <SetWalletModal />
       </div>
     </>
   )

@@ -1,27 +1,13 @@
-import { ReactNode } from "react"
 import { Popover, Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../../utils/format"
-import { isCurrencyTicker } from "../../utils/format"
 import { percent } from "../../utils/format"
 import { dayQuery } from "../../database/day"
-import { ReactComponent as Won } from "../../icons/won.svg"
-import { ReactComponent as Dollar } from "../../icons/dollar.svg"
 import Change from "../../components/Change"
+import Icon from "../../components/Icon"
 
 const { Column } = Table
 const { Text } = Typography
-
-const ICON = {
-  height: 20,
-  fill: "white",
-  style: { filter: "grayscale(100%)", opacity: 0.25, verticalAlign: "top" },
-}
-
-const signSVG: Record<CurrencyTicker, ReactNode> = {
-  KRW: <Won {...ICON} />,
-  USD: <Dollar {...ICON} />,
-}
 
 const DashboardTable = ({ date }: { date: string }) => {
   const { dataSource } = useRecoilValue(dayQuery(date))
@@ -41,15 +27,9 @@ const DashboardTable = ({ date }: { date: string }) => {
       size="small"
       scroll={{ x: true }}
     >
-      <Column<{ ticker: string }>
-        dataIndex="icon"
-        render={(icon, { ticker }) =>
-          isCurrencyTicker(ticker) ? (
-            signSVG[ticker]
-          ) : icon ? (
-            <img src={icon} {...ICON} alt="" />
-          ) : null
-        }
+      <Column
+        dataIndex="tickerKey"
+        render={(tickerKey) => <Icon tickerKey={tickerKey} />}
         align="center"
         fixed="left"
       />

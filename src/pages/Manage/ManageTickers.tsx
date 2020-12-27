@@ -1,14 +1,17 @@
-import { Table } from "antd"
+import { Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
-import { dayPricesQuery, latestDateQuery } from "../../database/day"
-import Change from "../../components/Change"
-import AddTickerModal from "./AddTickerModal"
+import { contentsState } from "../../database/database"
+import Icon, { signSVG } from "../../components/Icon"
+import SetTickerModal from "./SetTickerModal"
 
 const { Column } = Table
+const { Text } = Typography
 
 const ManageTickers = () => {
-  const date = useRecoilValue(latestDateQuery)
-  const dataSource = useRecoilValue(dayPricesQuery(date))
+  const { tickers } = useRecoilValue(contentsState)
+  const dataSource = Object.values(tickers).sort(
+    ({ aim: a = 0 }, { aim: b = 0 }) => b - a
+  )
 
   return (
     <>
@@ -18,26 +21,36 @@ const ManageTickers = () => {
         rowKey="tickerKey"
         scroll={{ x: true }}
       >
-        <Column title="이름" dataIndex="name" align="center" fixed="left" />
-        <Column title="통화" dataIndex="currency" align="center" />
-        <Column title="가격" dataIndex="price" align="center" />
         <Column
-          title="변동"
-          dataIndex="change"
-          render={(change) => <Change color>{change}</Change>}
+          title="아이콘"
+          dataIndex="tickerKey"
+          render={(tickerKey) => <Icon tickerKey={tickerKey} />}
           align="center"
+          fixed="left"
         />
         <Column
-          title="Key"
+          title="이름"
+          dataIndex="name"
+          render={(name) => <Text strong>{name}</Text>}
+          align="center"
+          fixed="left"
+        />
+        <Column
+          title="통화"
+          dataIndex="currency"
+          render={(currency: CurrencyTicker) => signSVG[currency]}
+          align="center"
+        />
+        <Column title="목표" dataIndex="aim" align="center" />
+        <Column
           dataIndex="tickerKey"
           align="center"
-          render={(key) => <code>{key}</code>}
-          responsive={["sm"]}
+          render={(tickerKey) => <SetTickerModal tickerKey={tickerKey} />}
         />
       </Table>
 
       <div style={{ marginTop: 16 }}>
-        <AddTickerModal key="add" />
+        <SetTickerModal />
       </div>
     </>
   )
