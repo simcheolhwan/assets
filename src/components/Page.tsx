@@ -4,8 +4,8 @@ import { useRecoilValue } from "recoil"
 import { formatExchange } from "../utils/format"
 import { latest } from "../utils/history"
 import { contentsState, databaseState } from "../database/database"
-import { useTitle } from "./routes"
-import UpdatedAt from "./UpdatedAt"
+import { useTitle } from "../routes"
+import UpdatedAt from "../layouts/UpdatedAt"
 
 const Page: FC<{ extra?: ReactNode }> = ({ children, extra }) => {
   const { state } = useRecoilValue(databaseState)

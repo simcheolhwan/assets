@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom"
-import Charts from "../pages/Charts/Charts"
-import Dashboard from "../pages/Dashboard/Dashboard"
-import DepositsHistory from "../pages/Deposits/DepositsHistory"
-import Manage from "../pages/Manage/Manage"
+import Charts from "./pages/Charts/Charts"
+import Dashboard from "./pages/Dashboard/Dashboard"
+import DepositsHistory from "./pages/Deposits/DepositsHistory"
+import Manage from "./pages/Manage/Manage"
 
 const routes = [
   { path: "/charts", label: "차트", component: Charts },

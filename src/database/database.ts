@@ -61,17 +61,15 @@ export const depositsHistoryState = selector({
 
 /* load: database */
 export const useDatabase = () => {
-  const { contents: authenticated } = useRecoilValue(authState)
   const setDatabase = useSetRecoilState(databaseState)
 
   useEffect(() => {
-    authenticated &&
-      db.ref().on("value", (snapshot) => {
-        const contents = snapshot.val() || initial
-        setDatabase({ state: "hydrated", contents })
-        localStorage.setItem("database", JSON.stringify(contents))
-      })
-  }, [authenticated, setDatabase])
+    db.ref().on("value", (snapshot) => {
+      const contents = snapshot.val() || initial
+      setDatabase({ state: "hydrated", contents })
+      localStorage.setItem("database", JSON.stringify(contents))
+    })
+  }, [setDatabase])
 }
 
 /* update */

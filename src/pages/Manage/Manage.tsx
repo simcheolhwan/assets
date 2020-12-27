@@ -1,5 +1,5 @@
 import { Tabs } from "antd"
-import Page from "../../layouts/Page"
+import Page from "../../components/Page"
 import ManageTickers from "./ManageTickers"
 import ManageWallets from "./ManageWallets"
 import ManageBalances from "./ManageBalances"

@@ -2,7 +2,7 @@ import { Table, Tooltip, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatM, formatDateWith, formatDate } from "../../utils/format"
 import { depositsHistoryState } from "../../database/database"
-import Page from "../../layouts/Page"
+import Page from "../../components/Page"
 import SetDepositModal from "../Manage/SetDepositModal"
 
 const { Column } = Table
@@ -17,6 +17,7 @@ const DepositsHistory = () => {
         dataSource={dataSource}
         pagination={false}
         rowKey={({ date, title }) => [date, title].join()}
+        scroll={{ x: true }}
       >
         <Column
           title="날짜"

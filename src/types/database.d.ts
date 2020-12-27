@@ -44,6 +44,8 @@ interface Deposit {
 
 interface Dept {
   amount: number
+  borrowedAt: string
+  returnedAt?: string
 }
 
 type CurrencyTicker = "KRW" | "USD"

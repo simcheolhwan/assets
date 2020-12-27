@@ -1,7 +1,7 @@
 import { Space } from "antd"
 import { useRecoilValue } from "recoil"
 import { latestDateQuery } from "../../database/day"
-import Page from "../../layouts/Page"
+import Page from "../../components/Page"
 import DashboardTable from "./DashboardTable"
 import DashboardStatistics from "./DashboardStatistics"
 

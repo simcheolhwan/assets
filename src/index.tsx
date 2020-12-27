@@ -6,12 +6,15 @@ import { register } from "./serviceWorkerRegistration"
 import reportWebVitals from "./reportWebVitals"
 
 import "./index.scss"
+import WithAuth from "./layouts/WithAuth"
 import App from "./layouts/App"
 
 render(
   <RecoilRoot>
     <Router>
-      <App />
+      <WithAuth>
+        <App />
+      </WithAuth>
     </Router>
   </RecoilRoot>,
   document.getElementById("root")
