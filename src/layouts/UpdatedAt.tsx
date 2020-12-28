@@ -6,7 +6,11 @@ import { formatDistanceStrict, startOfSecond } from "date-fns"
 import { addMinutes, isAfter } from "date-fns"
 import { contentsState } from "../database/database"
 
-const config = { addSuffix: true, locale: ko, roundingMethod: "floor" as const }
+const config = {
+  addSuffix: true,
+  roundingMethod: "floor" as const,
+  locale: ko,
+}
 
 const UpdatedAt = () => {
   const { updatedAt } = useRecoilValue(contentsState)
@@ -16,7 +20,7 @@ const UpdatedAt = () => {
     setInterval(() => setNow(startOfSecond(new Date()).getTime()), 1000)
   }, [])
 
-  const loading = isAfter(now, addMinutes(updatedAt, 1))
+  const loading = isAfter(now, addMinutes(updatedAt, 2))
 
   return loading ? (
     <Button loading disabled key="loading" />
