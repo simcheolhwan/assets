@@ -1,17 +1,16 @@
 import { Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
-import { contentsState } from "../../database/database"
+import { latestDateQuery, tickersDataQuery } from "../../database/day"
 import Icon, { signSVG } from "../../components/Icon"
+import Change from "../../components/Change"
 import SetTickerModal from "./SetTickerModal"
 
 const { Column } = Table
 const { Text } = Typography
 
 const ManageTickers = () => {
-  const { tickers } = useRecoilValue(contentsState)
-  const dataSource = Object.values(tickers).sort(
-    ({ aim: a = 0 }, { aim: b = 0 }) => b - a
-  )
+  const date = useRecoilValue(latestDateQuery)
+  const dataSource = useRecoilValue(tickersDataQuery(date))
 
   return (
     <>
@@ -39,6 +38,13 @@ const ManageTickers = () => {
           title="통화"
           dataIndex="currency"
           render={(currency: CurrencyTicker) => signSVG[currency]}
+          align="center"
+        />
+        <Column title="가격" dataIndex="price" align="center" />
+        <Column
+          title="변동"
+          dataIndex="change"
+          render={(change) => <Change color>{change}</Change>}
           align="center"
         />
         <Column title="목표" dataIndex="aim" align="center" />

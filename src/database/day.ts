@@ -98,7 +98,7 @@ export const dayQuery = selectorFamily({
 })
 
 /* tickers */
-export const dayPricesQuery = selectorFamily({
+export const tickersDataQuery = selectorFamily({
   key: "dayPrices",
   get: (date: string) => ({ get }) => {
     const { tickers, prices } = get(contentsState)
@@ -115,6 +115,7 @@ export const dayPricesQuery = selectorFamily({
         const change = price ? price / yesterday - 1 : undefined
         return { ...ticker, price, change }
       })
+      .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
       .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
       .sort(
         ({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b))
