@@ -84,8 +84,10 @@ export const dayQuery = selectorFamily({
 
     /* p&l: from deposit */
     const depositsHistory = get(depositsHistoryState)
-    const deposit = reverse(depositsHistory).find((deposit) =>
-      isBefore(new Date(deposit.date), new Date(date))
+    const deposit = reverse(depositsHistory).find(
+      (deposit) =>
+        deposit.title === "입금" &&
+        isBefore(new Date(deposit.date), new Date(date))
     )!
 
     const pnlFromDeposit = {
