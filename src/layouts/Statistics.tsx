@@ -1,8 +1,8 @@
 import { Space, Statistic } from "antd"
 import { useRecoilValue } from "recoil"
-import { formatKRW } from "../../utils/format"
-import { dayQuery } from "../../database/day"
-import PnL from "../../components/PnL"
+import { formatKRW } from "../utils/format"
+import { dayQuery } from "../database/day"
+import PnL from "../components/PnL"
 
 const DashboardStatistics = ({ date }: { date: string }) => {
   const { total, pnl, pnlFromDeposit } = useRecoilValue(dayQuery(date))

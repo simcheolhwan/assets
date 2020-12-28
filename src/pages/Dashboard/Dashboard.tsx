@@ -2,8 +2,8 @@ import { Space } from "antd"
 import { useRecoilValue } from "recoil"
 import { latestDateQuery } from "../../database/day"
 import Page from "../../components/Page"
+import DashboardStatistics from "../../layouts/Statistics"
 import DashboardTable from "./DashboardTable"
-import DashboardStatistics from "./DashboardStatistics"
 
 const Dashboard = () => {
   const date = useRecoilValue(latestDateQuery)
