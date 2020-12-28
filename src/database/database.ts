@@ -76,3 +76,9 @@ export const setBalance = async (balance: Balance) =>
   await db
     .ref(`/balances/${formatDate()}/${balance.balanceKey}`)
     .update(balance)
+
+export const setBranchItem = async (balanceItem: BalanceItem, date: string) =>
+  await db.ref(`/branch/${date}`).update(balanceItem)
+
+export const setBranch = async (balance: Balance, date: string) =>
+  await db.ref(`/branch/${date}/${balance.balanceKey}`).update(balance)

@@ -1,7 +1,7 @@
 interface Database {
-  balances: Dictionary<BalanceItem>
-  prices: Dictionary<PriceItem>
-  exchanges: Dictionary<ExchangeItem>
+  balances: Balances
+  prices: Prices
+  exchanges: Exchanges
 
   deposits: Deposit[]
   depts: Depts
@@ -10,7 +10,13 @@ interface Database {
   wallets: Wallets
 
   updatedAt: number
+
+  branch?: Balances
 }
+
+type Balances = Dictionary<BalanceItem>
+type Prices = Dictionary<PriceItem>
+type Exchanges = Dictionary<ExchangeItem>
 
 type BalanceItem = Dictionary<Balance>
 type PriceItem = Dictionary<Price>

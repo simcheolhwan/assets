@@ -2,9 +2,9 @@ import React from "react"
 import { useRecoilValue } from "recoil"
 import { Form, Input, Select } from "antd"
 import { v4 } from "uuid"
+import { latest } from "../../utils/history"
 import { setBalance, contentsState } from "../../database/database"
 import SetModal from "./SetModal"
-import { latest } from "../../utils/history"
 
 const { Option } = Select
 

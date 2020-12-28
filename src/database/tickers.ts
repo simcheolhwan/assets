@@ -1,12 +1,14 @@
 import { selectorFamily } from "recoil"
-import { contentsState } from "./database"
 import { prevDateQuery } from "./date"
 import { dayStatsQuery } from "./day"
+import { contentsState } from "./database"
+import { balancesWithBranchQuery } from "./branch"
 
 export const tickerBalancesQuery = selectorFamily({
   key: "tickerBalances",
   get: (date: string) => ({ get }) => {
-    const { balances, tickers, wallets } = get(contentsState)
+    const { tickers, wallets } = get(contentsState)
+    const balances = get(balancesWithBranchQuery)
     const balanceItem = balances[date]
 
     return Object.entries(tickers).reduce<Dictionary<TickerBalance>>(
