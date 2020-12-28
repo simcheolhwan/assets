@@ -15,8 +15,8 @@ const SetTickerModal = ({ tickerKey }: { tickerKey?: string }) => {
     : { tickerKey: tickerKey ?? v4(), currency: "KRW" }
 
   const submit = async () => {
-    const values = await form.validateFields()
-    await setTicker(pickBy((value) => value, values))
+    const { aim, ...values } = await form.validateFields()
+    await setTicker(pickBy((value) => value, { ...values, aim: Number(aim) }))
   }
 
   return (

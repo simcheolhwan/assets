@@ -16,7 +16,7 @@ const SetDepositModal = ({ index }: { index?: number }) => {
 
   const submit = async () => {
     const values = await form.validateFields()
-    const item = { ...values, amount: values.amount * 1e6 }
+    const item = { ...values, amount: Number(values.amount) * 1e6 }
     await setDeposit(
       Number.isInteger(index)
         ? update(index!, item, deposits)

@@ -17,8 +17,8 @@ const SetBalanceModal = ({ balanceKey }: { balanceKey?: string }) => {
     : { balanceKey: v4(), balance: 0 }
 
   const submit = async () => {
-    const values = await form.validateFields()
-    await setBalance(values)
+    const { balance, ...values } = await form.validateFields()
+    await setBalance({ ...values, balance: Number(balance) })
   }
 
   return (
