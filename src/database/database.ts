@@ -1,8 +1,7 @@
 import { useEffect } from "react"
-import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
+import { atom, selector, useSetRecoilState } from "recoil"
 import { db } from "../firebase"
 import { formatDate } from "../utils/format"
-import { authState } from "./auth"
 
 const initial = {
   tickers: {},
