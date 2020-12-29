@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { Radio, Tabs } from "antd"
 import { latestDateQuery } from "../../database/day"
 import Page from "../../components/Page"
-import DashboardStatistics from "../../layouts/Statistics"
+import Statistics from "../../layouts/Statistics"
 import { Range } from "./chartUtils"
 import BalanceChart from "./BalanceChart"
 import ValuesChart from "./ValuesChart"
@@ -30,7 +30,7 @@ const Charts = () => {
 
   return (
     <Page>
-      <DashboardStatistics date={date} />
+      <Statistics date={date} />
 
       <Tabs defaultActiveKey="1">
         <TabPane tab="종목" key="1">

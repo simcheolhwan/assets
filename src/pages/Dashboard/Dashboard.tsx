@@ -2,7 +2,7 @@ import { Space } from "antd"
 import { useRecoilValue } from "recoil"
 import { latestDateQuery } from "../../database/day"
 import Page from "../../components/Page"
-import DashboardStatistics from "../../layouts/Statistics"
+import Statistics from "../../layouts/Statistics"
 import DashboardTable from "./DashboardTable"
 
 const Dashboard = () => {
@@ -11,7 +11,7 @@ const Dashboard = () => {
   return (
     <Page>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        <DashboardStatistics date={date} />
+        <Statistics date={date} />
         <DashboardTable date={date} />
       </Space>
     </Page>
