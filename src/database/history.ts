@@ -1,5 +1,6 @@
 import { selector, waitForAll } from "recoil"
-import { daysQuery, dayStatusQuery } from "./day"
+import { dayStatusQuery } from "./day"
+import { daysQuery } from "./date"
 
 export const historyQuery = selector({
   key: "history",

@@ -1,8 +1,10 @@
-import { selector, selectorFamily } from "recoil"
-import { isNil, last, reverse, uniq } from "ramda"
+import { selectorFamily } from "recoil"
+import { reverse } from "ramda"
 import { isBefore } from "date-fns"
 import { yesterday } from "../utils/history"
-import { contentsState, depositsHistoryState } from "./database"
+import { contentsState } from "./database"
+import { depositsHistoryState } from "./deposits"
+import { prevDateQuery } from "./date"
 
 export const dayStatusQuery = selectorFamily({
   key: "dayStatus",
@@ -69,8 +71,8 @@ export const dayStatusQuery = selectorFamily({
   },
 })
 
-export const dayQuery = selectorFamily({
-  key: "day",
+export const dayWithPnLQuery = selectorFamily({
+  key: "dayWithPnL",
   get: (date: string) => ({ get }) => {
     const prevDate = get(prevDateQuery(date))
     const prevStatus = get(dayStatusQuery(prevDate))
@@ -96,59 +98,6 @@ export const dayQuery = selectorFamily({
     }
 
     return { ...dayStatus, pnl, pnlFromDeposit }
-  },
-})
-
-/* tickers */
-export const tickersDataQuery = selectorFamily({
-  key: "dayPrices",
-  get: (date: string) => ({ get }) => {
-    const { tickers, prices } = get(contentsState)
-    const prevDate = get(prevDateQuery(date))
-    const priceItemYesterday = prices[prevDate]
-    const priceItem = prices[date]
-
-    /* table */
-    const dataSource = Object.values(tickers)
-      .map((ticker) => {
-        const { tickerKey } = ticker
-        const price = priceItem[tickerKey]?.price
-        const yesterday = priceItemYesterday[tickerKey]?.price
-        const change = price ? price / yesterday - 1 : undefined
-        return { ...ticker, price, change }
-      })
-      .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
-      .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
-      .sort(
-        ({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b))
-      )
-
-    return dataSource
-  },
-})
-
-/* history */
-export const prevDateQuery = selectorFamily({
-  key: "prevDate",
-  get: (date: string) => ({ get }) => {
-    const days = get(daysQuery)
-    return days[days.indexOf(date) - 1]
-  },
-})
-
-export const latestDateQuery = selector({
-  key: "latestDate",
-  get: ({ get }) => {
-    const days = get(daysQuery)
-    return last(days)!
-  },
-})
-
-export const daysQuery = selector({
-  key: "days",
-  get: ({ get }) => {
-    const { balances } = get(contentsState)
-    return uniq(Object.keys(balances).sort())
   },
 })
 

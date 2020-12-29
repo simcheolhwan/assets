@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil"
 import { Tabs } from "antd"
-import { latestDateQuery } from "../../database/day"
+import { latestDateQuery } from "../../database/date"
 import Page from "../../components/Page"
 import Statistics from "../../layouts/Statistics"
 import BalanceChart from "./BalanceChart"

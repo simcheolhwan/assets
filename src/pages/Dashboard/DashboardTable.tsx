@@ -2,7 +2,7 @@ import { Popover, Table } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatAmount, formatKRW, formatPrice } from "../../utils/format"
 import { percent } from "../../utils/format"
-import { dayQuery } from "../../database/day"
+import { dayWithPnLQuery } from "../../database/day"
 import Change from "../../components/Change"
 import TickerName from "../../components/TickerName"
 import Icon from "../../components/Icon"
@@ -10,7 +10,7 @@ import Icon from "../../components/Icon"
 const { Column } = Table
 
 const DashboardTable = ({ date }: { date: string }) => {
-  const { dataSource } = useRecoilValue(dayQuery(date))
+  const { dataSource } = useRecoilValue(dayWithPnLQuery(date))
 
   const renderWallets = (wallets: DashboardWallet[]) =>
     wallets.map(({ name, balance }) => (

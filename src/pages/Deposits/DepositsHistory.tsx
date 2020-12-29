@@ -1,7 +1,7 @@
 import { Table, Tooltip, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatM, formatDateWith, formatDate } from "../../utils/format"
-import { depositsHistoryState } from "../../database/database"
+import { depositsHistoryState } from "../../database/deposits"
 import Page from "../../components/Page"
 import SetDepositModal from "../Manage/SetDepositModal"
 

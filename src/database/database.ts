@@ -46,18 +46,6 @@ export const contentsState = selector({
   },
 })
 
-export const depositsHistoryState = selector({
-  key: "deposits",
-  get: ({ get }) => {
-    const { deposits } = get(contentsState)
-    return deposits.reduce<DepositsHistoryItem[]>((acc, cur, index) => {
-      // Accumulate the balance
-      const balance = !index ? cur.amount : acc[index - 1].balance + cur.amount
-      return [...acc, { ...cur, balance }]
-    }, [])
-  },
-})
-
 /* load: database */
 export const useDatabase = () => {
   const setDatabase = useSetRecoilState(databaseState)
