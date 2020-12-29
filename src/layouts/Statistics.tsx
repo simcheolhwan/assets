@@ -2,10 +2,11 @@ import { Space, Statistic } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatKRW } from "../utils/format"
 import { dayWithPnLQuery } from "../database/day"
-import { yesterdayQuery } from "../database/date"
+import { latestDateQuery, yesterdayQuery } from "../database/date"
 import PnL from "../components/PnL"
 
-const Statistics = ({ date }: { date: string }) => {
+const Statistics = () => {
+  const date = useRecoilValue(latestDateQuery)
   const { total, pnl, pnlFromDeposit } = useRecoilValue(dayWithPnLQuery(date))
   const yesterday = useRecoilValue(yesterdayQuery)
 

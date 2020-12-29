@@ -1,30 +1,38 @@
-import { Card } from "antd"
 import { useRecoilValue } from "recoil"
+import { Card } from "antd"
 import { percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import ChartTitle from "../../components/ChartTitle"
 import { dataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
-const PricesChart = () => {
+const PricesChart = ({ validate }: { validate: (date: string) => boolean }) => {
   const { tickers, prices, exchanges } = useRecoilValue(contentsState)
   const tickerKeys = Object.keys(tickers)
+
+  const filteredPrices = Object.entries(prices).filter(([date]) =>
+    validate(date)
+  )
+
+  const filteredExchanges = Object.entries(exchanges).filter(([date]) =>
+    validate(date)
+  )
 
   const exchangesDatasets = {
     ...dataset,
     borderColor: colors.aqua,
     borderWidth: 2,
     label: "USD",
-    data: Object.entries(exchanges).map(([date, { USD }]) => {
-      const { USD: initialExchange } = Object.values(exchanges)[0]
+    data: filteredExchanges.map(([date, { USD }]) => {
+      const { USD: initialExchange } = filteredExchanges[0][1]
       return { t: new Date(date), y: (USD - initialExchange) / initialExchange }
     }),
   }
 
   const collectPrice = (tickerKey: string) =>
-    Object.entries(prices).map(([date, priceItem]) => {
+    filteredPrices.map(([date, priceItem]) => {
       const price = findPrice(tickerKey, priceItem)
-      const initialPrice = findPrice(tickerKey, Object.values(prices)[0])
+      const initialPrice = findPrice(tickerKey, filteredPrices[0][1])
       return { t: new Date(date), y: (price - initialPrice) / initialPrice }
     })
 

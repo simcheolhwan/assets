@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Card, Checkbox, Radio, Space } from "antd"
+import { Card, Radio } from "antd"
 import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
@@ -21,10 +21,13 @@ const Unit: Record<Range, TimeScale["unit"]> = {
   [Range.MAX]: "quarter",
 }
 
-const BalanceChart = () => {
+interface Props {
+  showBalances: boolean
+  showDeposits: boolean
+}
+
+const BalanceChart = ({ showBalances, showDeposits }: Props) => {
   const [range, setRange] = useState<Range>(Range.W)
-  const [showBalances, setShowBalances] = useState(true)
-  const [showDeposits, setShowDeposits] = useState(true)
 
   /* range */
   const filter = ({ t }: ChartPoint) =>
@@ -100,32 +103,16 @@ const BalanceChart = () => {
       <ChartTitle
         title="자본"
         extra={
-          <Space wrap>
-            <Checkbox
-              checked={showBalances}
-              onChange={(e) => setShowBalances(e.target.checked)}
-            >
-              잔고
-            </Checkbox>
-
-            <Checkbox
-              checked={showDeposits}
-              onChange={(e) => setShowDeposits(e.target.checked)}
-            >
-              입출금
-            </Checkbox>
-
-            <Radio.Group
-              options={Object.values(Range).map((value) => ({
-                label: value,
-                value,
-              }))}
-              onChange={(e) => setRange(e.target.value)}
-              value={range}
-              optionType="button"
-              buttonStyle="solid"
-            />
-          </Space>
+          <Radio.Group
+            options={Object.values(Range).map((value) => ({
+              label: value,
+              value,
+            }))}
+            onChange={(e) => setRange(e.target.value)}
+            value={range}
+            optionType="button"
+            buttonStyle="solid"
+          />
         }
       />
 

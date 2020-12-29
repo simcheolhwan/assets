@@ -9,15 +9,17 @@ import ChartTitle from "../../components/ChartTitle"
 import { dataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
-const ValuesChart = () => {
+const ValuesChart = ({ validate }: { validate: (date: string) => boolean }) => {
   const [key, setKey] = useState<"balance" | "value">("value")
   const history = useRecoilValue(historyQuery)
+  const filtered = history.filter(({ date }) => validate(date))
+
   const { tickers } = useRecoilValue(contentsState)
   const tickerKeys = Object.keys(tickers)
 
   const collectHistory = (tickerKey: string) =>
-    history.map(({ date, list }) => {
-      const { list: initialList } = history[0]
+    filtered.map(({ date, list }) => {
+      const { list: initialList } = filtered[0]
       const current = find(tickerKey, list, key)
       const initial = find(tickerKey, initialList, key)
 
