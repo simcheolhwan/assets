@@ -1,13 +1,13 @@
-import { Popover, Table, Typography } from "antd"
+import { Popover, Table } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatAmountWith, formatAmount, formatKRW } from "../../utils/format"
 import { percent } from "../../utils/format"
 import { dayQuery } from "../../database/day"
 import Change from "../../components/Change"
+import TickerName from "../../components/TickerName"
 import Icon from "../../components/Icon"
 
 const { Column } = Table
-const { Text } = Typography
 
 const DashboardTable = ({ date }: { date: string }) => {
   const { dataSource } = useRecoilValue(dayQuery(date))
@@ -35,8 +35,8 @@ const DashboardTable = ({ date }: { date: string }) => {
       />
       <Column
         title="항목"
-        dataIndex="ticker"
-        render={(ticker) => <Text strong>{ticker}</Text>}
+        dataIndex="tickerKey"
+        render={(tickerKey) => <TickerName tickerKey={tickerKey} />}
         align="center"
         fixed="left"
       />

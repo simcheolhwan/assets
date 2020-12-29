@@ -1,13 +1,12 @@
-import { Table, Typography } from "antd"
+import { Table } from "antd"
 import { useRecoilValue } from "recoil"
 import { latestDateQuery, tickersDataQuery } from "../../database/day"
+import TickerName from "../../components/TickerName"
 import Icon, { signSVG } from "../../components/Icon"
 import Change from "../../components/Change"
-import { colors } from "../Charts/chartUtils"
 import SetTickerModal from "./SetTickerModal"
 
 const { Column } = Table
-const { Text } = Typography
 
 const ManageTickers = () => {
   const date = useRecoilValue(latestDateQuery)
@@ -28,14 +27,10 @@ const ManageTickers = () => {
           align="center"
           fixed="left"
         />
-        <Column<Ticker>
+        <Column
           title="이름"
-          dataIndex="name"
-          render={(name, { color }) => (
-            <Text strong style={{ color: color && colors[color] }}>
-              {name}
-            </Text>
-          )}
+          dataIndex="tickerKey"
+          render={(tickerKey) => <TickerName tickerKey={tickerKey} />}
           align="center"
           fixed="left"
         />
