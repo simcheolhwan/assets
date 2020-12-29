@@ -25,37 +25,31 @@ const ManageBalances = () => {
     .sort(({ ticker: a }, { ticker: b }) => a.localeCompare(b))
 
   return (
-    <>
-      <Table
-        dataSource={dataSource}
-        pagination={false}
-        rowKey="balanceKey"
-        scroll={{ x: true }}
-      >
-        <Column
-          title="종목"
-          dataIndex="tickerKey"
-          render={(tickerKey) => <TickerName tickerKey={tickerKey} />}
-          align="center"
-        />
-        <Column title="지갑" dataIndex="wallet" align="center" />
-        <Column
-          title="잔고"
-          dataIndex="balance"
-          render={formatAmount}
-          align="center"
-        />
-        <Column
-          dataIndex="balanceKey"
-          align="center"
-          render={(balanceKey) => <SetBalanceModal balanceKey={balanceKey} />}
-        />
-      </Table>
-
-      <div style={{ marginTop: 16 }}>
-        <SetBalanceModal />
-      </div>
-    </>
+    <Table
+      dataSource={dataSource}
+      pagination={false}
+      rowKey="balanceKey"
+      scroll={{ x: true }}
+    >
+      <Column
+        title="종목"
+        dataIndex="tickerKey"
+        render={(tickerKey) => <TickerName tickerKey={tickerKey} />}
+        align="center"
+      />
+      <Column title="지갑" dataIndex="wallet" align="center" />
+      <Column
+        title="잔고"
+        dataIndex="balance"
+        render={formatAmount}
+        align="center"
+      />
+      <Column
+        dataIndex="balanceKey"
+        align="center"
+        render={(balanceKey) => <SetBalanceModal balanceKey={balanceKey} />}
+      />
+    </Table>
   )
 }
 

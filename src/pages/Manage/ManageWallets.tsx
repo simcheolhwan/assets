@@ -13,31 +13,25 @@ const ManageWallets = () => {
   })
 
   return (
-    <>
-      <Table
-        dataSource={dataSource}
-        pagination={false}
-        rowKey="walletKey"
-        scroll={{ x: true }}
-      >
-        <Column
-          title="이름"
-          dataIndex="name"
-          render={(name) => <Text strong>{name}</Text>}
-          align="center"
-          fixed="left"
-        />
-        <Column
-          dataIndex="walletKey"
-          align="center"
-          render={(walletKey) => <SetWalletModal walletKey={walletKey} />}
-        />
-      </Table>
-
-      <div style={{ marginTop: 16 }}>
-        <SetWalletModal />
-      </div>
-    </>
+    <Table
+      dataSource={dataSource}
+      pagination={false}
+      rowKey="walletKey"
+      scroll={{ x: true }}
+    >
+      <Column
+        title="이름"
+        dataIndex="name"
+        render={(name) => <Text strong>{name}</Text>}
+        align="center"
+        fixed="left"
+      />
+      <Column
+        dataIndex="walletKey"
+        align="center"
+        render={(walletKey) => <SetWalletModal walletKey={walletKey} />}
+      />
+    </Table>
   )
 }
 
