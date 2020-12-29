@@ -23,12 +23,15 @@ export const formatAmountWith = (
   }
 }
 
-export const formatAmount = formatAmountWith()
-export const formatKRW = formatAmountWith("KRW")
-export const formatExchange = formatAmountWith("KRW", true)
+export const formatPrice = (value: number, currency: CurrencyTicker) =>
+  formatAmountWith(currency, true)(value)
 
 export const formatM = (number: number) =>
   number ? Math.round(number / 1e6) + "백만" : "0"
+
+export const formatAmount = formatAmountWith()
+export const formatKRW = formatAmountWith("KRW")
+export const formatExchange = formatAmountWith("KRW", true)
 
 /* date */
 export const formatDateWith = (fmt = "yyyy-MM-dd") => {

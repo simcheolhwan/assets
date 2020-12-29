@@ -1,6 +1,6 @@
 import { Popover, Table } from "antd"
 import { useRecoilValue } from "recoil"
-import { formatAmountWith, formatAmount, formatKRW } from "../../utils/format"
+import { formatAmount, formatKRW, formatPrice } from "../../utils/format"
 import { percent } from "../../utils/format"
 import { dayQuery } from "../../database/day"
 import Change from "../../components/Change"
@@ -44,7 +44,7 @@ const DashboardTable = ({ date }: { date: string }) => {
       <Column<Ticker>
         title="가격"
         dataIndex="price"
-        render={(price, { currency }) => formatAmountWith(currency)(price)}
+        render={(price, { currency }) => formatPrice(price, currency)}
         align="center"
       />
       <Column<Dashboard>
