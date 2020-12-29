@@ -1,7 +1,6 @@
 import { selectorFamily } from "recoil"
 import { reverse } from "ramda"
 import { isBefore } from "date-fns"
-import { yesterday } from "../utils/history"
 import { contentsState } from "./database"
 import { depositsHistoryState } from "./deposits"
 import { prevDateQuery } from "./date"
@@ -80,7 +79,7 @@ export const dayWithPnLQuery = selectorFamily({
 
     /* p&l */
     const pnl = {
-      date: prevDate === yesterday ? "어제" : prevDate,
+      date: prevDate,
       ...calcPnL(dayStatus.total, prevStatus.total),
     }
 

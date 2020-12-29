@@ -1,12 +1,13 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
 import { Form, Input } from "antd"
-import { setDeposit, contentsState } from "../../database/database"
-import { today } from "../../utils/history"
-import SetModal from "./SetModal"
 import { update } from "ramda"
+import { setDeposit, contentsState } from "../../database/database"
+import { todayQuery } from "../../database/date"
+import SetModal from "./SetModal"
 
 const SetDepositModal = ({ index }: { index?: number }) => {
+  const today = useRecoilValue(todayQuery)
   const [form] = Form.useForm<Deposit>()
 
   const { deposits } = useRecoilValue(contentsState)

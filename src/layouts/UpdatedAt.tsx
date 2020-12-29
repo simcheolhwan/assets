@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import { Button } from "antd"
 import { ko } from "date-fns/locale"
-import { formatDistanceStrict, startOfSecond } from "date-fns"
+import { formatDistanceStrict } from "date-fns"
 import { addMinutes, isAfter } from "date-fns"
 import { contentsState } from "../database/database"
+import { nowState } from "../database/date"
 
 const config = {
   addSuffix: true,
@@ -14,12 +14,7 @@ const config = {
 
 const UpdatedAt = () => {
   const { updatedAt } = useRecoilValue(contentsState)
-  const [now, setNow] = useState(startOfSecond(Date.now()).getTime())
-
-  useEffect(() => {
-    setInterval(() => setNow(startOfSecond(new Date()).getTime()), 1000)
-  }, [])
-
+  const now = useRecoilValue(nowState)
   const loading = isAfter(now, addMinutes(updatedAt, 1))
 
   return loading ? (
