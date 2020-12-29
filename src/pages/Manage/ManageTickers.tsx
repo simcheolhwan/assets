@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil"
 import { latestDateQuery, tickersDataQuery } from "../../database/day"
 import Icon, { signSVG } from "../../components/Icon"
 import Change from "../../components/Change"
+import { colors } from "../Charts/chartUtils"
 import SetTickerModal from "./SetTickerModal"
 
 const { Column } = Table
@@ -27,10 +28,14 @@ const ManageTickers = () => {
           align="center"
           fixed="left"
         />
-        <Column
+        <Column<Ticker>
           title="이름"
           dataIndex="name"
-          render={(name) => <Text strong>{name}</Text>}
+          render={(name, { color }) => (
+            <Text strong style={{ color: color && colors[color] }}>
+              {name}
+            </Text>
+          )}
           align="center"
           fixed="left"
         />

@@ -7,7 +7,7 @@ export enum Range {
   "MAX" = "MAX",
 }
 
-export const colors = {
+export const colors: Dictionary<string> = {
   red: "#e64c57",
   orange: "#dd794a",
   yellow: "#ffec3d",
@@ -16,17 +16,6 @@ export const colors = {
   blue: "#1eb2ff",
   purple: "#9b8ec5",
   gray: "#d9d9d9",
-}
-
-export const tickerColors: Dictionary<string> = {
-  TQQQ: colors.red,
-  LUNA: colors.yellow,
-  KRW: colors.green,
-  USD: colors.aqua,
-  "mQQQ-UST LP": colors.blue,
-  QQQ: colors.blue,
-  "MIR-UST LP": colors.gray,
-  MIR: colors.gray,
 }
 
 export const dataset = {

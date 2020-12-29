@@ -1,10 +1,13 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
-import { Form, Input, Radio } from "antd"
+import { Form, Input, Radio, Select } from "antd"
 import { pickBy } from "ramda"
 import { v4 } from "uuid"
 import { setTicker, contentsState } from "../../database/database"
+import { colors } from "../Charts/chartUtils"
 import SetModal from "./SetModal"
+
+const { Option } = Select
 
 const SetTickerModal = ({ tickerKey }: { tickerKey?: string }) => {
   const [form] = Form.useForm<Ticker>()
@@ -42,6 +45,16 @@ const SetTickerModal = ({ tickerKey }: { tickerKey?: string }) => {
 
       <Form.Item name="icon" label="아이콘">
         <Input />
+      </Form.Item>
+
+      <Form.Item name="color" label="색상">
+        <Select>
+          {Object.keys(colors).map((color) => (
+            <Option value={color} key={color}>
+              {color}
+            </Option>
+          ))}
+        </Select>
       </Form.Item>
 
       <Form.Item name="aim" label="목표 비율">

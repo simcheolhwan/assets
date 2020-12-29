@@ -6,7 +6,7 @@ import { formatKRW, formatM, percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import { historyQuery } from "../../database/chart"
 import ChartTitle from "../../components/ChartTitle"
-import { dataset, tickerColors } from "./chartUtils"
+import { dataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
 const ValuesChart = ({ extra: filter }: { extra: ReactNode }) => {
@@ -31,13 +31,13 @@ const ValuesChart = ({ extra: filter }: { extra: ReactNode }) => {
 
   const datasets = tickerKeys
     .reduce<ChartDataSets[]>((acc, tickerKey) => {
-      const { name } = tickers[tickerKey]
+      const { name, color } = tickers[tickerKey]
 
       return [
         ...acc,
         {
           ...dataset,
-          borderColor: tickerColors[name],
+          borderColor: color ? colors[color] : "white",
           borderWidth: 2,
           label: name,
           data: collectHistory(tickerKey),

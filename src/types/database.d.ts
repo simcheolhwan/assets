@@ -54,6 +54,7 @@ interface Ticker {
   currency: CurrencyTicker
   name: string
   icon?: string
+  color?: string
   aim?: number
 }
 

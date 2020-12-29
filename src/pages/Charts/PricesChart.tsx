@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import ChartTitle from "../../components/ChartTitle"
-import { dataset, tickerColors } from "./chartUtils"
+import { dataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
 const PricesChart = () => {
@@ -12,7 +12,7 @@ const PricesChart = () => {
 
   const exchangesDatasets = {
     ...dataset,
-    borderColor: tickerColors["USD"],
+    borderColor: colors.aqua,
     borderWidth: 2,
     label: "USD",
     data: Object.entries(exchanges).map(([date, { USD }]) => {
@@ -30,11 +30,11 @@ const PricesChart = () => {
 
   const datasets = tickerKeys
     .map((tickerKey) => {
-      const { name } = tickers[tickerKey]
+      const { name, color } = tickers[tickerKey]
 
       return {
         ...dataset,
-        borderColor: tickerColors[name],
+        borderColor: color ? colors[color] : "white",
         borderWidth: 2,
         label: name,
         data: collectPrice(tickerKey),
