@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react"
+import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { Card, Radio, Space } from "antd"
 import { ChartDataSets } from "chart.js"
@@ -9,7 +9,7 @@ import ChartTitle from "../../components/ChartTitle"
 import { dataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
-const ValuesChart = ({ extra: filter }: { extra: ReactNode }) => {
+const ValuesChart = () => {
   const [key, setKey] = useState<"balance" | "value">("value")
   const history = useRecoilValue(historyQuery)
   const { tickers } = useRecoilValue(contentsState)
@@ -67,8 +67,6 @@ const ValuesChart = ({ extra: filter }: { extra: ReactNode }) => {
               <Radio.Button value="value">가치</Radio.Button>
               <Radio.Button value="balance">잔고</Radio.Button>
             </Radio.Group>
-
-            {filter}
           </Space>
         }
       />

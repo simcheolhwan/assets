@@ -1,6 +1,6 @@
-import { ReactNode, useState } from "react"
+import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Card, Checkbox, Space } from "antd"
+import { Card, Checkbox, Radio, Space } from "antd"
 import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
@@ -21,7 +21,8 @@ const Unit: Record<Range, TimeScale["unit"]> = {
   [Range.MAX]: "quarter",
 }
 
-const BalanceChart = ({ range, extra }: { range: Range; extra: ReactNode }) => {
+const BalanceChart = () => {
+  const [range, setRange] = useState<Range>(Range.W)
   const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(true)
 
@@ -114,7 +115,16 @@ const BalanceChart = ({ range, extra }: { range: Range; extra: ReactNode }) => {
               입출금
             </Checkbox>
 
-            {extra}
+            <Radio.Group
+              options={Object.values(Range).map((value) => ({
+                label: value,
+                value,
+              }))}
+              onChange={(e) => setRange(e.target.value)}
+              value={range}
+              optionType="button"
+              buttonStyle="solid"
+            />
           </Space>
         }
       />
