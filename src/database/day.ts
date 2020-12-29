@@ -1,9 +1,9 @@
-import { selectorFamily } from "recoil"
+import { selector, selectorFamily } from "recoil"
 import { reverse } from "ramda"
 import { isBefore } from "date-fns"
 import { contentsState } from "./database"
 import { depositsHistoryState } from "./deposits"
-import { prevDateQuery } from "./date"
+import { prevDateQuery, todayQuery } from "./date"
 
 export const dayStatusQuery = selectorFamily({
   key: "dayStatus",
@@ -70,9 +70,10 @@ export const dayStatusQuery = selectorFamily({
   },
 })
 
-export const dayWithPnLQuery = selectorFamily({
+export const dayWithPnLQuery = selector({
   key: "dayWithPnL",
-  get: (date: string) => ({ get }) => {
+  get: ({ get }) => {
+    const date = get(todayQuery)
     const prevDate = get(prevDateQuery(date))
     const prevStatus = get(dayStatusQuery(prevDate))
     const dayStatus = get(dayStatusQuery(date))

@@ -1,6 +1,5 @@
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
-import { latestDateQuery } from "../../database/date"
 import { tickersWithPriceQuery } from "../../database/tickers"
 import TickerName from "../../components/TickerName"
 import Icon, { signSVG } from "../../components/Icon"
@@ -10,8 +9,7 @@ import SetTickerModal from "./SetTickerModal"
 const { Column } = Table
 
 const ManageTickers = () => {
-  const date = useRecoilValue(latestDateQuery)
-  const dataSource = useRecoilValue(tickersWithPriceQuery(date))
+  const dataSource = useRecoilValue(tickersWithPriceQuery)
 
   return (
     <Table

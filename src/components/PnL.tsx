@@ -1,5 +1,5 @@
-import { Statistic } from "antd"
-import { formatKRW } from "../utils/format"
+import { Statistic, Tooltip } from "antd"
+import { formatExact, formatKRW } from "../utils/format"
 import Change from "./Change"
 
 interface PnLProps {
@@ -10,11 +10,13 @@ interface PnLProps {
 }
 
 const PnL = ({ date, pnl, change, isChanged }: PnLProps) => (
-  <Statistic
-    title={`${date}보다`}
-    value={isChanged ? formatKRW(pnl) : "변동없음"}
-    suffix={isChanged && <Change color>{change}</Change>}
-  />
+  <Tooltip title={formatExact(pnl)} placement="bottom">
+    <Statistic
+      title={`${date}보다`}
+      value={isChanged ? formatKRW(pnl) : "변동없음"}
+      suffix={isChanged && <Change color>{change}</Change>}
+    />
+  </Tooltip>
 )
 
 export default PnL

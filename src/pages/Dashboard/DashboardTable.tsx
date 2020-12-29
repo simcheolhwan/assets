@@ -3,7 +3,6 @@ import { useRecoilValue } from "recoil"
 import { formatAmount, formatKRW, formatPrice } from "../../utils/format"
 import { percent } from "../../utils/format"
 import { dayWithPnLQuery } from "../../database/day"
-import { latestDateQuery } from "../../database/date"
 import Change from "../../components/Change"
 import TickerName from "../../components/TickerName"
 import Icon from "../../components/Icon"
@@ -11,8 +10,7 @@ import Icon from "../../components/Icon"
 const { Column } = Table
 
 const DashboardTable = () => {
-  const date = useRecoilValue(latestDateQuery)
-  const { list } = useRecoilValue(dayWithPnLQuery(date))
+  const { list } = useRecoilValue(dayWithPnLQuery)
 
   const renderWallets = (wallets: DashboardWallet[]) =>
     wallets.map(({ name, balance }) => (

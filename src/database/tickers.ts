@@ -1,22 +1,25 @@
-import { selectorFamily } from "recoil"
+import { selector } from "recoil"
 import { isNil } from "ramda"
 import { contentsState } from "./database"
-import { prevDateQuery } from "./date"
+import { todayQuery, yesterdayQuery } from "./date"
 
-export const tickersWithPriceQuery = selectorFamily({
+export const tickersWithPriceQuery = selector({
   key: "tickersWithPrice",
-  get: (date: string) => ({ get }) => {
+  get: ({ get }) => {
+    const today = get(todayQuery)
+    const yesterday = get(yesterdayQuery)
     const { tickers, prices } = get(contentsState)
-    const prevDate = get(prevDateQuery(date))
-    const priceItemYesterday = prices[prevDate]
-    const priceItem = prices[date]
+
+    const priceItem = prices[today]
+    const priceItemYesterday = prices[yesterday]
 
     return Object.values(tickers)
       .map((ticker) => {
         const { tickerKey } = ticker
         const price = priceItem[tickerKey]?.price
-        const yesterday = priceItemYesterday[tickerKey]?.price
-        const change = price ? price / yesterday - 1 : undefined
+        const yesterdayPrice = priceItemYesterday[tickerKey]?.price
+        const change = price ? price / yesterdayPrice - 1 : undefined
+
         return { ...ticker, price, change }
       })
       .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
