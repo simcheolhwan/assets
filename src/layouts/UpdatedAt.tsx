@@ -20,7 +20,7 @@ const UpdatedAt = () => {
     setInterval(() => setNow(startOfSecond(new Date()).getTime()), 1000)
   }, [])
 
-  const loading = isAfter(now, addMinutes(updatedAt, 2))
+  const loading = isAfter(now, addMinutes(updatedAt, 1))
 
   return loading ? (
     <Button loading disabled key="loading" />
