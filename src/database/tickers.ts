@@ -11,8 +11,7 @@ export const tickersWithPriceQuery = selectorFamily({
     const priceItemYesterday = prices[prevDate]
     const priceItem = prices[date]
 
-    /* table */
-    const dataSource = Object.values(tickers)
+    return Object.values(tickers)
       .map((ticker) => {
         const { tickerKey } = ticker
         const price = priceItem[tickerKey]?.price
@@ -25,7 +24,5 @@ export const tickersWithPriceQuery = selectorFamily({
       .sort(
         ({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b))
       )
-
-    return dataSource
   },
 })

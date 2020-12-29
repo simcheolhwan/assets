@@ -10,7 +10,7 @@ import Icon from "../../components/Icon"
 const { Column } = Table
 
 const DashboardTable = ({ date }: { date: string }) => {
-  const { dataSource } = useRecoilValue(dayWithPnLQuery(date))
+  const { list } = useRecoilValue(dayWithPnLQuery(date))
 
   const renderWallets = (wallets: DashboardWallet[]) =>
     wallets.map(({ name, balance }) => (
@@ -21,7 +21,7 @@ const DashboardTable = ({ date }: { date: string }) => {
 
   return (
     <Table
-      dataSource={dataSource}
+      dataSource={list}
       pagination={false}
       rowKey="tickerKey"
       size="small"

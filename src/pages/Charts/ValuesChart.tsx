@@ -16,10 +16,10 @@ const ValuesChart = () => {
   const tickerKeys = Object.keys(tickers)
 
   const collectHistory = (tickerKey: string) =>
-    history.map(({ date, dataSource }) => {
-      const { dataSource: initialDataSource } = history[0]
-      const current = find(tickerKey, dataSource, key)
-      const initial = find(tickerKey, initialDataSource, key)
+    history.map(({ date, list }) => {
+      const { list: initialList } = history[0]
+      const current = find(tickerKey, list, key)
+      const initial = find(tickerKey, initialList, key)
 
       const value = {
         balance: (current - initial) / initial,
@@ -88,8 +88,11 @@ const ValuesChart = () => {
 export default ValuesChart
 
 /* helpers */
-const find = (
-  tickerKey: string,
-  dataSource: { tickerKey: string; balance: number; value: number }[],
-  key: "balance" | "value"
-) => dataSource.find((d) => d.tickerKey === tickerKey)?.[key] ?? 0
+interface Item {
+  tickerKey: string
+  balance: number
+  value: number
+}
+
+const find = (tickerKey: string, list: Item[], key: "balance" | "value") =>
+  list.find((d) => d.tickerKey === tickerKey)?.[key] ?? 0

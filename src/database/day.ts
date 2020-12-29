@@ -56,7 +56,7 @@ export const dayStatusQuery = selectorFamily({
     const total = asset - dept
 
     /* table */
-    const dataSource = data
+    const list = data
       .map((item) => {
         const { balance, value, aim = 0 } = item
         const ratio = value / asset
@@ -67,7 +67,7 @@ export const dayStatusQuery = selectorFamily({
       .sort(({ value: a }, { value: b }) => b - a)
       .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
 
-    return { date, dataSource, asset, dept, total }
+    return { date, list, asset, dept, total }
   },
 })
 
