@@ -6,6 +6,7 @@ import { reverse } from "ramda"
 import { isAfter } from "date-fns"
 import { formatM } from "../../utils/format"
 import { contentsState } from "../../database/database"
+import { todayQuery } from "../../database/date"
 import Page from "../../components/Page"
 import Statistics from "../../layouts/Statistics"
 import BalanceChart from "./BalanceChart"
@@ -60,11 +61,14 @@ export default Charts
 /* hooks */
 const useSelectStartDate = () => {
   const { balances, deposits } = useRecoilValue(contentsState)
+  const today = useRecoilValue(todayQuery)
+
   const genesis = Object.keys(balances)[0]
   const list = reverse(
     deposits.filter(
       ({ date }) =>
-        date === genesis || isAfter(new Date(date), new Date(genesis))
+        (date === genesis || isAfter(new Date(date), new Date(genesis))) &&
+        date !== today
     )
   )
 
