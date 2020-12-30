@@ -19,6 +19,14 @@ const DashboardTable = () => {
       </p>
     ))
 
+  const ratio = (
+    <pre>
+      {list
+        .map(({ ticker, ratio }) => [ticker, percent(ratio, true)].join(": "))
+        .join("\n")}
+    </pre>
+  )
+
   return (
     <Table
       dataSource={list}
@@ -63,7 +71,11 @@ const DashboardTable = () => {
       />
       <Column title="가치" dataIndex="value" render={formatKRW} align="right" />
       <Column
-        title="비율"
+        title={
+          <Popover content={ratio} placement="bottom">
+            비율
+          </Popover>
+        }
         dataIndex="ratio"
         render={(value) => percent(value, true)}
         align="center"
