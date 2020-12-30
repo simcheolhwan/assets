@@ -22,13 +22,13 @@ const Charts = () => {
   const [tab, setTab] = useState<Tab>("values")
   const handleChange = (tab: string) => setTab(tab as Tab)
 
-  const startDateFilter = useSelectStartDate()
+  const { value, onChange, list, validate } = useSelectStartDate()
   const balanceFilter = useBalanceFilter()
 
   const extra = {
     values: (
-      <Select value={startDateFilter.value} onChange={startDateFilter.onChange}>
-        {startDateFilter.list.map((option) => (
+      <Select value={value} onChange={onChange}>
+        {list.map((option) => (
           <Option {...option} key={option.value} />
         ))}
       </Select>
@@ -44,8 +44,10 @@ const Charts = () => {
 
       <Tabs activeKey={tab} onChange={handleChange} tabBarExtraContent={extra}>
         <TabPane tab="종목" key="values">
-          <ValuesChart validate={startDateFilter.validate} />
-          <PricesChart validate={startDateFilter.validate} />
+          <div key={value}>
+            <ValuesChart validate={validate} />
+            <PricesChart validate={validate} />
+          </div>
         </TabPane>
 
         <TabPane tab="자본" key="balances">
