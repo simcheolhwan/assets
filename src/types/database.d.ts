@@ -39,7 +39,7 @@ interface ExchangeItem {
 interface Deposit {
   date: string
   title: string
-  amount: number
+  amount?: number
 }
 
 interface Dept {

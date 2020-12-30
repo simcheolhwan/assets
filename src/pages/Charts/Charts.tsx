@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { Checkbox, Select, Tabs } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import { reverse } from "ramda"
-import { isAfter } from "date-fns"
+import { isAfter, isBefore } from "date-fns"
 import { formatM } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import { todayQuery } from "../../database/date"
@@ -27,7 +27,7 @@ const Charts = () => {
 
   const extra = {
     values: (
-      <Select value={value} onChange={onChange}>
+      <Select value={value} onChange={onChange} style={{ minWidth: 200 }}>
         {list.map((option) => (
           <Option {...option} key={option.value} />
         ))}
@@ -67,11 +67,11 @@ const useSelectStartDate = () => {
 
   const genesis = Object.keys(balances)[0]
   const list = reverse(
-    deposits.filter(
-      ({ date }) =>
-        (date === genesis || isAfter(new Date(date), new Date(genesis))) &&
-        date !== today
-    )
+    deposits.filter(({ date }) => {
+      const isAfterGenesis =
+        date === genesis || isAfter(new Date(date), new Date(genesis))
+      return isAfterGenesis && isBefore(new Date(date), new Date(today))
+    })
   )
 
   const [startDate, setStartDate] = useState(list[0].date)
@@ -79,10 +79,10 @@ const useSelectStartDate = () => {
   return {
     value: startDate,
     onChange: setStartDate,
-    list: list.map(({ date, title, amount }) => ({
-      value: date,
-      children: [date, title, formatM(amount)].join(" "),
-    })),
+    list: list.map(({ date, title, amount }) => {
+      const affix = `(${[title, formatM(amount)].filter(Boolean).join(" ")})`
+      return { value: date, children: [date, affix].join(" ") }
+    }),
     validate: (date: string) =>
       date === startDate || isAfter(new Date(date), new Date(startDate)),
   }

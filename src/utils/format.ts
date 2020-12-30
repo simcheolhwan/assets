@@ -26,8 +26,10 @@ export const formatAmountWith = (
 export const formatPrice = (value: number, currency: CurrencyTicker) =>
   formatAmountWith(currency, true)(value)
 
-export const formatM = (number: number) =>
-  Math.abs(number) > 1e6
+export const formatM = (number?: number) =>
+  !number
+    ? ""
+    : Math.abs(number) > 1e6
     ? Math.round(number / 1e6) + "백만"
     : Math.abs(number) > 1e5
     ? Math.round((number * 10) / 1e6) / 10 + "백만"

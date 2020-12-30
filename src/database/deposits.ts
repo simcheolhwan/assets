@@ -7,7 +7,8 @@ export const depositsHistoryState = selector({
     const { deposits } = get(contentsState)
     return deposits.reduce<DepositsHistoryItem[]>((acc, cur, index) => {
       // Accumulate the balance
-      const balance = !index ? cur.amount : acc[index - 1].balance + cur.amount
+      const { amount = 0 } = cur
+      const balance = !index ? amount : acc[index - 1].balance + amount
       return [...acc, { ...cur, balance }]
     }, [])
   },

@@ -11,13 +11,19 @@ const SetDepositModal = ({ index }: { index?: number }) => {
   const [form] = Form.useForm<Deposit>()
 
   const { deposits } = useRecoilValue(contentsState)
+  const deposit = index ? deposits[index!] : undefined
   const initialValues = Number.isInteger(index)
-    ? { ...deposits[index!], amount: deposits[index!].amount / 1e6 }
+    ? { ...deposit, amount: deposit?.amount && deposit.amount / 1e6 }
     : { date: today }
 
   const submit = async () => {
-    const values = await form.validateFields()
-    const item = { ...values, amount: Number(values.amount) * 1e6 }
+    const { amount, ...values } = await form.validateFields()
+    const item: Deposit = Object.assign(
+      {},
+      values,
+      amount && { amount: Number(amount) * 1e6 }
+    )
+
     await setDeposit(
       Number.isInteger(index)
         ? update(index!, item, deposits)
@@ -39,7 +45,7 @@ const SetDepositModal = ({ index }: { index?: number }) => {
         <Input autoFocus />
       </Form.Item>
 
-      <Form.Item name="amount" label="내역 (백만)" rules={[{ required: true }]}>
+      <Form.Item name="amount" label="내역 (백만)">
         <Input type="number" />
       </Form.Item>
     </SetModal>
