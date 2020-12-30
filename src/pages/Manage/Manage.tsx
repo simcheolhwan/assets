@@ -28,7 +28,7 @@ const Manage = () => {
   }[tab]
 
   return (
-    <Page extra>
+    <Page>
       <Tabs
         activeKey={tab}
         onChange={(tab) => setTab(tab as Tab)}
