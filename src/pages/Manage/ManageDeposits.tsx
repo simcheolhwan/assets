@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil"
 import { reverse } from "ramda"
 import { formatM, formatDateWith } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
+import { colors } from "../Charts/chartUtils"
 import SetDepositModal from "./SetDepositModal"
 
 const { Column } = Table
@@ -27,7 +28,11 @@ const DepositsHistory = () => {
       <Column
         title="항목"
         dataIndex="title"
-        render={(title) => <Text strong>{title}</Text>}
+        render={(title) => (
+          <Text style={{ color: colorsByTitle[title] }} strong>
+            {title}
+          </Text>
+        )}
         align="center"
       />
       <Column
@@ -52,3 +57,9 @@ const DepositsHistory = () => {
 }
 
 export default DepositsHistory
+
+/* styles */
+const colorsByTitle: Dictionary<string> = {
+  입금: colors.green,
+  수익: colors.blue,
+}
