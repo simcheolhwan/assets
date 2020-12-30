@@ -1,8 +1,7 @@
 import { useEffect } from "react"
 import { atom, selector, selectorFamily, useSetRecoilState } from "recoil"
 import { last, uniq } from "ramda"
-import { startOfSecond, subDays } from "date-fns"
-import { formatDate } from "../utils/format"
+import { startOfSecond } from "date-fns"
 import { contentsState } from "./database"
 
 export const nowState = atom({
@@ -12,18 +11,12 @@ export const nowState = atom({
 
 export const todayQuery = selector({
   key: "today",
-  get: ({ get }) => {
-    const now = get(nowState)
-    return formatDate(new Date(now))
-  },
+  get: ({ get }) => get(latestDateQuery),
 })
 
 export const yesterdayQuery = selector({
   key: "yesterday",
-  get: ({ get }) => {
-    const now = get(nowState)
-    return formatDate(subDays(new Date(now), 1))
-  },
+  get: ({ get }) => get(prevDateQuery(get(todayQuery))),
 })
 
 export const prevDateQuery = selectorFamily({
