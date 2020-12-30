@@ -11,7 +11,7 @@ const SetDepositModal = ({ index }: { index?: number }) => {
   const [form] = Form.useForm<Deposit>()
 
   const { deposits } = useRecoilValue(contentsState)
-  const deposit = index ? deposits[index!] : undefined
+  const deposit = Number.isInteger(index) ? deposits[index!] : undefined
   const initialValues = Number.isInteger(index)
     ? { ...deposit, amount: deposit?.amount && deposit.amount / 1e6 }
     : { date: today }

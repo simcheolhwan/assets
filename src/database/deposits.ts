@@ -9,7 +9,7 @@ export const depositsHistoryState = selector({
       // Accumulate the balance
       const { amount = 0 } = cur
       const balance = !index ? amount : acc[index - 1].balance + amount
-      return [...acc, { ...cur, balance }]
+      return [...acc, { ...cur, index, balance }]
     }, [])
   },
 })

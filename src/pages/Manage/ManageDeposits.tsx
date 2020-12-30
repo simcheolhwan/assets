@@ -1,6 +1,7 @@
-import { Table, Tooltip, Typography } from "antd"
+import { Table, Typography } from "antd"
 import { useRecoilValue } from "recoil"
-import { formatM, formatDateWith, formatDate } from "../../utils/format"
+import { reverse } from "ramda"
+import { formatM, formatDateWith } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
 import SetDepositModal from "./SetDepositModal"
 
@@ -12,7 +13,7 @@ const DepositsHistory = () => {
 
   return (
     <Table
-      dataSource={dataSource}
+      dataSource={reverse(dataSource)}
       pagination={false}
       rowKey={({ date, title }) => [date, title].join()}
       scroll={{ x: true }}
@@ -20,11 +21,7 @@ const DepositsHistory = () => {
       <Column
         title="날짜"
         dataIndex="date"
-        render={(date) => (
-          <Tooltip title={formatDate(date)} placement="bottom">
-            {formatDateWith("yyyy")(date)}
-          </Tooltip>
-        )}
+        render={formatDateWith("yyyy년 M월 d일")}
         align="center"
       />
       <Column
@@ -46,7 +43,8 @@ const DepositsHistory = () => {
       />
       <Column title="누적" dataIndex="balance" render={formatM} align="right" />
       <Column
-        render={(_, record, index) => <SetDepositModal index={index} />}
+        dataIndex="index"
+        render={(index) => <SetDepositModal index={index} />}
         align="right"
       />
     </Table>
