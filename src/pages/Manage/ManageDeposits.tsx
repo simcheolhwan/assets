@@ -1,4 +1,4 @@
-import { Table, Typography } from "antd"
+import { Table, Tooltip, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { reverse } from "ramda"
 import { formatM, formatDateWith } from "../../utils/format"
@@ -25,13 +25,15 @@ const DepositsHistory = () => {
         render={formatDateWith("yyyy년 M월 d일")}
         align="center"
       />
-      <Column
+      <Column<Deposit>
         title="항목"
         dataIndex="title"
-        render={(title) => (
-          <Text style={{ color: colorsByTitle[title] }} strong>
-            {title}
-          </Text>
+        render={(title, { memo = "" }) => (
+          <Tooltip title={memo}>
+            <Text style={{ color: colorsByTitle[title] }} strong>
+              {title}
+            </Text>
+          </Tooltip>
         )}
         align="center"
       />

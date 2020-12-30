@@ -1,7 +1,7 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
 import { Form, Input } from "antd"
-import { update } from "ramda"
+import { pickBy, update } from "ramda"
 import { setDeposit, contentsState } from "../../database/database"
 import { todayQuery } from "../../database/date"
 import SetModal from "./SetModal"
@@ -18,11 +18,8 @@ const SetDepositModal = ({ index }: { index?: number }) => {
 
   const submit = async () => {
     const { amount, ...values } = await form.validateFields()
-    const item: Deposit = Object.assign(
-      {},
-      values,
-      amount && { amount: Number(amount) * 1e6 }
-    )
+    const deposit = { ...values, amount: Number(amount) * 1e6 }
+    const item: Deposit = pickBy((v) => v, deposit)
 
     await setDeposit(
       Number.isInteger(index)
@@ -47,6 +44,10 @@ const SetDepositModal = ({ index }: { index?: number }) => {
 
       <Form.Item name="amount" label="내역 (백만)">
         <Input type="number" />
+      </Form.Item>
+
+      <Form.Item name="memo" label="메모">
+        <Input />
       </Form.Item>
     </SetModal>
   )

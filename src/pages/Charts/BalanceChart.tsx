@@ -88,7 +88,9 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
       ? ""
       : depositsHistory
           .filter((history) => history.date === date)
-          .map(({ title, amount }) => [title, formatM(amount)].join(" "))
+          .map(({ title, amount, memo }) =>
+            [memo, title, formatM(amount)].filter(Boolean).join(" ")
+          )
           .join(", ")
 
   const datasets = [

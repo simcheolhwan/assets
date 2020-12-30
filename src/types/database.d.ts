@@ -40,6 +40,7 @@ interface Deposit {
   date: string
   title: string
   amount?: number
+  memo?: string
 }
 
 interface Dept {
