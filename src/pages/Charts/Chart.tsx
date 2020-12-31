@@ -9,11 +9,11 @@ interface Props {
   affixLabel?: boolean
   format: (value: number) => string
   formatY?: (value: number) => string
-  getAffix?: (date: string) => string
+  getFooter?: (date: string) => string
 }
 
 const Chart = ({ legend, unit, datasets, ...props }: Props) => {
-  const { format, formatY, affixLabel, getAffix = () => "" } = props
+  const { format, formatY, affixLabel, getFooter = () => "" } = props
 
   return (
     <Line
@@ -63,17 +63,18 @@ const Chart = ({ legend, unit, datasets, ...props }: Props) => {
           titleFontStyle: "600",
           bodyFontColor: "#172240",
           bodyFontSize: 12,
+          footerFontColor: "#172240",
+          footerFontSize: 12,
+          footerFontStyle: "400",
           xPadding: 10,
           yPadding: 8,
           callbacks: {
             title: ([{ value }]) => format(Number(value) ?? 0),
             label: ({ label, datasetIndex }, { datasets }) => {
-              const affix = affixLabel
-                ? datasets![datasetIndex!].label
-                : getAffix(formatDate(label))
-
+              const affix = affixLabel ? datasets![datasetIndex!].label : ""
               return [formatDate(label), affix].join(" ")
             },
+            footer: ([{ label }]) => getFooter(formatDate(label)),
           },
         },
       }}

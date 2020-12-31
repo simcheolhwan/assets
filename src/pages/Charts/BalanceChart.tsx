@@ -83,13 +83,15 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
   }
 
   /* render */
-  const getAffix = (date: string) =>
+  const getFooter = (date: string) =>
     !showDeposits
       ? ""
       : depositsHistory
           .filter((history) => history.date === date)
-          .map(({ title, amount, memo }) =>
-            [memo, title, formatM(amount)].filter(Boolean).join(" ")
+          .map(({ title, amount = 0, memo }) =>
+            [memo, title, (amount > 0 ? "+" : "") + formatM(amount)]
+              .filter(Boolean)
+              .join(" ")
           )
           .join(", ")
 
@@ -123,7 +125,7 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
           datasets={datasets}
           unit={Unit[range]}
           format={formatM}
-          getAffix={getAffix}
+          getFooter={getFooter}
         />
       </Card>
     </>
