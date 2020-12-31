@@ -16,6 +16,7 @@ const SetWalletModal = ({ walletKey }: { walletKey?: string }) => {
   const submit = async () => {
     const values = await form.validateFields()
     await setWallet(values.walletKey, values.name)
+    form.resetFields()
   }
 
   return (

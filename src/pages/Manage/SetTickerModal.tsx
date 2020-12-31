@@ -20,6 +20,7 @@ const SetTickerModal = ({ tickerKey }: { tickerKey?: string }) => {
   const submit = async () => {
     const { aim, ...values } = await form.validateFields()
     await setTicker(pickBy((value) => value, { ...values, aim: Number(aim) }))
+    form.resetFields()
   }
 
   return (

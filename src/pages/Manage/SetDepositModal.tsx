@@ -26,6 +26,8 @@ const SetDepositModal = ({ index }: { index?: number }) => {
         ? update(index!, item, deposits)
         : [...deposits, item]
     )
+
+    form.resetFields()
   }
 
   return (

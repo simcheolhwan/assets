@@ -1,6 +1,8 @@
 import { useState } from "react"
+import { useRecoilValue } from "recoil"
 import { Tabs } from "antd"
 
+import { todayQuery } from "../../database/date"
 import Page from "../../components/Page"
 
 import ManageTickers from "./ManageTickers"
@@ -12,18 +14,25 @@ import SetTickerModal from "./SetTickerModal"
 import SetWalletModal from "./SetWalletModal"
 import SetBalanceModal from "./SetBalanceModal"
 import SetDepositModal from "./SetDepositModal"
+import SetBalanceItemModal from "./SetBalanceItemModal"
 
 const { TabPane } = Tabs
 
 type Tab = "tickers" | "wallets" | "balances" | "deposits"
 
 const Manage = () => {
+  const today = useRecoilValue(todayQuery)
   const [tab, setTab] = useState<Tab>("tickers")
 
   const extra = {
     tickers: <SetTickerModal />,
     wallets: <SetWalletModal />,
-    balances: <SetBalanceModal />,
+    balances: (
+      <>
+        <SetBalanceItemModal date={today} />
+        <SetBalanceModal />
+      </>
+    ),
     deposits: <SetDepositModal />,
   }[tab]
 
