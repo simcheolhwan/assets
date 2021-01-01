@@ -1,20 +1,22 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Checkbox, Select, Tabs } from "antd"
+import { Checkbox, DatePicker, Tabs } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
-import { reverse } from "ramda"
-import { isAfter, isBefore } from "date-fns"
-import { formatM } from "../../utils/format"
-import { contentsState } from "../../database/database"
-import { todayQuery } from "../../database/date"
+import { last, uniq } from "ramda"
+import { isAfter } from "date-fns"
+import moment from "moment"
+
+import { formatDate } from "../../utils/format"
+import { chartDaysQuery } from "../../database/history"
 import Page from "../../components/Page"
 import Statistics from "../../layouts/Statistics"
+
+import { colors } from "./chartUtils"
 import BalanceChart from "./BalanceChart"
 import ValuesChart from "./ValuesChart"
 import PricesChart from "./PricesChart"
 
 const { TabPane } = Tabs
-const { Option } = Select
 
 type Tab = "values" | "balances"
 
@@ -22,16 +24,27 @@ const Charts = () => {
   const [tab, setTab] = useState<Tab>("values")
   const handleChange = (tab: string) => setTab(tab as Tab)
 
-  const { value, onChange, list, validate } = useSelectStartDate()
+  const selectStartDate = useSelectStartDate()
   const balanceFilter = useBalanceFilter()
 
+  const { value, onChange, getStyle } = selectStartDate
+  const { startDate, validateDate, validate } = selectStartDate
   const extra = {
     values: (
-      <Select value={value} onChange={onChange} style={{ minWidth: 200 }}>
-        {list.map((option) => (
-          <Option {...option} key={option.value} />
-        ))}
-      </Select>
+      <DatePicker
+        value={moment(value)}
+        onChange={(value) => value && onChange(value.toDate())}
+        disabledDate={(moment) => !validateDate(moment.toDate())}
+        dateRender={(current) => (
+          <div
+            className="ant-picker-cell-inner"
+            style={getStyle(current.toDate())}
+          >
+            {current.date()}
+          </div>
+        )}
+        showToday={false}
+      />
     ),
     balances: balanceFilter.list.map((attr) => (
       <Checkbox {...attr} key={attr.children} />
@@ -44,7 +57,7 @@ const Charts = () => {
 
       <Tabs activeKey={tab} onChange={handleChange} tabBarExtraContent={extra}>
         <TabPane tab="종목" key="values">
-          <div key={value}>
+          <div key={startDate}>
             <ValuesChart validate={validate} />
             <PricesChart validate={validate} />
           </div>
@@ -62,29 +75,41 @@ export default Charts
 
 /* hooks */
 const useSelectStartDate = () => {
-  const { balances, deposits } = useRecoilValue(contentsState)
-  const today = useRecoilValue(todayQuery)
+  const chartDays = useRecoilValue(chartDaysQuery)
+  const { depositedDays, rebalancedDays } = chartDays
+  const days = uniq([...depositedDays, ...rebalancedDays].sort())
 
-  const genesis = Object.keys(balances)[0]
-  const list = reverse(
-    deposits.filter(({ date }) => {
-      const isAfterGenesis =
-        date === genesis || isAfter(new Date(date), new Date(genesis))
-      return isAfterGenesis && isBefore(new Date(date), new Date(today))
-    })
-  )
+  /* calendar */
+  const initial = last(days)!
+  const [value, setValue] = useState<Date>(new Date(initial))
 
-  const [startDate, setStartDate] = useState(list[0].date)
+  /* validate */
+  const startDate = formatDate(value)
+  const validate = (date: string) =>
+    date === startDate || isAfter(new Date(date), value)
+
+  const validateDate = (date: Date) => days.includes(formatDate(date))
+
+  /* render */
+  const getStyle = (date: Date) => {
+    const isDeposited = depositedDays.includes(formatDate(date))
+    const isRebalanced = rebalancedDays.includes(formatDate(date))
+    const borderColor = isDeposited
+      ? colors.green
+      : isRebalanced
+      ? colors.orange
+      : undefined
+
+    return { border: borderColor && `1px solid ${borderColor}` }
+  }
 
   return {
-    value: startDate,
-    onChange: setStartDate,
-    list: list.map(({ date, title, amount }) => {
-      const affix = `(${[title, formatM(amount)].filter(Boolean).join(" ")})`
-      return { value: date, children: [date, affix].join(" ") }
-    }),
-    validate: (date: string) =>
-      date === startDate || isAfter(new Date(date), new Date(startDate)),
+    startDate,
+    value,
+    onChange: setValue,
+    getStyle,
+    validateDate,
+    validate,
   }
 }
 
