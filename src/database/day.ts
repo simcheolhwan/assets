@@ -1,52 +1,22 @@
-import { selector, selectorFamily } from "recoil"
+import { selectorFamily } from "recoil"
 import { reverse } from "ramda"
 import { isBefore } from "date-fns"
+import { prevDateQuery } from "./date"
 import { contentsState } from "./database"
 import { depositsHistoryState } from "./deposits"
-import { prevDateQuery, todayQuery } from "./date"
+import { tickerValuesQuery } from "./tickers"
 
-export const dayStatusQuery = selectorFamily({
-  key: "dayStatus",
+export const dayStatsQuery = selectorFamily({
+  key: "dayStats",
   get: (date: string) => ({ get }) => {
-    const contents = get(contentsState)
-    const { balances, prices, exchanges, tickers, wallets, depts } = contents
+    const { depts } = get(contentsState)
+    const tickerValues = get(tickerValuesQuery(date))
 
-    const balanceItem = balances[date]
-    const priceItem = prices[date]
-    const exchangeItem = exchanges[date]
+    const asset = Object.values(tickerValues).reduce(
+      (acc, { value }) => acc + value,
+      0
+    )
 
-    /* merge wallets by ticker */
-    const byTicker = Object.keys(tickers)
-      .map((tickerKey) =>
-        Object.values(balanceItem)
-          .filter((item) => item.tickerKey === tickerKey)
-          .reduce<Dashboard>(
-            (acc, { balance, walletKey }) => ({
-              ...acc,
-              balance: acc.balance + balance,
-              wallets: [
-                ...acc.wallets,
-                { name: wallets[walletKey], balance: balance },
-              ],
-            }),
-            { tickerKey, wallets: [], balance: 0 }
-          )
-      )
-      .filter(({ balance }) => balance)
-
-    /* calculate values */
-    const data = byTicker.map((data) => {
-      const { balance, tickerKey } = data
-      const { currency, name: ticker, icon, aim } = tickers[tickerKey]
-      const price = priceItem[tickerKey]?.price ?? 1
-      const { USD } = exchangeItem
-      const rate = currency === "KRW" ? 1 : USD
-      const value = balance * price * rate
-      return { ...data, currency, ticker, icon, price, value, aim }
-    })
-
-    /* statistics */
-    const asset = data.reduce((acc, { value }) => acc + value, 0)
     const dept = Object.values(depts).reduce(
       (acc, { amount }) => acc + amount,
       0
@@ -54,34 +24,21 @@ export const dayStatusQuery = selectorFamily({
 
     const total = asset - dept
 
-    /* table */
-    const list = data
-      .map((item) => {
-        const { balance, value, aim = 0 } = item
-        const ratio = value / asset
-        const aimValue = asset * aim
-        const rebalance = balance * (aimValue / value - 1)
-        return { ...item, ratio, rebalance }
-      })
-      .sort(({ value: a }, { value: b }) => b - a)
-      .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
-
-    return { date, list, asset, dept, total }
+    return { asset, dept, total }
   },
 })
 
-export const dayWithPnLQuery = selector({
-  key: "dayWithPnL",
-  get: ({ get }) => {
-    const date = get(todayQuery)
-    const prevDate = get(prevDateQuery(date))
-    const prevStatus = get(dayStatusQuery(prevDate))
-    const dayStatus = get(dayStatusQuery(date))
+export const dayPnLQuery = selectorFamily({
+  key: "dayPnL",
+  get: (date: string) => ({ get }) => {
+    const yesterday = get(prevDateQuery(date))
+    const yesterdayStats = get(dayStatsQuery(yesterday))
+    const todayStats = get(dayStatsQuery(date))
 
     /* p&l */
     const pnl = {
-      date: prevDate,
-      ...calcPnL(dayStatus.total, prevStatus.total),
+      date: yesterday,
+      ...calcPnL(todayStats.total, yesterdayStats.total),
     }
 
     /* p&l: from deposit */
@@ -94,10 +51,10 @@ export const dayWithPnLQuery = selector({
 
     const pnlFromDeposit = {
       date: deposit.date,
-      ...calcPnL(dayStatus.total, deposit.balance),
+      ...calcPnL(todayStats.total, deposit.balance),
     }
 
-    return { ...dayStatus, pnl, pnlFromDeposit }
+    return { ...todayStats, pnl, pnlFromDeposit }
   },
 })
 

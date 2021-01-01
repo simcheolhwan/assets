@@ -2,7 +2,8 @@ import { Popover, Table } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatAmount, formatKRW, formatPrice } from "../../utils/format"
 import { percent } from "../../utils/format"
-import { dayWithPnLQuery } from "../../database/day"
+import { todayQuery } from "../../database/date"
+import { tickerRatiosQuery } from "../../database/tickers"
 import Change from "../../components/Change"
 import TickerName from "../../components/TickerName"
 import Icon from "../../components/Icon"
@@ -10,9 +11,15 @@ import Icon from "../../components/Icon"
 const { Column } = Table
 
 const DashboardTable = () => {
-  const { list } = useRecoilValue(dayWithPnLQuery)
+  const today = useRecoilValue(todayQuery)
+  const tickerRatios = useRecoilValue(tickerRatiosQuery(today))
 
-  const renderWallets = (wallets: DashboardWallet[]) =>
+  const dataSource = Object.values(tickerRatios)
+    .filter(({ balance }) => balance)
+    .sort(({ value: a }, { value: b }) => b - a)
+    .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
+
+  const renderWallets = (wallets: TickerWallet[]) =>
     wallets.map(({ name, balance }) => (
       <p key={name}>
         {name}: {formatAmount(balance)}
@@ -21,15 +28,15 @@ const DashboardTable = () => {
 
   const ratio = (
     <pre>
-      {list
-        .map(({ ticker, ratio }) => [ticker, percent(ratio, true)].join(": "))
+      {dataSource
+        .map(({ name, ratio }) => [name, percent(ratio, true)].join(": "))
         .join("\n")}
     </pre>
   )
 
   return (
     <Table
-      dataSource={list}
+      dataSource={dataSource}
       pagination={false}
       rowKey="tickerKey"
       size="small"
@@ -55,7 +62,7 @@ const DashboardTable = () => {
         render={(price, { currency }) => formatPrice(price, currency)}
         align="center"
       />
-      <Column<Dashboard>
+      <Column<TickerBalance>
         title="잔고"
         dataIndex="balance"
         render={(value, { wallets }) =>

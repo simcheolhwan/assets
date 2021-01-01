@@ -1,12 +1,21 @@
-import { selector, waitForAll } from "recoil"
-import { dayStatusQuery } from "./day"
+import { selector, selectorFamily, waitForAll } from "recoil"
 import { daysQuery } from "./date"
+import { dayStatsQuery } from "./day"
+import { tickerRatiosQuery } from "./tickers"
 
-export const historyQuery = selector({
-  key: "history",
+export const chartItemQuery = selectorFamily({
+  key: "chartItem",
+  get: (date: string) => ({ get }) => {
+    const stats = get(dayStatsQuery(date))
+    const ticker = get(tickerRatiosQuery(date))
+    return { date, stats, ticker }
+  },
+})
+
+export const chartHistoryQuery = selector({
+  key: "chartHistoryHistory",
   get: ({ get }) => {
     const days = get(daysQuery)
-    const history = get(waitForAll(days.map(dayStatusQuery)))
-    return history
+    return get(waitForAll(days.map(chartItemQuery)))
   },
 })

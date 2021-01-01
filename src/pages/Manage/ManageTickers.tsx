@@ -1,6 +1,8 @@
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
-import { tickersWithPriceQuery } from "../../database/tickers"
+import { isNil } from "ramda"
+import { todayQuery } from "../../database/date"
+import { tickerValuesQuery } from "../../database/tickers"
 import TickerName from "../../components/TickerName"
 import Icon, { signSVG } from "../../components/Icon"
 import Change from "../../components/Change"
@@ -9,7 +11,12 @@ import SetTickerModal from "./SetTickerModal"
 const { Column } = Table
 
 const ManageTickers = () => {
-  const dataSource = useRecoilValue(tickersWithPriceQuery)
+  const today = useRecoilValue(todayQuery)
+  const tickerValues = useRecoilValue(tickerValuesQuery(today))
+  const dataSource = Object.values(tickerValues)
+    .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
+    .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
+    .sort(({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b)))
 
   return (
     <Table

@@ -7,7 +7,7 @@ import { subMonths, subQuarters, subYears } from "date-fns"
 
 import { formatDate, formatM } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
-import { historyQuery } from "../../database/history"
+import { chartHistoryQuery } from "../../database/history"
 import ChartTitle from "../../components/ChartTitle"
 import { colors, dataset, Range } from "./chartUtils"
 import Chart from "./Chart"
@@ -41,9 +41,9 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
     }[range])
 
   /* data: balances */
-  const history = useRecoilValue(historyQuery)
+  const history = useRecoilValue(chartHistoryQuery)
   const balanceData = history
-    .map(({ date, total }) => ({ t: new Date(date), y: total }))
+    .map(({ date, stats }) => ({ t: new Date(date), y: stats.total }))
     .filter(filter)
 
   const balancesDatasets = {

@@ -1,10 +1,12 @@
 import { Space } from "antd"
 import { useRecoilValue } from "recoil"
-import { dayWithPnLQuery } from "../database/day"
+import { todayQuery } from "../database/date"
+import { dayPnLQuery } from "../database/day"
 import PnL from "../components/PnL"
 
 const Statistics = () => {
-  const { pnl, pnlFromDeposit } = useRecoilValue(dayWithPnLQuery)
+  const today = useRecoilValue(todayQuery)
+  const { pnl, pnlFromDeposit } = useRecoilValue(dayPnLQuery(today))
 
   return (
     <Space size="large" wrap>

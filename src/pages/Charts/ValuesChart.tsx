@@ -4,24 +4,24 @@ import { Card, Radio, Space } from "antd"
 import { ChartDataSets } from "chart.js"
 import { formatKRW, formatM, percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
-import { historyQuery } from "../../database/history"
+import { chartHistoryQuery } from "../../database/history"
 import ChartTitle from "../../components/ChartTitle"
 import { dataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
 const ValuesChart = ({ validate }: { validate: (date: string) => boolean }) => {
   const [key, setKey] = useState<"balance" | "value">("value")
-  const history = useRecoilValue(historyQuery)
+  const history = useRecoilValue(chartHistoryQuery)
   const filtered = history.filter(({ date }) => validate(date))
 
   const { tickers } = useRecoilValue(contentsState)
   const tickerKeys = Object.keys(tickers)
 
   const collectHistory = (tickerKey: string) =>
-    filtered.map(({ date, list }) => {
-      const { list: initialList } = filtered[0]
-      const current = find(tickerKey, list, key)
-      const initial = find(tickerKey, initialList, key)
+    filtered.map(({ date, ticker }) => {
+      const { ticker: initialTicker } = filtered[0]
+      const current = ticker[tickerKey][key]
+      const initial = initialTicker[tickerKey][key]
 
       const value = {
         balance: (current - initial) / initial,
@@ -88,13 +88,3 @@ const ValuesChart = ({ validate }: { validate: (date: string) => boolean }) => {
 }
 
 export default ValuesChart
-
-/* helpers */
-interface Item {
-  tickerKey: string
-  balance: number
-  value: number
-}
-
-const find = (tickerKey: string, list: Item[], key: "balance" | "value") =>
-  list.find((d) => d.tickerKey === tickerKey)?.[key] ?? 0
