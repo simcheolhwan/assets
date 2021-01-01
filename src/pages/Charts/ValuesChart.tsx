@@ -1,16 +1,22 @@
-import { useState } from "react"
+import { ReactNode } from "react"
 import { useRecoilValue } from "recoil"
-import { Card, Radio, Space } from "antd"
+import { Card } from "antd"
 import { ChartDataSets } from "chart.js"
-import { formatKRW, formatM, percent } from "../../utils/format"
+import { formatAmount, formatKRW, formatM, percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import { chartHistoryQuery } from "../../database/history"
 import ChartTitle from "../../components/ChartTitle"
 import { dataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
-const ValuesChart = ({ validate }: { validate: (date: string) => boolean }) => {
-  const [key, setKey] = useState<"balance" | "value">("value")
+interface Props {
+  validate: (date: string) => boolean
+  extra: ReactNode
+  asPercent: boolean
+  type: "balance" | "value"
+}
+
+const ValuesChart = ({ validate, extra, asPercent, type }: Props) => {
   const history = useRecoilValue(chartHistoryQuery)
   const filtered = history.filter(({ date }) => validate(date))
 
@@ -20,15 +26,12 @@ const ValuesChart = ({ validate }: { validate: (date: string) => boolean }) => {
   const collectHistory = (tickerKey: string) =>
     filtered.map(({ date, ticker }) => {
       const { ticker: initialTicker } = filtered[0]
-      const current = ticker[tickerKey][key]
-      const initial = initialTicker[tickerKey][key]
+      const current = ticker[tickerKey][type]
+      const initial = initialTicker[tickerKey][type]
+      const value = current - initial
+      const change = value / initial
 
-      const value = {
-        balance: (current - initial) / initial,
-        value: current - initial,
-      }
-
-      return { t: new Date(date), y: value[key] }
+      return { t: new Date(date), y: asPercent ? change : value }
     })
 
   const datasets = tickerKeys
@@ -49,35 +52,21 @@ const ValuesChart = ({ validate }: { validate: (date: string) => boolean }) => {
     .filter(({ data }) => (data as ChartPoint[]).some(({ y }) => y))
     .sort(({ label: a = "" }, { label: b = "" }) => a.localeCompare(b))
 
-  const format = {
-    balance: (value: number) => (value > 0 ? "+" : "") + percent(value),
-    value: formatKRW,
-  }
+  const formatPercent = (value: number) =>
+    (value > 0 ? "+" : "") + percent(value)
+
+  const format = { value: formatKRW, balance: formatAmount }
+  const formatY = { value: formatM, balance: formatAmount }
 
   return (
     <>
-      <ChartTitle
-        title="가치"
-        extra={
-          <Space wrap>
-            <Radio.Group
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-              optionType="button"
-              buttonStyle="solid"
-            >
-              <Radio.Button value="value">가치</Radio.Button>
-              <Radio.Button value="balance">잔고</Radio.Button>
-            </Radio.Group>
-          </Space>
-        }
-      />
+      <ChartTitle title="가치" extra={extra} />
 
       <Card>
         <Chart
           datasets={datasets}
-          format={format[key]}
-          formatY={key === "value" ? formatM : undefined}
+          format={asPercent ? formatPercent : format[type]}
+          formatY={asPercent ? formatPercent : formatY[type]}
           unit="day"
           legend
           affixLabel

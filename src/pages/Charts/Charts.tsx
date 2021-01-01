@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Checkbox, DatePicker, Tabs } from "antd"
+import { Checkbox, DatePicker, Radio, Space, Tabs } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import { last, uniq } from "ramda"
 import { isAfter } from "date-fns"
@@ -51,16 +51,44 @@ const Charts = () => {
     )),
   }[tab]
 
+  /* values chart */
+  const [type, setType] = useState<"balance" | "value">("value")
+  const [asPercent, setAsPercent] = useState(false)
+  const selectType = (
+    <Space>
+      <Checkbox
+        checked={asPercent}
+        onChange={(e) => setAsPercent(e.target.checked)}
+      >
+        %
+      </Checkbox>
+
+      <Radio.Group
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        optionType="button"
+        buttonStyle="solid"
+      >
+        <Radio.Button value="value">가치</Radio.Button>
+        <Radio.Button value="balance">잔고</Radio.Button>
+      </Radio.Group>
+    </Space>
+  )
+
   return (
     <Page>
       <Statistics />
 
       <Tabs activeKey={tab} onChange={handleChange} tabBarExtraContent={extra}>
         <TabPane tab="종목" key="values">
-          <div key={startDate}>
-            <ValuesChart validate={validate} />
-            <PricesChart validate={validate} />
-          </div>
+          <ValuesChart
+            validate={validate}
+            extra={selectType}
+            type={type}
+            asPercent={asPercent}
+            key={startDate + type}
+          />
+          <PricesChart validate={validate} key={startDate} />
         </TabPane>
 
         <TabPane tab="자본" key="balances">
