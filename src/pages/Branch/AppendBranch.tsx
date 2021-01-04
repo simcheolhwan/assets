@@ -20,7 +20,7 @@ const AppendBranch = () => {
   }
 
   return isAfter(new Date(date), new Date(today)) ? null : (
-    <Button onClick={submit}>다음 날짜 추가</Button>
+    <Button onClick={submit}>날짜 추가</Button>
   )
 }
 

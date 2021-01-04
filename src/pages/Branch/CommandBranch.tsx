@@ -1,6 +1,6 @@
 import { Button, Space } from "antd"
 import { useRecoilValue } from "recoil"
-import { head, last } from "ramda"
+import { isBefore } from "date-fns"
 import { db } from "../../firebase"
 import { todayQuery } from "../../database/date"
 import { contentsState } from "../../database/database"
@@ -16,9 +16,8 @@ const CommandBranch = () => {
   const branchValues = useRecoilValue(branchValuesQuery)
   const balancesWithBranch = useRecoilValue(balancesWithBranchQuery)
 
-  const merge = async () => {
-    const confirm = window.confirm("모두 병합할까요?")
-    const { date, value } = head(branchValues)!
+  const merge = async (date: string) => {
+    const { value } = branchValues.find((item) => item.date === date)!
     const deposit = { date, title: "입금", amount: value }
 
     const nextDeposits = [
@@ -26,34 +25,33 @@ const CommandBranch = () => {
       deposit,
     ].sort(({ date: a }, { date: b }) => a.localeCompare(b))
 
+    const nextBalances = Object.entries(balances).reduce<Balances>(
+      (acc, [balanceDate, balanceItem]) => ({
+        ...acc,
+        [balanceDate]: isBefore(new Date(balanceDate), new Date(date))
+          ? balanceItem
+          : balancesWithBranch[balanceDate],
+      }),
+      {}
+    )
+
     const updates = {
-      balances: balancesWithBranch,
+      balances: nextBalances,
       deposits: nextDeposits,
       branch: null,
     }
 
-    confirm && (await db.ref(`/`).update(updates))
+    await db.ref(`/`).update(updates)
   }
 
-  const squash = async () => {
-    const confirm = window.confirm("오늘 날짜로 입금할까요?")
-    const { date, value } = last(branchValues)!
-    const deposit = { date, title: "입금", amount: value }
-    const nextDeposits = [...deposits, deposit]
-
-    const updates = {
-      balances: { ...balances, [today]: balancesWithBranch[today] },
-      deposits: nextDeposits,
-      branch: null,
-    }
-
-    confirm && (await db.ref(`/`).update(updates))
+  const submit = () => {
+    const date = window.prompt("병합할 날짜", today)
+    date && branchValues.find((item) => item.date === date) && merge(date)
   }
 
   return !withBranch ? null : (
     <Space style={{ marginTop: 16 }}>
-      <Button onClick={merge}>모두 병합하기</Button>
-      <Button onClick={squash}>오늘 입금하기</Button>
+      <Button onClick={submit}>병합하기</Button>
       <AppendBranch />
     </Space>
   )
