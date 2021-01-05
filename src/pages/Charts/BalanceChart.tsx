@@ -27,7 +27,7 @@ interface Props {
 }
 
 const BalanceChart = ({ showBalances, showDeposits }: Props) => {
-  const [range, setRange] = useState<Range>(Range.W)
+  const [range, setRange] = useState<Range>(Range.YTD)
 
   /* range */
   const filter = ({ t }: ChartPoint) =>
