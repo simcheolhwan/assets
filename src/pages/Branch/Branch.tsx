@@ -1,7 +1,7 @@
 import { useRecoilValue } from "recoil"
 import { Table, Tooltip } from "antd"
 import { uniq } from "ramda"
-import { formatAmount, formatExactKRW, formatKRW } from "../../utils/format"
+import { formatAmount, formatThousandKRW, formatKRW } from "../../utils/format"
 import { branchValuesQuery } from "../../database/branch"
 import SetBranchItemModal from "./SetBranchItemModal"
 import AddBranchModal from "./AddBranchModal"
@@ -43,7 +43,9 @@ const Branch = () => {
           dataIndex="value"
           title="가치"
           render={(value) => (
-            <Tooltip title={formatExactKRW(value)}>{formatKRW(value)}</Tooltip>
+            <Tooltip title={formatThousandKRW(value)}>
+              {formatKRW(value)}
+            </Tooltip>
           )}
           align="right"
         />

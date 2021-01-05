@@ -9,13 +9,10 @@ export const isCurrencyTicker = (name: string): name is CurrencyTicker =>
   ["KRW", "USD"].includes(name)
 
 /* amount */
-export const formatAmountWith = (
-  currency?: CurrencyTicker,
-  noRound = false
-) => {
+export const formatAmountWith = (currency?: CurrencyTicker, places = 3) => {
   return (value: number) => {
-    const p = Math.pow(10, String(Math.round(value)).length - 3)
-    const v = noRound ? value : Math.round(value / p) * p
+    const p = Math.pow(10, String(Math.round(value)).length - places)
+    const v = Math.round(value / p) * p
 
     return [currency && getSign(currency), numeral(v).format("0,0.[00]")]
       .filter(Boolean)
@@ -24,7 +21,7 @@ export const formatAmountWith = (
 }
 
 export const formatPrice = (value: number, currency: CurrencyTicker) =>
-  formatAmountWith(currency, true)(value)
+  formatAmountWith(currency, 6)(value)
 
 export const formatM = (number?: number) =>
   !number
@@ -37,8 +34,9 @@ export const formatM = (number?: number) =>
 
 export const formatAmount = formatAmountWith()
 export const formatKRW = formatAmountWith("KRW")
-export const formatExact = formatAmountWith(undefined, true)
-export const formatExactKRW = formatAmountWith("KRW", true)
+export const formatExact = formatAmountWith(undefined, 6)
+export const formatThousandKRW = (value: number) =>
+  formatAmountWith("KRW", 6)(Math.round(value / 1e3) * 1e3)
 
 /* date */
 export const formatDateWith = (fmt = "yyyy-MM-dd") => {

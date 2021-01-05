@@ -1,6 +1,6 @@
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
-import { formatAmount } from "../../utils/format"
+import { formatExact } from "../../utils/format"
 import { latest } from "../../utils/history"
 import { contentsState } from "../../database/database"
 import TickerName from "../../components/TickerName"
@@ -41,7 +41,7 @@ const ManageBalances = () => {
       <Column
         title="잔고"
         dataIndex="balance"
-        render={formatAmount}
+        render={formatExact}
         align="center"
       />
       <Column
