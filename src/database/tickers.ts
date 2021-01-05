@@ -47,7 +47,7 @@ export const tickerValuesQuery = selectorFamily({
 
     return Object.values(tickerBalances).reduce<Dictionary<TickerValue>>(
       (acc, tickerBalance) => {
-        const { balance, currency, tickerKey } = tickerBalance
+        const { balance, name, currency, tickerKey } = tickerBalance
 
         /* price */
         const price = priceItem[tickerKey]?.price ?? 1
@@ -57,7 +57,7 @@ export const tickerValuesQuery = selectorFamily({
 
         /* exchange */
         const { USD } = exchangeItem
-        const rate = currency === "KRW" ? 1 : USD
+        const rate = name === "KRW" ? 1000 : currency === "KRW" ? 1 : USD
 
         /* value */
         const value = balance * price * rate

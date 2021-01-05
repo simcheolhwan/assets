@@ -17,7 +17,7 @@ export const branchValuesQuery = selector({
           const { name, currency } = tickers[tickerKey]
           const { USD } = exchanges[date]
           const price = prices[date][tickerKey]?.price ?? 1
-          const rate = currency === "KRW" ? 1 : USD
+          const rate = name === "KRW" ? 1000 : currency === "KRW" ? 1 : USD
           const value = balance * price * rate
           return { ...acc, [name]: balance, value: acc.value + value }
         },
