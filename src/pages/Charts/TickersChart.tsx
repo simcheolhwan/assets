@@ -16,7 +16,7 @@ interface Props {
   type: "balance" | "value"
 }
 
-const ValuesChart = ({ validate, extra, asPercent, type }: Props) => {
+const TickersChart = ({ validate, extra, asPercent, type }: Props) => {
   const history = useRecoilValue(chartHistoryQuery)
   const filtered = history.filter(({ date }) => validate(date))
 
@@ -76,4 +76,4 @@ const ValuesChart = ({ validate, extra, asPercent, type }: Props) => {
   )
 }
 
-export default ValuesChart
+export default TickersChart

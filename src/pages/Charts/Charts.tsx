@@ -13,7 +13,7 @@ import Statistics from "../../layouts/Statistics"
 
 import { colors } from "./chartUtils"
 import BalanceChart from "./BalanceChart"
-import ValuesChart from "./ValuesChart"
+import TickersChart from "./TickersChart"
 import PricesChart from "./PricesChart"
 
 const { TabPane } = Tabs
@@ -81,7 +81,7 @@ const Charts = () => {
 
       <Tabs activeKey={tab} onChange={handleChange} tabBarExtraContent={extra}>
         <TabPane tab="종목" key="values">
-          <ValuesChart
+          <TickersChart
             validate={validate}
             extra={selectType}
             type={type}

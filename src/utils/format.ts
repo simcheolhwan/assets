@@ -37,7 +37,8 @@ export const formatM = (number?: number) =>
 
 export const formatAmount = formatAmountWith()
 export const formatKRW = formatAmountWith("KRW")
-export const formatExact = formatAmountWith("KRW", true)
+export const formatExact = formatAmountWith(undefined, true)
+export const formatExactKRW = formatAmountWith("KRW", true)
 
 /* date */
 export const formatDateWith = (fmt = "yyyy-MM-dd") => {

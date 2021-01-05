@@ -4,6 +4,7 @@ import { Layout } from "antd"
 import { loadingState, useDatabase } from "../database/database"
 import { useUpdateNow } from "../database/date"
 import Loading from "../components/Loading"
+import BalancesHistory from "../pages/Manage/BalancesHistory"
 import routes from "../routes"
 import Nav from "./Nav"
 import SignOut from "./SignOut"
@@ -28,6 +29,7 @@ const App = () => {
               <Route {...route} exact={route.path === "/"} key={route.path} />
             ))}
 
+            <Route path="/balances" component={BalancesHistory} />
             <Route path="/signout" component={SignOut} />
             <Redirect to={routes[0].path} />
           </Switch>
