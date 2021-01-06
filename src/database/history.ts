@@ -49,17 +49,21 @@ export const rebalancedDaysQuery = selector({
 
     return days.filter((date, index) => {
       const current = tickerBalances[index]
-      return Object.values(current).some(({ tickerKey, name, balance }) => {
-        const previous = index
-          ? tickerBalances[index - 1][tickerKey]
-          : undefined
+      const changed = Object.values(current).filter(
+        ({ tickerKey, name, balance }) => {
+          const previous = index
+            ? tickerBalances[index - 1][tickerKey]
+            : undefined
 
-        return (
-          !name.includes("LP") &&
-          balance !== previous?.balance &&
-          isBefore(new Date(date), new Date(today))
-        )
-      })
+          return (
+            !name.includes("LP") &&
+            balance !== previous?.balance &&
+            isBefore(new Date(date), new Date(today))
+          )
+        }
+      )
+
+      return changed.length > 1
     })
   },
 })
