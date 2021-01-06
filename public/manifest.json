@@ -3,6 +3,11 @@
   "name": "자산",
   "icons": [
     {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    },
+    {
       "src": "apple-touch-icon.png",
       "type": "image/png",
       "sizes": "180x180"
