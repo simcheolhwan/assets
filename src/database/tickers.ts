@@ -81,7 +81,7 @@ export const tickerRatiosQuery = selectorFamily({
         const { tickerKey, balance, value, aim = 0 } = tickerValue
         const ratio = value / asset
         const aimValue = asset * aim
-        const rebalance = balance * (aimValue / value - 1)
+        const rebalance = Math.round(balance * (aimValue / value - 1))
         return { ...acc, [tickerKey]: { ...tickerValue, ratio, rebalance } }
       },
       {}
