@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { Card, Radio } from "antd"
 import { TimeScale } from "chart.js"
-import { isAfter, isSameYear, startOfYear, subWeeks } from "date-fns"
+import { isAfter, isSameYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
 import { formatDate, formatM } from "../../utils/format"
@@ -133,3 +133,9 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
 }
 
 export default BalanceChart
+
+/* utils */
+const startOfYear = (date: Date) => {
+  const year = date.getFullYear()
+  return new Date(`${year}-01-01`)
+}
