@@ -47,4 +47,4 @@ export const formatDate = formatDateWith()
 
 /* percent */
 export const percent = (n: number, integer = false) =>
-  numeral(n).format(integer ? "0%" : "0[.]0%")
+  numeral(n).format(integer || Math.abs(n) >= 0.1 ? "0%" : "0[.]0%")
