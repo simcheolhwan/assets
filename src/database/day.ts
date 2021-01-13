@@ -9,7 +9,7 @@ import { tickerValuesQuery } from "./tickers"
 export const dayStatsQuery = selectorFamily({
   key: "dayStats",
   get: (date: string) => ({ get }) => {
-    const { depts } = get(contentsState)
+    const { debts } = get(contentsState)
     const tickerValues = get(tickerValuesQuery(date))
 
     const asset = Object.values(tickerValues).reduce(
@@ -17,14 +17,14 @@ export const dayStatsQuery = selectorFamily({
       0
     )
 
-    const dept = Object.values(depts).reduce(
+    const debt = Object.values(debts).reduce(
       (acc, { amount }) => acc + amount,
       0
     )
 
-    const total = asset - dept
+    const total = asset - debt
 
-    return { asset, dept, total }
+    return { asset, debt, total }
   },
 })
 

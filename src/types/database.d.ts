@@ -4,7 +4,7 @@ interface Database {
   exchanges: Exchanges
 
   deposits: Deposit[]
-  depts: Depts
+  debts: Debts
 
   tickers: Tickers
   wallets: Wallets
@@ -21,7 +21,7 @@ type Exchanges = Dictionary<ExchangeItem>
 type BalanceItem = Dictionary<Balance>
 type PriceItem = Dictionary<Price>
 
-type Depts = Dictionary<Dept>
+type Debts = Dictionary<Debt>
 
 type Tickers = Dictionary<Ticker>
 type Wallets = Dictionary<string>
@@ -49,7 +49,7 @@ interface Deposit {
   memo?: string
 }
 
-interface Dept {
+interface Debt {
   amount: number
   borrowedAt: string
   returnedAt?: string

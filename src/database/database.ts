@@ -10,7 +10,7 @@ const initial = {
   prices: {},
   balances: {},
   deposits: [],
-  depts: {},
+  debts: {},
   updatedAt: 0,
 }
 
