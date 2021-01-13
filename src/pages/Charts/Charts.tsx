@@ -150,14 +150,14 @@ const useBalanceFilter = () => {
     showDeposits,
     list: [
       {
-        checked: showBalances,
-        onChange: (e: CheckboxChangeEvent) => setShowBalances(e.target.checked),
-        children: "잔고",
-      },
-      {
         checked: showDeposits,
         onChange: (e: CheckboxChangeEvent) => setShowDeposits(e.target.checked),
         children: "입출금",
+      },
+      {
+        checked: showBalances,
+        onChange: (e: CheckboxChangeEvent) => setShowBalances(e.target.checked),
+        children: "잔고",
       },
     ],
   }
