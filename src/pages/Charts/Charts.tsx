@@ -143,7 +143,7 @@ const useSelectStartDate = () => {
 
 const useBalanceFilter = () => {
   const [showBalances, setShowBalances] = useState(true)
-  const [showDeposits, setShowDeposits] = useState(true)
+  const [showDeposits, setShowDeposits] = useState(false)
 
   return {
     showBalances,
