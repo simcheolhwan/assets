@@ -21,7 +21,7 @@ const { TabPane } = Tabs
 type Tab = "values" | "balances"
 
 const Charts = () => {
-  const [tab, setTab] = useState<Tab>("values")
+  const [tab, setTab] = useState<Tab>("balances")
   const handleChange = (tab: string) => setTab(tab as Tab)
 
   const selectStartDate = useSelectStartDate()
@@ -80,6 +80,10 @@ const Charts = () => {
       <Statistics />
 
       <Tabs activeKey={tab} onChange={handleChange} tabBarExtraContent={extra}>
+        <TabPane tab="자본" key="balances">
+          <BalanceChart {...balanceFilter} />
+        </TabPane>
+
         <TabPane tab="종목" key="values">
           <TickersChart
             validate={validate}
@@ -89,10 +93,6 @@ const Charts = () => {
             key={startDate + type}
           />
           <PricesChart validate={validate} key={startDate} />
-        </TabPane>
-
-        <TabPane tab="자본" key="balances">
-          <BalanceChart {...balanceFilter} />
         </TabPane>
       </Tabs>
     </Page>
@@ -108,7 +108,7 @@ const useSelectStartDate = () => {
   const days = uniq([...depositedDays, ...rebalancedDays].sort())
 
   /* calendar */
-  const initial = last(days)!
+  const initial = last(depositedDays)!
   const [value, setValue] = useState<Date>(new Date(initial))
 
   /* validate */
