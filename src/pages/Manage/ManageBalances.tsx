@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
 import { formatExact } from "../../utils/format"
@@ -34,7 +35,11 @@ const ManageBalances = () => {
       <Column
         title="종목"
         dataIndex="tickerKey"
-        render={(tickerKey) => <TickerName tickerKey={tickerKey} />}
+        render={(tickerKey) => (
+          <Link to="/balances">
+            <TickerName tickerKey={tickerKey} />
+          </Link>
+        )}
         align="center"
       />
       <Column title="지갑" dataIndex="wallet" align="center" />

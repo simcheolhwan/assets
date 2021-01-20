@@ -52,6 +52,7 @@ const BalancesHistory = () => {
         pagination={false}
         rowKey="date"
         scroll={{ x: true }}
+        sticky
       >
         <Column
           dataIndex="date"
