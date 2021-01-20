@@ -26,13 +26,6 @@ const ManageTickers = () => {
       scroll={{ x: true }}
     >
       <Column
-        title="아이콘"
-        dataIndex="tickerKey"
-        render={(tickerKey) => <Icon tickerKey={tickerKey} />}
-        align="center"
-        fixed="left"
-      />
-      <Column
         title="이름"
         dataIndex="tickerKey"
         render={(tickerKey) => <TickerName tickerKey={tickerKey} />}
@@ -53,6 +46,12 @@ const ManageTickers = () => {
         align="center"
       />
       <Column title="목표" dataIndex="aim" align="center" />
+      <Column
+        title="아이콘"
+        dataIndex="tickerKey"
+        render={(tickerKey) => <Icon tickerKey={tickerKey} />}
+        align="center"
+      />
       <Column
         dataIndex="tickerKey"
         align="center"
