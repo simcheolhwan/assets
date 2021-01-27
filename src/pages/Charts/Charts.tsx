@@ -9,7 +9,6 @@ import moment from "moment"
 import { formatDate } from "../../utils/format"
 import { chartDaysQuery } from "../../database/history"
 import Page from "../../components/Page"
-import Statistics from "../../layouts/Statistics"
 
 import { colors } from "./chartUtils"
 import BalanceChart from "./BalanceChart"
@@ -77,8 +76,6 @@ const Charts = () => {
 
   return (
     <Page>
-      <Statistics />
-
       <Tabs activeKey={tab} onChange={handleChange} tabBarExtraContent={extra}>
         <TabPane tab="자본" key="balances">
           <BalanceChart {...balanceFilter} />

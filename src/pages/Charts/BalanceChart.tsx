@@ -8,6 +8,8 @@ import { subMonths, subQuarters, subYears } from "date-fns"
 import { formatDate, formatM } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
 import { chartHistoryQuery } from "../../database/history"
+import { dayStatsQuery } from "../../database/day"
+import { todayQuery } from "../../database/date"
 import ChartTitle from "../../components/ChartTitle"
 import { colors, dataset, Range } from "./chartUtils"
 import Chart from "./Chart"
@@ -102,10 +104,14 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
     .filter(({ valid }) => valid)
     .map(({ dataset }) => dataset)
 
+  /* total */
+  const today = useRecoilValue(todayQuery)
+  const { total } = useRecoilValue(dayStatsQuery(today))
+
   return (
     <>
       <ChartTitle
-        title="자본"
+        title={formatM(total)}
         extra={
           <Radio.Group
             options={Object.values(Range).map((value) => ({
