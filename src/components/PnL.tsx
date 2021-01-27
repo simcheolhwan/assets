@@ -1,5 +1,5 @@
 import { Statistic, Tooltip } from "antd"
-import { formatThousandKRW, formatKRW } from "../utils/format"
+import { formatThousandKRW, formatM, formatKRW } from "../utils/format"
 import Change from "./Change"
 
 interface PnLProps {
@@ -9,14 +9,18 @@ interface PnLProps {
   isChanged: boolean
 }
 
-const PnL = ({ date, pnl, change, isChanged }: PnLProps) => (
-  <Tooltip title={formatThousandKRW(pnl)} placement="bottom">
-    <Statistic
-      title={`${date}보다`}
-      value={isChanged ? formatKRW(pnl) : "변동없음"}
-      suffix={isChanged && <Change color>{change}</Change>}
-    />
-  </Tooltip>
-)
+const PnL = ({ date, pnl, change, isChanged }: PnLProps) => {
+  const value = pnl >= 1e6 ? formatM(pnl) : formatKRW(pnl)
+
+  return (
+    <Tooltip title={formatThousandKRW(pnl)} placement="bottom">
+      <Statistic
+        title={date}
+        value={!isChanged ? "변동없음" : value}
+        suffix={isChanged && <Change color>{change}</Change>}
+      />
+    </Tooltip>
+  )
+}
 
 export default PnL

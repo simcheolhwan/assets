@@ -6,12 +6,13 @@ import PnL from "../components/PnL"
 
 const Statistics = () => {
   const today = useRecoilValue(todayQuery)
-  const { pnl, pnlFromDeposit } = useRecoilValue(dayPnLQuery(today))
+  const { pnl, pnlFromDeposit, pnlYTD } = useRecoilValue(dayPnLQuery(today))
 
   return (
     <Space size="large" wrap>
-      <PnL {...pnlFromDeposit} date="마지막 입금" />
-      <PnL {...pnl} date="어제" />
+      <PnL {...pnlYTD} date="올해" />
+      <PnL {...pnlFromDeposit} date="마지막 입금 이후" />
+      <PnL {...pnl} date="어제보다" />
     </Space>
   )
 }
