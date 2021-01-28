@@ -1,6 +1,6 @@
 import { selectorFamily } from "recoil"
 import { reverse } from "ramda"
-import { isBefore, startOfYear } from "date-fns"
+import { startOfYear } from "date-fns"
 import { formatDate } from "../utils/format"
 import { prevDateQuery } from "./date"
 import { contentsState } from "./database"
@@ -45,9 +45,7 @@ export const dayPnLQuery = selectorFamily({
     /* p&l: from deposit */
     const depositsHistory = get(depositsHistoryState)
     const deposit = reverse(depositsHistory).find(
-      (deposit) =>
-        deposit.title === "입금" &&
-        isBefore(new Date(deposit.date), new Date(date))
+      (deposit) => deposit.title === "입금"
     )!
 
     const pnlFromDeposit = {
