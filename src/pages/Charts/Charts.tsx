@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Checkbox, DatePicker, Radio, Space, Tabs } from "antd"
+import { Checkbox, DatePicker, Radio, Space, Switch, Tabs } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import { head, last, uniq } from "ramda"
 import { isAfter, isWithinInterval } from "date-fns"
@@ -45,9 +45,22 @@ const Charts = () => {
         showToday={false}
       />
     ),
-    balances: balanceFilter.list.map((attr) => (
-      <Checkbox {...attr} key={attr.children} />
-    )),
+    balances: (
+      <Space size="large">
+        <Switch
+          checkedChildren="전체"
+          unCheckedChildren="수익"
+          checked={!balanceFilter.upward}
+          onChange={(checked) => balanceFilter.setUpward(!checked)}
+        />
+
+        <Space>
+          {balanceFilter.list.map((attr) => (
+            <Checkbox {...attr} key={attr.children} />
+          ))}
+        </Space>
+      </Space>
+    ),
   }[tab]
 
   /* values chart */
@@ -143,7 +156,11 @@ const useBalanceFilter = () => {
   const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(false)
 
+  const [upward, setUpward] = useState(true)
+
   return {
+    upward,
+    setUpward,
     showBalances,
     showDeposits,
     list: [

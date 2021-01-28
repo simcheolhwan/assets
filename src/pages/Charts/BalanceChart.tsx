@@ -4,6 +4,7 @@ import { Card, Radio, Tooltip } from "antd"
 import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
+import { reverse } from "ramda"
 
 import { formatDate, formatM, formatThousandKRW } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
@@ -24,11 +25,12 @@ const Unit: Record<Range, TimeScale["unit"]> = {
 }
 
 interface Props {
+  upward: boolean
   showBalances: boolean
   showDeposits: boolean
 }
 
-const BalanceChart = ({ showBalances, showDeposits }: Props) => {
+const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
   const [range, setRange] = useState<Range>(Range.YTD)
 
   /* range */
@@ -52,7 +54,7 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
     ...dataset,
     borderColor: colors.blue,
     label: "자본",
-    data: balanceData,
+    data: upward ? toUpward(balanceData) : balanceData,
   }
 
   /* data: deposits */
@@ -148,4 +150,12 @@ export default BalanceChart
 const startOfYear = (date: Date) => {
   const year = date.getFullYear()
   return new Date(`${year}-01-01`)
+}
+
+const toUpward = (data: ChartPoint[]) => {
+  const reversed = reverse(data)
+  return reversed.filter(
+    ({ y }, index) =>
+      !index || reversed.slice(0, index).every((point) => point.y > y)
+  )
 }
