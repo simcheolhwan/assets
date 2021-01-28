@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { Card, Radio } from "antd"
+import { Card, Radio, Tooltip } from "antd"
 import { TimeScale } from "chart.js"
 import { isAfter, isSameYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 
-import { formatDate, formatM } from "../../utils/format"
+import { formatDate, formatM, formatThousandKRW } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
 import { chartHistoryQuery } from "../../database/history"
 import { dayStatsQuery } from "../../database/day"
@@ -111,7 +111,11 @@ const BalanceChart = ({ showBalances, showDeposits }: Props) => {
   return (
     <>
       <ChartTitle
-        title={formatM(total)}
+        title={
+          <Tooltip title={formatThousandKRW(total)} placement="bottom">
+            {formatM(total)}
+          </Tooltip>
+        }
         extra={
           <Radio.Group
             options={Object.values(Range).map((value) => ({

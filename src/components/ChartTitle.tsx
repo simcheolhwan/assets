@@ -2,7 +2,7 @@ import { Space } from "antd"
 import { CSSProperties, FC, ReactNode } from "react"
 
 interface Props {
-  title?: string
+  title?: ReactNode
   extra?: ReactNode
   style?: CSSProperties
 }
