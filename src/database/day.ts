@@ -1,7 +1,6 @@
 import { selectorFamily } from "recoil"
 import { reverse } from "ramda"
-import { startOfYear } from "date-fns"
-import { formatDate } from "../utils/format"
+import { isBefore, startOfYear } from "date-fns"
 import { prevDateQuery } from "./date"
 import { contentsState } from "./database"
 import { depositsHistoryState } from "./deposits"
@@ -54,9 +53,11 @@ export const dayPnLQuery = selectorFamily({
     }
 
     /* p&l: YTD */
-    const startDate = formatDate(startOfYear(new Date(date)))
-    const startOfYearStats = get(dayStatsQuery(startDate))
-    const pnlYTD = calcPnL(todayStats.total, startOfYearStats.total)
+    const lastDeposit = reverse(depositsHistory).find((deposit) =>
+      isBefore(new Date(deposit.date), startOfYear(new Date(date)))
+    )!
+
+    const pnlYTD = calcPnL(todayStats.total, lastDeposit.balance)
 
     return { ...todayStats, pnl, pnlFromDeposit, pnlYTD }
   },
