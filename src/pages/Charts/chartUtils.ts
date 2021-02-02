@@ -22,7 +22,7 @@ export const dataset = {
   fill: false,
   borderCapStyle: "round" as const,
   borderWidth: 3,
-  lineTension: 0.1,
+  lineTension: 0.05,
   pointRadius: 0,
   pointHoverRadius: 0,
 }
