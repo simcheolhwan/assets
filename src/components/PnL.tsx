@@ -10,7 +10,7 @@ interface PnLProps {
 }
 
 const PnL = ({ date, pnl, change, isChanged }: PnLProps) => {
-  const value = pnl >= 1e6 ? formatM(pnl) : formatKRW(pnl)
+  const value = Math.abs(pnl) >= 1e6 ? formatM(pnl) : formatKRW(pnl)
 
   return (
     <Tooltip title={formatThousandKRW(pnl)} placement="bottom">
