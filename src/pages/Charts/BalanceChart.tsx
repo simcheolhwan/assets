@@ -77,6 +77,10 @@ const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
 
       return shouldPrepend ? [...acc, prepend, point] : [...acc, point]
     }, [])
+    .filter(
+      ({ t }) =>
+        !(showBalances && showDeposits) || !isAfter(t, balanceData[0].t)
+    )
     .filter(filter)
 
   const depositsDatasets = {
