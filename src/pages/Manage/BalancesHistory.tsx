@@ -53,6 +53,7 @@ const BalancesHistory = () => {
         rowKey="date"
         scroll={{ x: true }}
         sticky
+        size="small"
       >
         <Column
           dataIndex="date"
