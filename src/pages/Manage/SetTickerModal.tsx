@@ -1,6 +1,6 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
-import { Form, Input, Radio, Select } from "antd"
+import { Checkbox, Form, Input, Radio, Select } from "antd"
 import { pickBy } from "ramda"
 import { v4 } from "uuid"
 import { setTicker, contentsState } from "../../database/database"
@@ -60,6 +60,10 @@ const SetTickerModal = ({ tickerKey }: { tickerKey?: string }) => {
 
       <Form.Item name="aim" label="목표 비율">
         <Input type="number" />
+      </Form.Item>
+
+      <Form.Item name="hidden" valuePropName="checked">
+        <Checkbox>숨김</Checkbox>
       </Form.Item>
     </SetModal>
   )

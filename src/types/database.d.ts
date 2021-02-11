@@ -63,6 +63,7 @@ interface Ticker {
   icon?: string
   color?: string
   aim?: number
+  hidden?: boolean
 }
 
 interface DayItem {

@@ -14,6 +14,7 @@ const ManageTickers = () => {
   const today = useRecoilValue(todayQuery)
   const tickerValues = useRecoilValue(tickerValuesQuery(today))
   const dataSource = Object.values(tickerValues)
+    .filter(({ hidden }) => !hidden)
     .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
     .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
     .sort(({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b)))
