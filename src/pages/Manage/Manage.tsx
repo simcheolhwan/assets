@@ -22,7 +22,7 @@ type Tab = "tickers" | "wallets" | "balances" | "deposits"
 
 const Manage = () => {
   const today = useRecoilValue(todayQuery)
-  const [tab, setTab] = useState<Tab>("tickers")
+  const [tab, setTab] = useState<Tab>("balances")
 
   const extra = {
     tickers: <SetTickerModal />,
@@ -43,12 +43,12 @@ const Manage = () => {
         onChange={(tab) => setTab(tab as Tab)}
         tabBarExtraContent={extra}
       >
-        <TabPane tab="종목" key="tickers">
-          <ManageTickers />
-        </TabPane>
-
         <TabPane tab="잔고" key="balances">
           <ManageBalances />
+        </TabPane>
+
+        <TabPane tab="종목" key="tickers">
+          <ManageTickers />
         </TabPane>
 
         <TabPane tab="입출금" key="deposits">
