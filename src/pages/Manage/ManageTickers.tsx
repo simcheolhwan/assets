@@ -1,6 +1,7 @@
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
 import { isNil } from "ramda"
+import { formatPrice } from "../../utils/format"
 import { todayQuery } from "../../database/date"
 import { tickerValuesQuery } from "../../database/tickers"
 import TickerName from "../../components/TickerName"
@@ -39,7 +40,12 @@ const ManageTickers = () => {
         render={(currency: CurrencyTicker) => signSVG[currency]}
         align="center"
       />
-      <Column title="가격" dataIndex="price" align="center" />
+      <Column
+        title="가격"
+        dataIndex="price"
+        render={formatPrice}
+        align="center"
+      />
       <Column
         title="변동"
         dataIndex="change"
