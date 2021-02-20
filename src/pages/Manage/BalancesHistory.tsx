@@ -58,7 +58,7 @@ const BalancesHistory = () => {
           <Column
             dataIndex={key}
             title={renderTitle(key)}
-            render={formatExact}
+            render={(value) => value && formatExact(value)}
             align="center"
             key={key}
           />
