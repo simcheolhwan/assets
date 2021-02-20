@@ -56,4 +56,5 @@ interface Asset {
   balanceKey: string
   tickerKey: string
   walletKey: string
+  hidden?: string
 }

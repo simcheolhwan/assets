@@ -73,6 +73,9 @@ export const setTicker = async (ticker: Ticker) =>
 export const setWallet = async (walletKey: string, name: string) =>
   await db.ref(`/wallets/${walletKey}`).set(name)
 
+export const setAsset = async (asset: Asset) =>
+  await db.ref(`/assets/${asset.balanceKey}`).update(asset)
+
 export const setBalanceItem = async (balanceItem: BalanceItem) =>
   await db.ref(`/balances/${formatDate()}`).update(balanceItem)
 

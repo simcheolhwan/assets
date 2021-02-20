@@ -8,11 +8,13 @@ import Page from "../../components/Page"
 import ManageTickers from "./ManageTickers"
 import ManageWallets from "./ManageWallets"
 import ManageBalances from "./ManageBalances"
+import ManageAssets from "./ManageAssets"
 import ManageDeposits from "./ManageDeposits"
 
 import SetTickerModal from "./SetTickerModal"
 import SetWalletModal from "./SetWalletModal"
 import SetDepositModal from "./SetDepositModal"
+import SetAssetModal from "./SetAssetModal"
 import SetBalanceItemModal from "./SetBalanceItemModal"
 
 const { TabPane } = Tabs
@@ -27,6 +29,7 @@ const Manage = () => {
     tickers: <SetTickerModal />,
     wallets: <SetWalletModal />,
     balances: <SetBalanceItemModal date={today} />,
+    assets: <SetAssetModal />,
     deposits: <SetDepositModal />,
   }[tab]
 
@@ -45,12 +48,16 @@ const Manage = () => {
           <ManageTickers />
         </TabPane>
 
-        <TabPane tab="입출금" key="deposits">
-          <ManageDeposits />
-        </TabPane>
-
         <TabPane tab="지갑" key="wallets">
           <ManageWallets />
+        </TabPane>
+
+        <TabPane tab="자산" key="assets">
+          <ManageAssets />
+        </TabPane>
+
+        <TabPane tab="입출금" key="deposits">
+          <ManageDeposits />
         </TabPane>
       </Tabs>
     </Page>
