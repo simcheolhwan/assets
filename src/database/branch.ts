@@ -39,14 +39,15 @@ export const balancesWithBranchQuery = selector({
 
     return Object.entries(balances).reduce<Balances>(
       (acc, [date, balanceItem]) => {
-        const next = Object.entries(balanceItem).reduce(
-          (acc, [balanceKey, initial]) => {
-            const branchBalance = branch[date]?.[balanceKey] ?? 0
-            const balance = initial + (withBranch ? branchBalance : 0)
-            return { ...acc, [balanceKey]: balance }
-          },
-          {}
-        )
+        const branchItem = branch[date] ?? {}
+        const keys = [...Object.keys(balanceItem), ...Object.keys(branchItem)]
+
+        const next = keys.reduce((acc, balanceKey) => {
+          const initial = balanceItem[balanceKey] ?? 0
+          const branchBalance = branchItem[balanceKey] ?? 0
+          const balance = withBranch ? initial + branchBalance : initial
+          return { ...acc, [balanceKey]: balance }
+        }, {})
 
         return { ...acc, [date]: next }
       },
