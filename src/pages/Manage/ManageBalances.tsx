@@ -4,25 +4,19 @@ import { useRecoilValue } from "recoil"
 import { formatExact } from "../../utils/format"
 import { latest } from "../../utils/history"
 import { contentsState } from "../../database/database"
+import { assetQuery } from "../../database/assets"
 import TickerName from "../../components/TickerName"
 import SetBalanceModal from "./SetBalanceModal"
 
 const { Column } = Table
 
 const ManageBalances = () => {
-  const { balances, tickers, wallets } = useRecoilValue(contentsState)
+  const { balances } = useRecoilValue(contentsState)
   const latestBalanceItem = latest(balances)
+  const asset = useRecoilValue(assetQuery)
 
-  const dataSource = Object.values(latestBalanceItem)
-    .map((data) => {
-      const { tickerKey, walletKey } = data
-
-      return {
-        ...data,
-        ticker: tickers[tickerKey].name,
-        wallet: wallets[walletKey],
-      }
-    })
+  const dataSource = Object.entries(latestBalanceItem)
+    .map(([balanceKey, balance]) => ({ ...asset(balanceKey), balance }))
     .sort(({ ticker: a }, { ticker: b }) => a.localeCompare(b))
 
   return (

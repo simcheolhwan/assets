@@ -9,15 +9,17 @@ export const withBranchState = atom({
 export const branchValuesQuery = selector({
   key: "branchValues",
   get: ({ get }) => {
-    const { branch = {}, prices, exchanges, tickers } = get(contentsState)
+    const contents = get(contentsState)
+    const { branch = {}, prices, exchanges, tickers, assets } = contents
 
     return Object.entries(branch).map(([date, balanceItem]) => {
-      const row = Object.values(balanceItem).reduce(
-        (acc, { tickerKey, balance }) => {
+      const row = Object.entries(balanceItem).reduce(
+        (acc, [balanceKey, balance]) => {
+          const { tickerKey } = assets[balanceKey]
           const { name, currency } = tickers[tickerKey]
-          const { USD } = exchanges[date]
-          const price = prices[date][tickerKey]?.price ?? 1
-          const rate = name === "KRW" ? 1000 : currency === "KRW" ? 1 : USD
+          const exchange = exchanges[date]
+          const price = prices[date][tickerKey] ?? 1
+          const rate = name === "KRW" ? 1000 : currency === "KRW" ? 1 : exchange
           const value = balance * price * rate
           return { ...acc, [name]: balance, value: acc.value + value }
         },
@@ -38,10 +40,10 @@ export const balancesWithBranchQuery = selector({
     return Object.entries(balances).reduce<Balances>(
       (acc, [date, balanceItem]) => {
         const next = Object.entries(balanceItem).reduce(
-          (acc, [balanceKey, data]) => {
-            const branchBalance = branch[date]?.[balanceKey]?.balance ?? 0
-            const balance = data.balance + (withBranch ? branchBalance : 0)
-            return { ...acc, [balanceKey]: { ...data, balance } }
+          (acc, [balanceKey, initial]) => {
+            const branchBalance = branch[date]?.[balanceKey] ?? 0
+            const balance = initial + (withBranch ? branchBalance : 0)
+            return { ...acc, [balanceKey]: balance }
           },
           {}
         )

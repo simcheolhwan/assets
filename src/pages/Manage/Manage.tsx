@@ -12,7 +12,6 @@ import ManageDeposits from "./ManageDeposits"
 
 import SetTickerModal from "./SetTickerModal"
 import SetWalletModal from "./SetWalletModal"
-import SetBalanceModal from "./SetBalanceModal"
 import SetDepositModal from "./SetDepositModal"
 import SetBalanceItemModal from "./SetBalanceItemModal"
 
@@ -27,12 +26,7 @@ const Manage = () => {
   const extra = {
     tickers: <SetTickerModal />,
     wallets: <SetWalletModal />,
-    balances: (
-      <>
-        <SetBalanceItemModal date={today} />
-        <SetBalanceModal />
-      </>
-    ),
+    balances: <SetBalanceItemModal date={today} />,
     deposits: <SetDepositModal />,
   }[tab]
 

@@ -4,7 +4,7 @@ import { uniq } from "ramda"
 import { formatAmount, formatThousandKRW, formatKRW } from "../../utils/format"
 import { branchValuesQuery } from "../../database/branch"
 import SetBranchItemModal from "./SetBranchItemModal"
-import AddBranchModal from "./AddBranchModal"
+import AddBranchBalanceModal from "./AddBranchBalanceModal"
 import CommandBranch from "./CommandBranch"
 
 const { Column } = Table
@@ -55,7 +55,7 @@ const Branch = () => {
           render={(date) => (
             <>
               <SetBranchItemModal date={date} />
-              <AddBranchModal date={date} />
+              <AddBranchBalanceModal date={date} />
             </>
           )}
           align="center"

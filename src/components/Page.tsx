@@ -10,10 +10,10 @@ import UpdatedAt from "../layouts/UpdatedAt"
 const Page: FC<{ extra?: ReactNode }> = ({ children, extra }) => {
   const { state } = useRecoilValue(databaseState)
   const { exchanges } = useRecoilValue(contentsState)
-  const { USD } = latest(exchanges)
+  const exchange = latest(exchanges)
 
   const title = useTitle()
-  const subTitle = `환율 ${formatPrice(USD, "KRW")}`
+  const subTitle = `환율 ${formatPrice(exchange, "KRW")}`
   const updatedAt = state === "hydrated" && (
     <Suspense fallback key="suspense">
       <UpdatedAt />

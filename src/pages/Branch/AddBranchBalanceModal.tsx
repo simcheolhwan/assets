@@ -1,7 +1,6 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
 import { Form, Input, Select } from "antd"
-import { latest } from "../../utils/history"
 import { setBranch, contentsState } from "../../database/database"
 import SetModal from "../Manage/SetModal"
 
@@ -11,17 +10,15 @@ interface Props {
   date: string
 }
 
-const AddBranchModal = ({ date }: Props) => {
-  const [form] = Form.useForm<Balance>()
+const AddBranchBalanceModal = ({ date }: Props) => {
+  const [form] = Form.useForm<{ balanceKey: string; balance: string }>()
 
-  const { balances, tickers, wallets } = useRecoilValue(contentsState)
-  const latestBalance = latest(balances)
+  const { tickers, wallets, assets } = useRecoilValue(contentsState)
   const initialValues = { balance: 0 }
 
   const submit = async () => {
     const { balance, balanceKey } = await form.validateFields()
-    const prev = latestBalance[balanceKey]
-    await setBranch({ ...prev, balance: Number(balance) }, date)
+    await setBranch(balanceKey, Number(balance), date)
     form.resetFields()
   }
 
@@ -29,7 +26,7 @@ const AddBranchModal = ({ date }: Props) => {
     <SetModal type="add" form={{ form, initialValues }} submit={submit}>
       <Form.Item name="balanceKey" label="지갑" rules={[{ required: true }]}>
         <Select>
-          {Object.entries(latestBalance).map(
+          {Object.entries(assets).map(
             ([balanceKey, { tickerKey, walletKey }]) => (
               <Option value={balanceKey} key={balanceKey}>
                 {[tickers[tickerKey].name, wallets[walletKey]].join(" ")}
@@ -46,4 +43,4 @@ const AddBranchModal = ({ date }: Props) => {
   )
 }
 
-export default AddBranchModal
+export default AddBranchBalanceModal

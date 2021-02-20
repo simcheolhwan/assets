@@ -23,9 +23,9 @@ const PricesChart = ({ validate }: { validate: (date: string) => boolean }) => {
     borderColor: colors.aqua,
     borderWidth: 2,
     label: "USD",
-    data: filteredExchanges.map(([date, { USD }]) => {
-      const { USD: initialExchange } = filteredExchanges[0][1]
-      return { t: new Date(date), y: (USD - initialExchange) / initialExchange }
+    data: filteredExchanges.map(([date, exchange]) => {
+      const initial = filteredExchanges[0][1]
+      return { t: new Date(date), y: (exchange - initial) / initial }
     }),
   }
 
@@ -73,5 +73,4 @@ export default PricesChart
 
 /* helpers */
 const findPrice = (tickerKey: string, priceItem: PriceItem) =>
-  Object.values(priceItem).find((item) => item.tickerKey === tickerKey)
-    ?.price ?? 0
+  Object.entries(priceItem).find((item) => item[0] === tickerKey)?.[1] ?? 0

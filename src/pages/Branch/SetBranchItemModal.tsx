@@ -5,18 +5,20 @@ import { isNil } from "ramda"
 import { formatAmount } from "../../utils/format"
 import { latest } from "../../utils/history"
 import { contentsState, setBranchItem } from "../../database/database"
+import { assetQuery } from "../../database/assets"
 import SetModal from "../Manage/SetModal"
 
 const SetBranchItemModal = ({ date }: { date: string }) => {
   const [form] = Form.useForm<Dictionary<number>>()
 
-  const { branch = {}, tickers, wallets } = useRecoilValue(contentsState)
+  const contents = useRecoilValue(contentsState)
+  const { branch = {} } = contents
   const branchItem = date ? branch[date] : latest(branch)
 
-  const getLabel = (branchKey: string) => {
-    const { tickerKey, walletKey, balance } = branchItem[branchKey]
-    const ticker = tickers[tickerKey].name
-    const wallet = wallets[walletKey]
+  const asset = useRecoilValue(assetQuery)
+  const getLabel = (balanceKey: string) => {
+    const balance = branchItem[balanceKey]
+    const { ticker, wallet } = asset(balanceKey)
     return `${formatAmount(balance)} ${ticker} (${wallet})`
   }
 
@@ -24,7 +26,7 @@ const SetBranchItemModal = ({ date }: { date: string }) => {
     const values = await form.validateFields()
     const updates = Object.entries(values).reduce(
       (acc, [branchKey, balance]) => {
-        const next = { ...branchItem[branchKey], balance: Number(balance) }
+        const next = Number(balance)
         return Object.assign({}, acc, !isNil(balance) && { [branchKey]: next })
       },
       {}
@@ -36,8 +38,8 @@ const SetBranchItemModal = ({ date }: { date: string }) => {
 
   return (
     <SetModal type={date ? "edit" : "add"} form={{ form }} submit={submit}>
-      {Object.keys(branchItem).map((branchKey) => (
-        <Form.Item name={branchKey} label={getLabel(branchKey)} key={branchKey}>
+      {Object.keys(branchItem).map((key) => (
+        <Form.Item name={key} label={getLabel(key)} key={key}>
           <Input type="number" />
         </Form.Item>
       ))}

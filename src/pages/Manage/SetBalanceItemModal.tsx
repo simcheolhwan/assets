@@ -5,18 +5,19 @@ import { isNil } from "ramda"
 import { formatAmount } from "../../utils/format"
 import { latest } from "../../utils/history"
 import { contentsState, setBalanceItem } from "../../database/database"
+import { assetQuery } from "../../database/assets"
 import SetModal from "./SetModal"
 
 const SetBalanceItemModal = ({ date }: { date?: string }) => {
   const [form] = Form.useForm<Dictionary<number>>()
 
-  const { balances, tickers, wallets } = useRecoilValue(contentsState)
+  const { balances } = useRecoilValue(contentsState)
   const balanceItem = date ? balances[date] : latest(balances)
+  const asset = useRecoilValue(assetQuery)
 
   const getLabel = (balanceKey: string) => {
-    const { tickerKey, walletKey, balance } = balanceItem[balanceKey]
-    const ticker = tickers[tickerKey].name
-    const wallet = wallets[walletKey]
+    const balance = balanceItem[balanceKey]
+    const { ticker, wallet } = asset(balanceKey)
     return `${formatAmount(balance)} ${ticker} (${wallet})`
   }
 
@@ -24,7 +25,7 @@ const SetBalanceItemModal = ({ date }: { date?: string }) => {
     const values = await form.validateFields()
     const updates = Object.entries(values).reduce(
       (acc, [balanceKey, balance]) => {
-        const next = { ...balanceItem[balanceKey], balance: Number(balance) }
+        const next = Number(balance)
         return Object.assign({}, acc, !isNil(balance) && { [balanceKey]: next })
       },
       {}

@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { reverse, uniq } from "ramda"
 import { formatExact } from "../../utils/format"
 import { contentsState } from "../../database/database"
-import { balanceKeyQuery } from "../../database/balances"
+import { assetQuery } from "../../database/assets"
 import Page from "../../components/Page"
 import TickerName from "../../components/TickerName"
 
@@ -12,19 +12,12 @@ const { Text } = Typography
 
 const BalancesHistory = () => {
   const { balances } = useRecoilValue(contentsState)
-  const queryBalanceKey = useRecoilValue(balanceKeyQuery)
+  const asset = useRecoilValue(assetQuery)
 
   const dataSource = reverse(
-    Object.entries(balances).map(([date, balanceItem]) => ({
-      date,
-      ...Object.values(balanceItem).reduce(
-        (acc, { balanceKey, balance }) => ({
-          ...acc,
-          [balanceKey]: balance,
-        }),
-        {}
-      ),
-    }))
+    Object.entries(balances).map(([date, balanceItem]) => {
+      return { date, ...balanceItem }
+    })
   )
 
   const keys = uniq(
@@ -32,12 +25,10 @@ const BalancesHistory = () => {
       (acc, { date, ...rest }) => [...acc, ...Object.keys(rest)],
       []
     )
-  ).sort((a, b) =>
-    queryBalanceKey(a).ticker.localeCompare(queryBalanceKey(b).ticker)
-  )
+  ).sort((a, b) => asset(a).ticker.localeCompare(asset(b).ticker))
 
   const renderTitle = (balanceKey: string) => {
-    const { tickerKey, wallet } = queryBalanceKey(balanceKey)
+    const { tickerKey, wallet } = asset(balanceKey)
     return (
       <Tooltip title={wallet}>
         <TickerName tickerKey={tickerKey} />

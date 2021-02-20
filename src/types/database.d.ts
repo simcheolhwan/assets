@@ -6,6 +6,7 @@ interface Database {
   deposits: Deposit[]
   debts: Debts
 
+  assets: Assets
   tickers: Tickers
   wallets: Wallets
 
@@ -16,31 +17,16 @@ interface Database {
 
 type Balances = Dictionary<BalanceItem>
 type Prices = Dictionary<PriceItem>
-type Exchanges = Dictionary<ExchangeItem>
+type Exchanges = Dictionary<number>
 
-type BalanceItem = Dictionary<Balance>
-type PriceItem = Dictionary<Price>
+type BalanceItem = Dictionary<number>
+type PriceItem = Dictionary<number>
 
 type Debts = Dictionary<Debt>
 
 type Tickers = Dictionary<Ticker>
 type Wallets = Dictionary<string>
-
-interface Balance {
-  balance: number
-  balanceKey: string
-  tickerKey: string
-  walletKey: string
-}
-
-interface Price {
-  price: number
-  tickerKey: string
-}
-
-interface ExchangeItem {
-  USD: number
-}
+type Assets = Dictionary<Asset>
 
 interface Deposit {
   date: string
@@ -66,8 +52,8 @@ interface Ticker {
   hidden?: boolean
 }
 
-interface DayItem {
-  balanceItem: BalanceItem
-  priceItem: PriceItem
-  exchangeItem: ExchangeItem
+interface Asset {
+  balanceKey: string
+  tickerKey: string
+  walletKey: string
 }

@@ -7,26 +7,26 @@ import { balancesWithBranchQuery } from "./branch"
 export const tickerBalancesQuery = selectorFamily({
   key: "tickerBalances",
   get: (date: string) => ({ get }) => {
-    const { tickers, wallets } = get(contentsState)
+    const { tickers, wallets, assets } = get(contentsState)
     const balances = get(balancesWithBranchQuery)
     const balanceItem = balances[date]
 
     return Object.entries(tickers).reduce<Dictionary<TickerBalance>>(
       (acc, [tickerKey, ticker]) => {
-        const tickerBalance = Object.values(balanceItem)
-          .filter((item) => item.tickerKey === tickerKey)
-          .reduce<TickerBalance>(
-            (acc, cur) => {
-              const wallet = {
-                name: wallets[cur.walletKey],
-                balance: cur.balance,
-              }
+        const filteredAssets = Object.values(assets).filter(
+          (item) => item.tickerKey === tickerKey
+        )
 
-              const balance = acc.balance + cur.balance
-              return { ...acc, balance, wallets: [...acc.wallets, wallet] }
-            },
-            { ...ticker, wallets: [], balance: 0 }
-          )
+        const tickerBalance = filteredAssets.reduce<TickerBalance>(
+          (acc, { balanceKey, walletKey }) => {
+            const balance = balanceItem[balanceKey] ?? 0
+            const wallet = { name: wallets[walletKey], balance: balance }
+            const next = acc.balance + balance
+
+            return { ...acc, balance: next, wallets: [...acc.wallets, wallet] }
+          },
+          { ...ticker, wallets: [], balance: 0 }
+        )
 
         return { ...acc, [tickerKey]: tickerBalance }
       },
@@ -43,21 +43,20 @@ export const tickerValuesQuery = selectorFamily({
     const yesterday = get(prevDateQuery(date))
     const priceItemYesterday = prices[yesterday]
     const priceItem = prices[date]
-    const exchangeItem = exchanges[date]
+    const exchange = exchanges[date]
 
     return Object.values(tickerBalances).reduce<Dictionary<TickerValue>>(
       (acc, tickerBalance) => {
         const { balance, name, currency, tickerKey } = tickerBalance
 
         /* price */
-        const price = priceItem[tickerKey]?.price ?? 1
-        const yesterdayPrice = priceItemYesterday?.[tickerKey]?.price
+        const price = priceItem[tickerKey] ?? 1
+        const yesterdayPrice = priceItemYesterday?.[tickerKey]
         const change =
           price && yesterdayPrice ? price / yesterdayPrice - 1 : undefined
 
         /* exchange */
-        const { USD } = exchangeItem
-        const rate = name === "KRW" ? 1000 : currency === "KRW" ? 1 : USD
+        const rate = name === "KRW" ? 1000 : currency === "KRW" ? 1 : exchange
 
         /* value */
         const value = balance * price * rate

@@ -4,13 +4,17 @@ import { db } from "../firebase"
 import { formatDate } from "../utils/format"
 
 const initial = {
-  tickers: {},
-  wallets: {},
-  exchanges: {},
-  prices: {},
   balances: {},
+  prices: {},
+  exchanges: {},
+
   deposits: [],
   debts: {},
+
+  tickers: {},
+  wallets: {},
+  assets: {},
+
   updatedAt: 0,
 }
 
@@ -72,13 +76,11 @@ export const setWallet = async (walletKey: string, name: string) =>
 export const setBalanceItem = async (balanceItem: BalanceItem) =>
   await db.ref(`/balances/${formatDate()}`).update(balanceItem)
 
-export const setBalance = async (balance: Balance) =>
-  await db
-    .ref(`/balances/${formatDate()}/${balance.balanceKey}`)
-    .update(balance)
+export const setBalance = async (balanceKey: string, balance: number) =>
+  await db.ref(`/balances/${formatDate()}/${balanceKey}`).set(balance)
 
 export const setBranchItem = async (balanceItem: BalanceItem, date: string) =>
   await db.ref(`/branch/${date}`).update(balanceItem)
 
-export const setBranch = async (balance: Balance, date: string) =>
-  await db.ref(`/branch/${date}/${balance.balanceKey}`).update(balance)
+export const setBranch = async (key: string, balance: number, date: string) =>
+  await db.ref(`/branch/${date}/${key}`).set(balance)
