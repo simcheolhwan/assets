@@ -16,6 +16,7 @@ import SetWalletModal from "./SetWalletModal"
 import SetDepositModal from "./SetDepositModal"
 import SetAssetModal from "./SetAssetModal"
 import SetBalanceItemModal from "./SetBalanceItemModal"
+import SetBalanceModal from "./SetBalanceModal"
 
 const { TabPane } = Tabs
 
@@ -25,10 +26,17 @@ const Manage = () => {
   const today = useRecoilValue(todayQuery)
   const [tab, setTab] = useState<Tab>("balances")
 
+  const balancesActions = (
+    <>
+      <SetBalanceItemModal date={today} />
+      <SetBalanceModal />
+    </>
+  )
+
   const extra = {
     tickers: <SetTickerModal />,
     wallets: <SetWalletModal />,
-    balances: <SetBalanceItemModal date={today} />,
+    balances: balancesActions,
     assets: <SetAssetModal />,
     deposits: <SetDepositModal />,
   }[tab]
