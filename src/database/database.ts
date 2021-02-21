@@ -67,6 +67,9 @@ export const useDatabase = () => {
 export const setDeposit = async (deposits: Deposit[]) =>
   await db.ref(`/deposits`).set(deposits)
 
+export const setTickers = async (tickers: Tickers) =>
+  await db.ref(`/tickers`).update(tickers)
+
 export const setTicker = async (ticker: Ticker) =>
   await db.ref(`/tickers/${ticker.tickerKey}`).set(ticker)
 

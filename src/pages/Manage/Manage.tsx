@@ -5,18 +5,19 @@ import { Tabs } from "antd"
 import { todayQuery } from "../../database/date"
 import Page from "../../components/Page"
 
+import ManageBalances from "./ManageBalances"
 import ManageTickers from "./ManageTickers"
 import ManageWallets from "./ManageWallets"
-import ManageBalances from "./ManageBalances"
 import ManageAssets from "./ManageAssets"
 import ManageDeposits from "./ManageDeposits"
 
-import SetTickerModal from "./SetTickerModal"
-import SetWalletModal from "./SetWalletModal"
-import SetDepositModal from "./SetDepositModal"
-import SetAssetModal from "./SetAssetModal"
 import SetBalanceItemModal from "./SetBalanceItemModal"
 import SetBalanceModal from "./SetBalanceModal"
+import SetTickersModal from "./SetTickersModal"
+import SetTickerModal from "./SetTickerModal"
+import SetWalletModal from "./SetWalletModal"
+import SetAssetModal from "./SetAssetModal"
+import SetDepositModal from "./SetDepositModal"
 
 const { TabPane } = Tabs
 
@@ -33,10 +34,17 @@ const Manage = () => {
     </>
   )
 
+  const tickersActions = (
+    <>
+      <SetTickersModal />
+      <SetTickerModal />
+    </>
+  )
+
   const extra = {
-    tickers: <SetTickerModal />,
-    wallets: <SetWalletModal />,
     balances: balancesActions,
+    tickers: tickersActions,
+    wallets: <SetWalletModal />,
     assets: <SetAssetModal />,
     deposits: <SetDepositModal />,
   }[tab]
