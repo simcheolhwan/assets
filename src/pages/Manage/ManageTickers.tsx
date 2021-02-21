@@ -1,7 +1,8 @@
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
 import { isNil } from "ramda"
-import { formatPrice } from "../../utils/format"
+import BigNumber from "bignumber.js"
+import { formatPrice, percent } from "../../utils/format"
 import { todayQuery } from "../../database/date"
 import { tickerValuesQuery } from "../../database/tickers"
 import TickerName from "../../components/TickerName"
@@ -19,6 +20,8 @@ const ManageTickers = () => {
     .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
     .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
     .sort(({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b)))
+
+  const aim = BigNumber.sum(...dataSource.map(({ aim }) => aim ?? 0)).toNumber()
 
   return (
     <Table
@@ -52,7 +55,12 @@ const ManageTickers = () => {
         render={(change) => <Change color>{change}</Change>}
         align="center"
       />
-      <Column title="목표" dataIndex="aim" align="center" />
+      <Column
+        title={percent(aim)}
+        dataIndex="aim"
+        render={(value) => percent(value)}
+        align="center"
+      />
       <Column
         title="아이콘"
         dataIndex="tickerKey"
