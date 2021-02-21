@@ -62,7 +62,11 @@ const SetTickerModal = ({ tickerKey }: { tickerKey?: string }) => {
         <Input type="number" />
       </Form.Item>
 
-      <Form.Item name="hidden" valuePropName="checked">
+      <Form.Item
+        name="hidden"
+        valuePropName="checked"
+        wrapperCol={{ offset: 6 }}
+      >
         <Checkbox>숨김</Checkbox>
       </Form.Item>
     </SetModal>

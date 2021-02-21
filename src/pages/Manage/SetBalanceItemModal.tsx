@@ -15,10 +15,14 @@ const SetBalanceItemModal = ({ date }: { date?: string }) => {
   const balanceItem = date ? balances[date] : latest(balances)
   const asset = useRecoilValue(assetQuery)
 
+  const initialValues = Object.entries(balanceItem).reduce(
+    (acc, [balanceKey, balance]) => ({ ...acc, [balanceKey]: balance }),
+    {}
+  )
+
   const getLabel = (balanceKey: string) => {
-    const balance = balanceItem[balanceKey]
     const { ticker, wallet } = asset(balanceKey)
-    return `${formatAmount(balance)} ${ticker} (${wallet})`
+    return `${ticker} (${wallet})`
   }
 
   const submit = async () => {
@@ -36,7 +40,11 @@ const SetBalanceItemModal = ({ date }: { date?: string }) => {
   }
 
   return (
-    <SetModal type={date ? "edit" : "add"} form={{ form }} submit={submit}>
+    <SetModal
+      type={date ? "edit" : "add"}
+      form={{ form, initialValues }}
+      submit={submit}
+    >
       {Object.keys(balanceItem).map((balanceKey) => (
         <Form.Item
           name={balanceKey}

@@ -33,7 +33,7 @@ const SetModal: FC<Props> = ({ form, type, submit, children }) => {
         onOk={onSet}
         onCancel={close}
       >
-        <Form {...form} layout="vertical">
+        <Form {...form} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
           {children}
         </Form>
       </Modal>

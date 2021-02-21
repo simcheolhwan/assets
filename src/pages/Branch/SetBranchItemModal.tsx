@@ -2,7 +2,6 @@ import React from "react"
 import { useRecoilValue } from "recoil"
 import { Form, Input } from "antd"
 import { isNil } from "ramda"
-import { formatAmount } from "../../utils/format"
 import { latest } from "../../utils/history"
 import { contentsState, setBranchItem } from "../../database/database"
 import { assetQuery } from "../../database/assets"
@@ -17,9 +16,8 @@ const SetBranchItemModal = ({ date }: { date: string }) => {
 
   const asset = useRecoilValue(assetQuery)
   const getLabel = (balanceKey: string) => {
-    const balance = branchItem[balanceKey]
     const { ticker, wallet } = asset(balanceKey)
-    return `${formatAmount(balance)} ${ticker} (${wallet})`
+    return `${ticker} (${wallet})`
   }
 
   const submit = async () => {
