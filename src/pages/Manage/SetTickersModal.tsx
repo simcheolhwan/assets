@@ -5,11 +5,6 @@ import { percent } from "../../utils/format"
 import { contentsState, setTickers } from "../../database/database"
 import SetModal from "./SetModal"
 
-const MARKS = Array.from({ length: 20 }, (_, i) => (i + 1) / 20).reduce(
-  (acc, cur) => ({ ...acc, [cur]: cur % 0.25 ? "" : percent(cur) }),
-  {}
-)
-
 const SetTickersModal = () => {
   const [form] = Form.useForm<Dictionary<number>>()
 
@@ -31,14 +26,16 @@ const SetTickersModal = () => {
     form.resetFields()
   }
 
+  const format = (value?: number) => (value ? percent(value) : "")
+
   return (
     <SetModal type="edit" form={{ form, initialValues }} submit={submit}>
       {Object.values(tickers)
         .filter(({ hidden }) => !hidden)
         .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
-        .map(({ tickerKey, name, aim }) => (
+        .map(({ tickerKey, name }) => (
           <Form.Item name={tickerKey} label={name} key={tickerKey}>
-            <Slider min={0} max={1} step={0.05} marks={MARKS} />
+            <Slider min={0} max={1} step={0.01} tipFormatter={format} />
           </Form.Item>
         ))}
     </SetModal>
