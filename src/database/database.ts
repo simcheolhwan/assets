@@ -80,10 +80,10 @@ export const setBalanceItem = async (balanceItem: BalanceItem) =>
   await db.ref(`/balances/${formatDate()}`).update(balanceItem)
 
 export const setBalance = async (balanceKey: string, balance: number) =>
-  await db.ref(`/balances/${formatDate()}/${balanceKey}`).set(balance)
+  await db.ref(`/balances/${formatDate()}/${balanceKey}`).set(balance || null)
 
 export const setBranchItem = async (balanceItem: BalanceItem, date: string) =>
   await db.ref(`/branch/${date}`).update(balanceItem)
 
 export const setBranch = async (key: string, balance: number, date: string) =>
-  await db.ref(`/branch/${date}/${key}`).set(balance)
+  await db.ref(`/branch/${date}/${key}`).set(balance || null)
