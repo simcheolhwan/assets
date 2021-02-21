@@ -19,7 +19,7 @@ const DashboardTable = () => {
   const [withBranch, setWithBranch] = useRecoilState(withBranchState)
 
   const dataSource = Object.values(tickerRatios)
-    .filter(({ balance }) => balance)
+    .filter(({ balance, aim }) => balance || aim)
     .sort(({ value: a }, { value: b }) => b - a)
     .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
 
@@ -98,13 +98,13 @@ const DashboardTable = () => {
             </Popover>
           }
           dataIndex="ratio"
-          render={(value) => percent(value, true)}
+          render={(value) => percent(value, value > 0.1)}
           align="center"
         />
         <Column
           title="목표"
           dataIndex="aim"
-          render={(value) => percent(value, true)}
+          render={(value) => percent(value, value > 0.1)}
           align="center"
         />
         <Column
