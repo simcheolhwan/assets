@@ -35,7 +35,7 @@ const SetTickersModal = () => {
         .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
         .map(({ tickerKey, name }) => (
           <Form.Item name={tickerKey} label={name} key={tickerKey}>
-            <Slider min={0} max={1} step={0.01} tipFormatter={format} />
+            <Slider min={0} max={0.5} step={0.01} tipFormatter={format} />
           </Form.Item>
         ))}
     </SetModal>
