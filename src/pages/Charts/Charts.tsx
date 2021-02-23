@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { Checkbox, DatePicker, Radio, Space, Switch, Tabs } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import { head, last, uniq } from "ramda"
-import { isAfter, isWithinInterval } from "date-fns"
+import { isAfter, isWithinInterval, subDays } from "date-fns"
 import moment from "moment"
 
 import { formatDate } from "../../utils/format"
@@ -127,7 +127,10 @@ const useSelectStartDate = () => {
     date === startDate || isAfter(new Date(date), value)
 
   const validateDate = (date: Date) =>
-    isWithinInterval(date, { start: new Date(head(days)!), end: new Date() })
+    isWithinInterval(date, {
+      start: new Date(head(days)!),
+      end: subDays(new Date(), 1),
+    })
 
   /* render */
   const getStyle = (date: Date) => {
