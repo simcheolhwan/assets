@@ -56,7 +56,7 @@ export const rebalancedDaysQuery = selector({
             : undefined
 
           return (
-            !name.includes("LP") &&
+            !["LP", "MIR"].some((word) => name.includes(word)) &&
             balance !== previous?.balance &&
             isBefore(new Date(date), new Date(today))
           )
