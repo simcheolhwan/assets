@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { Checkbox, DatePicker, Radio, Space, Switch, Tabs } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import { head, last, uniq } from "ramda"
-import { isAfter, isWithinInterval, subDays } from "date-fns"
+import { isAfter, isWithinInterval, startOfYear, subDays } from "date-fns"
 import moment from "moment"
 
 import { formatDate } from "../../utils/format"
@@ -118,8 +118,9 @@ const useSelectStartDate = () => {
   const days = uniq([...depositedDays, ...rebalancedDays].sort())
 
   /* calendar */
-  const initial = last(depositedDays)!
-  const [value, setValue] = useState<Date>(new Date(initial))
+  const lastDeposit = last(depositedDays)
+  const initial = lastDeposit ? new Date(lastDeposit) : startOfYear(new Date())
+  const [value, setValue] = useState<Date>(initial)
 
   /* validate */
   const startDate = formatDate(value)
