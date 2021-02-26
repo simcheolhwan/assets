@@ -1,6 +1,7 @@
 import { selectorFamily } from "recoil"
 import { reverse } from "ramda"
-import { isBefore, startOfYear } from "date-fns"
+import { isAfter, isBefore, isWithinInterval } from "date-fns"
+import { startOfYear, subDays } from "date-fns"
 import { prevDateQuery } from "./date"
 import { contentsState } from "./database"
 import { depositsHistoryState } from "./deposits"
@@ -18,7 +19,16 @@ export const dayStatsQuery = selectorFamily({
     )
 
     const debt = Object.values(debts).reduce(
-      (acc, { amount }) => acc + amount,
+      (acc, { amount, borrowedAt, returnedAt }) => {
+        const d = !returnedAt
+          ? date === borrowedAt || isAfter(new Date(date), new Date(borrowedAt))
+          : isWithinInterval(new Date(date), {
+              start: new Date(borrowedAt),
+              end: subDays(new Date(returnedAt), 1),
+            })
+
+        return d ? acc + amount : acc
+      },
       0
     )
 
