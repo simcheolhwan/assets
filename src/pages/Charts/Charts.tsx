@@ -160,7 +160,7 @@ const useBalanceFilter = () => {
   const [showBalances, setShowBalances] = useState(true)
   const [showDeposits, setShowDeposits] = useState(false)
 
-  const [upward, setUpward] = useState(false)
+  const [upward, setUpward] = useState(true)
 
   return {
     upward,
