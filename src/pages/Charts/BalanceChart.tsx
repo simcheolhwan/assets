@@ -75,7 +75,20 @@ const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
         y: !prevDeposits ? 0 : prevDeposits.balance,
       }
 
-      return shouldPrepend ? [...acc, prepend, point] : [...acc, point]
+      const shouldAppend =
+        depositsHistory.length - 1 === index &&
+        !isSameYear(new Date(date), new Date())
+
+      const append = {
+        t: startOfYear(new Date()),
+        y: balance,
+      }
+
+      return shouldPrepend
+        ? [...acc, prepend, point]
+        : shouldAppend
+        ? [...acc, point, append]
+        : [...acc, point]
     }, [])
     .filter(
       ({ t }) =>
@@ -159,7 +172,9 @@ const startOfYear = (date: Date) => {
 const toUpward = (data: ChartPoint[]) => {
   const reversed = reverse(data)
   return reversed.filter(
-    ({ y }, index) =>
-      !index || reversed.slice(0, index).every((point) => point.y > y)
+    ({ t, y }, index) =>
+      !index ||
+      formatDate(t) === formatDate(startOfYear(new Date())) ||
+      reversed.slice(0, index).every((point) => point.y > y)
   )
 }
