@@ -1,3 +1,5 @@
+import { ChartDataSets } from "chart.js"
+
 export enum Range {
   "W" = "1W",
   "M" = "1M",
@@ -18,11 +20,12 @@ export const colors: Dictionary<string> = {
   gray: "#d9d9d9",
 }
 
-export const dataset = {
+export const getDataset = (dataset?: ChartDataSets): ChartDataSets => ({
   fill: false,
-  borderCapStyle: "round" as const,
+  borderCapStyle: "round",
   borderWidth: 3,
   lineTension: 0.05,
   pointRadius: 0,
   pointHoverRadius: 0,
-}
+  ...dataset,
+})

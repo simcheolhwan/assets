@@ -3,7 +3,7 @@ import { Card } from "antd"
 import { percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import ChartTitle from "../../components/ChartTitle"
-import { dataset, colors } from "./chartUtils"
+import { getDataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
 const PricesChart = ({ validate }: { validate: (date: string) => boolean }) => {
@@ -19,7 +19,7 @@ const PricesChart = ({ validate }: { validate: (date: string) => boolean }) => {
   )
 
   const exchangesDatasets = {
-    ...dataset,
+    ...getDataset(),
     borderColor: colors.aqua,
     borderWidth: 2,
     label: "USD",
@@ -41,7 +41,7 @@ const PricesChart = ({ validate }: { validate: (date: string) => boolean }) => {
       const { name, color } = tickers[tickerKey]
 
       return {
-        ...dataset,
+        ...getDataset(),
         borderColor: color ? colors[color] : "white",
         borderWidth: 2,
         label: name,

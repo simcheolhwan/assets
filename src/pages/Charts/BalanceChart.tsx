@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { Card, Radio, Tooltip } from "antd"
-import { TimeScale } from "chart.js"
+import { ChartDataSets, TimeScale } from "chart.js"
 import { isAfter, isSameYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 import { reverse } from "ramda"
@@ -12,7 +12,7 @@ import { chartHistoryQuery } from "../../database/history"
 import { dayStatsQuery } from "../../database/day"
 import { todayQuery } from "../../database/date"
 import ChartTitle from "../../components/ChartTitle"
-import { colors, dataset, Range } from "./chartUtils"
+import { colors, getDataset, Range } from "./chartUtils"
 import Chart from "./Chart"
 
 const Unit: Record<Range, TimeScale["unit"]> = {
@@ -32,6 +32,13 @@ interface Props {
 
 const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
   const [range, setRange] = useState<Range>(Range.YTD)
+  const verbose = !upward && showBalances && showDeposits
+  const longRange = [Range.MAX, Range.Y].includes(range)
+  const dataset = Object.assign(
+    {} as ChartDataSets,
+    longRange && { lineTension: 0.025 },
+    longRange && verbose && { borderWidth: 2 }
+  )
 
   /* range */
   const filter = ({ t }: ChartPoint) =>
@@ -51,7 +58,7 @@ const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
     .filter(filter)
 
   const balancesDatasets = {
-    ...dataset,
+    ...getDataset(dataset),
     borderColor: colors.blue,
     label: "자본",
     data: upward ? toUpward(balanceData) : balanceData,
@@ -97,7 +104,7 @@ const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
     .filter(filter)
 
   const depositsDatasets = {
-    ...dataset,
+    ...getDataset(dataset),
     borderColor: colors.aqua,
     label: "입출금",
     data: depositsData,

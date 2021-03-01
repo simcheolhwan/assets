@@ -6,7 +6,7 @@ import { formatAmount, formatKRW, formatM, percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import { chartHistoryQuery } from "../../database/history"
 import ChartTitle from "../../components/ChartTitle"
-import { dataset, colors } from "./chartUtils"
+import { getDataset, colors } from "./chartUtils"
 import Chart from "./Chart"
 
 interface Props {
@@ -41,7 +41,7 @@ const TickersChart = ({ validate, extra, asPercent, type }: Props) => {
       return [
         ...acc,
         {
-          ...dataset,
+          ...getDataset(),
           borderColor: color ? colors[color] : "white",
           borderWidth: 2,
           label: name,
