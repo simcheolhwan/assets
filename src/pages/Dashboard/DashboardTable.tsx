@@ -1,6 +1,6 @@
 import { Checkbox, Popover, Table } from "antd"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { formatAmount, formatM, formatPrice } from "../../utils/format"
+import { formatAmount, formatKorean, formatPrice } from "../../utils/format"
 import { percent } from "../../utils/format"
 import { todayQuery } from "../../database/date"
 import { contentsState } from "../../database/database"
@@ -90,7 +90,12 @@ const DashboardTable = () => {
           }
           align="right"
         />
-        <Column title="가치" dataIndex="value" render={formatM} align="right" />
+        <Column
+          title="가치"
+          dataIndex="value"
+          render={formatKorean}
+          align="right"
+        />
         <Column
           title={
             <Popover content={ratio} placement="bottom">

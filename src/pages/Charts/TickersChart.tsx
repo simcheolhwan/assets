@@ -2,7 +2,8 @@ import { ReactNode } from "react"
 import { useRecoilValue } from "recoil"
 import { Card } from "antd"
 import { ChartDataSets } from "chart.js"
-import { formatAmount, formatKRW, formatM, percent } from "../../utils/format"
+import { formatAmount, formatKRW, formatKorean } from "../../utils/format"
+import { percent } from "../../utils/format"
 import { contentsState } from "../../database/database"
 import { chartHistoryQuery } from "../../database/history"
 import ChartTitle from "../../components/ChartTitle"
@@ -56,7 +57,7 @@ const TickersChart = ({ validate, extra, asPercent, type }: Props) => {
     (value > 0 ? "+" : "") + percent(value)
 
   const format = { value: formatKRW, balance: formatAmount }
-  const formatY = { value: formatM, balance: formatAmount }
+  const formatY = { value: formatKorean, balance: formatAmount }
 
   return (
     <>

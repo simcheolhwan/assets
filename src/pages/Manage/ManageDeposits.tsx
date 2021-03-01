@@ -1,7 +1,7 @@
 import { Table, Tooltip, Typography } from "antd"
 import { useRecoilValue } from "recoil"
 import { reverse } from "ramda"
-import { formatM, formatDateWith } from "../../utils/format"
+import { formatKorean, formatDateWith } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
 import { colors } from "../Charts/chartUtils"
 import SetDepositModal from "./SetDepositModal"
@@ -43,12 +43,17 @@ const DepositsHistory = () => {
         render={(amount) => (
           <Text type={amount < 0 ? "danger" : undefined}>
             {amount > 0 && "+"}
-            {formatM(amount)}
+            {formatKorean(amount)}
           </Text>
         )}
         align="right"
       />
-      <Column title="누적" dataIndex="balance" render={formatM} align="right" />
+      <Column
+        title="누적"
+        dataIndex="balance"
+        render={formatKorean}
+        align="right"
+      />
       <Column
         dataIndex="index"
         render={(index) => <SetDepositModal index={index} />}

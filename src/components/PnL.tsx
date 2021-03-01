@@ -1,5 +1,5 @@
 import { Statistic, Tooltip } from "antd"
-import { formatThousandKRW, formatM, formatKRW } from "../utils/format"
+import { formatThousandKRW, formatKorean } from "../utils/format"
 import Change from "./Change"
 
 interface PnLProps {
@@ -10,7 +10,7 @@ interface PnLProps {
 }
 
 const PnL = ({ date, pnl, change, isChanged }: PnLProps) => {
-  const value = Math.abs(pnl) >= 1e6 ? formatM(pnl) : formatKRW(pnl)
+  const value = formatKorean(pnl)
 
   return (
     <Tooltip title={formatThousandKRW(pnl)} placement="bottom">

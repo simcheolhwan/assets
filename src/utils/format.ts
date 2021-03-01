@@ -23,14 +23,22 @@ export const formatAmountWith = (currency?: CurrencyTicker, places = 3) => {
 export const formatPrice = (value: number, currency: CurrencyTicker) =>
   formatAmountWith(currency, 6)(value)
 
-export const formatM = (number?: number) =>
-  !number
-    ? ""
-    : Math.abs(number) > 1e6
-    ? Math.round(number / 1e6) + "백만"
-    : Math.abs(number) > 1e5
-    ? Math.round((number * 10) / 1e6) / 10 + "백만"
-    : "0"
+export const formatKorean = (number?: number) => {
+  if (!number) return ""
+
+  const abs = Math.abs(number)
+  const e6 = Math.round(number / 1e6)
+  const e7 = Math.round(number / 1e7)
+  const e8 = Math.round(number / 1e8)
+
+  return abs < 1e4
+    ? "0"
+    : abs < 1e7
+    ? e6 + "백"
+    : abs < 1e8
+    ? e7 + "천"
+    : e8 + "억"
+}
 
 export const formatAmount = formatAmountWith()
 export const formatKRW = formatAmountWith("KRW")

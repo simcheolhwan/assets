@@ -6,7 +6,7 @@ import { isAfter, isSameYear, subWeeks } from "date-fns"
 import { subMonths, subQuarters, subYears } from "date-fns"
 import { reverse } from "ramda"
 
-import { formatDate, formatM, formatThousandKRW } from "../../utils/format"
+import { formatDate, formatKorean, formatThousandKRW } from "../../utils/format"
 import { depositsHistoryState } from "../../database/deposits"
 import { chartHistoryQuery } from "../../database/history"
 import { dayStatsQuery } from "../../database/day"
@@ -117,7 +117,7 @@ const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
       : depositsHistory
           .filter((history) => history.date === date)
           .map(({ title, amount = 0, memo }) =>
-            [memo, title, (amount > 0 ? "+" : "") + formatM(amount)]
+            [memo, title, (amount > 0 ? "+" : "") + formatKorean(amount)]
               .filter(Boolean)
               .join(" ")
           )
@@ -139,7 +139,7 @@ const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
       <ChartTitle
         title={
           <Tooltip title={formatThousandKRW(total)} placement="bottom">
-            {formatM(total)}
+            {formatKorean(total)}
           </Tooltip>
         }
         extra={
@@ -160,7 +160,7 @@ const BalanceChart = ({ upward, showBalances, showDeposits }: Props) => {
         <Chart
           datasets={datasets}
           unit={Unit[range]}
-          format={formatM}
+          format={formatKorean}
           getFooter={getFooter}
         />
       </Card>
