@@ -1,6 +1,7 @@
-import { Checkbox, Popover, Table } from "antd"
+import { Checkbox, Popover, Table, Tooltip } from "antd"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { formatAmount, formatKorean, formatPrice } from "../../utils/format"
+import { formatAmount, formatPrice } from "../../utils/format"
+import { formatKorean, formatThousandKRW } from "../../utils/format"
 import { percent } from "../../utils/format"
 import { todayQuery } from "../../database/date"
 import { contentsState } from "../../database/database"
@@ -93,7 +94,11 @@ const DashboardTable = () => {
         <Column
           title="가치"
           dataIndex="value"
-          render={formatKorean}
+          render={(value) => (
+            <Tooltip title={formatThousandKRW(value)}>
+              {formatKorean(value)}
+            </Tooltip>
+          )}
           align="right"
         />
         <Column
