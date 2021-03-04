@@ -77,6 +77,7 @@ export const dayPnLQuery = selectorFamily({
 export const calcPnL = (current: number, comparison: number) => {
   const pnl = current - comparison
   const change = pnl / comparison
-  const isChanged = Math.abs(change) >= 0.001
-  return { pnl, change, isChanged }
+  return { pnl, change, isChanged: isChanged(change) }
 }
+
+export const isChanged = (change: number) => Math.abs(change) >= 0.001

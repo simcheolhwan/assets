@@ -7,6 +7,7 @@ import { todayQuery } from "../../database/date"
 import { contentsState } from "../../database/database"
 import { tickerRatiosQuery } from "../../database/tickers"
 import { withBranchState } from "../../database/branch"
+import { isChanged } from "../../database/day"
 import Change from "../../components/Change"
 import TickerName from "../../components/TickerName"
 import Icon from "../../components/Icon"
@@ -70,14 +71,19 @@ const DashboardTable = () => {
           align="center"
           fixed="left"
         />
-
-        <Column<Ticker>
+        <Column<TickerRatio>
           title="가격"
           dataIndex="price"
           render={(price, { currency }) => formatPrice(price, currency)}
-          align="center"
+          align="right"
         />
-        <Column<TickerBalance>
+        <Column
+          dataIndex="change"
+          render={(change) =>
+            isChanged(change) && <Change color>{change}</Change>
+          }
+        />
+        <Column<TickerRatio>
           title="잔고"
           dataIndex="balance"
           render={(value, { wallets }) =>

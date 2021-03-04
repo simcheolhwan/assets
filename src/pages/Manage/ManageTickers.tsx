@@ -1,13 +1,11 @@
 import { Table } from "antd"
 import { useRecoilValue } from "recoil"
-import { isNil } from "ramda"
 import BigNumber from "bignumber.js"
 import { formatPrice, percent } from "../../utils/format"
 import { todayQuery } from "../../database/date"
 import { tickerValuesQuery } from "../../database/tickers"
 import TickerName from "../../components/TickerName"
 import Icon, { signSVG } from "../../components/Icon"
-import Change from "../../components/Change"
 import SetTickerModal from "./SetTickerModal"
 
 const { Column } = Table
@@ -18,8 +16,6 @@ const ManageTickers = () => {
   const dataSource = Object.values(tickerValues)
     .filter(({ hidden }) => !hidden)
     .sort(({ aim: a = 0 }, { aim: b = 0 }) => b - a)
-    .sort(({ change: a = 0 }, { change: b = 0 }) => b - a)
-    .sort(({ change: a }, { change: b }) => Number(isNil(a)) - Number(isNil(b)))
 
   const aim = BigNumber.sum(...dataSource.map(({ aim }) => aim ?? 0)).toNumber()
 
@@ -47,12 +43,6 @@ const ManageTickers = () => {
         title="가격"
         dataIndex="price"
         render={formatPrice}
-        align="center"
-      />
-      <Column
-        title="변동"
-        dataIndex="change"
-        render={(change) => <Change color>{change}</Change>}
         align="center"
       />
       <Column
