@@ -31,11 +31,11 @@ export const formatKorean = (number?: number) => {
   const e7 = Math.round(number / 1e7)
   const e8 = Math.round(number / 1e8)
 
-  return abs < 1e4
+  return abs < 9.5e5
     ? "0"
-    : abs < 1e7
+    : abs < 9.5e6
     ? e6 + "백"
-    : abs < 1e8
+    : abs < 9.5e7
     ? e7 + "천"
     : e8 + "억"
 }
