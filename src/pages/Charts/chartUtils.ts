@@ -1,4 +1,6 @@
+import { reverse } from "ramda"
 import { ChartDataSets } from "chart.js"
+import { formatDate } from "../../utils/format"
 
 export enum Range {
   "W" = "1W",
@@ -29,3 +31,20 @@ export const getDataset = (dataset?: ChartDataSets): ChartDataSets => ({
   pointHoverRadius: 0,
   ...dataset,
 })
+
+export const toUpward = (data: ChartPoint[]) => {
+  const reversed = reverse(data)
+  return reverse(
+    reversed.filter(
+      ({ t, y }, index) =>
+        !index ||
+        formatDate(t) === formatDate(startOfYear(new Date())) ||
+        reversed.slice(0, index).every((point) => point.y >= y)
+    )
+  )
+}
+
+export const startOfYear = (date: Date) => {
+  const year = date.getFullYear()
+  return new Date(`${year}-01-01`)
+}
