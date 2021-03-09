@@ -182,6 +182,6 @@ const toUpward = (data: ChartPoint[]) => {
     ({ t, y }, index) =>
       !index ||
       formatDate(t) === formatDate(startOfYear(new Date())) ||
-      reversed.slice(0, index).every((point) => point.y > y)
+      reversed.slice(0, index).every((point) => point.y >= y)
   )
 }
